@@ -7,33 +7,44 @@ struct PackOpeningView: View {
     let packType: PackType
     @Binding var isPresented: Bool
 
+    // MARK: State
+
     @State private var phase: Phase = .packIdle
     @State private var cards: [Animal] = []
-    @State private var currentIndex: Int = 0
-    @State private var revealedCards: [Animal] = []
-    @State private var packScale: CGFloat = 1.0
-    @State private var packOpacity: Double = 1.0
-    @State private var packRotation: Double = 0
 
-    enum Phase { case packIdle, opening, revealing, summary }
+    // Pack idle
+    @State private var packIdleScale: CGFloat = 1.0
+    @State private var packIdleRotation: Double = 0
+
+    // Opening animation
+    @State private var shakeAngle: Double = 0
+    @State private var openingScale: CGFloat = 1.0
+    @State private var packTopFly: CGFloat = 0
+    @State private var packBottomFly: CGFloat = 0
+    @State private var packOpacity: Double = 1.0
+    @State private var flashOpacity: Double = 0
+
+    // Carousel
+    @State private var carouselIndex: Int = 0
+    @State private var dragOffset: CGFloat = 0
+    @State private var flippedCards: Set<Int> = []
+
+    enum Phase { case packIdle, opening, carousel, summary }
+
+    private let cardSpacing: CGFloat = 230
+
+    // MARK: - Body
 
     var body: some View {
         ZStack {
-            // Background
             Color(white: 0.04).ignoresSafeArea()
             starfieldBackground
 
             switch phase {
-            case .packIdle:
-                packIdleView
-            case .opening:
-                packOpeningAnimation
-            case .revealing:
-                if currentIndex < cards.count {
-                    cardRevealView
-                }
-            case .summary:
-                summaryView
+            case .packIdle:  packIdleView
+            case .opening:   openingView
+            case .carousel:  carouselPhaseView
+            case .summary:   summaryView
             }
         }
         .navigationBarHidden(true)
@@ -51,18 +62,15 @@ struct PackOpeningView: View {
                 .foregroundStyle(.white.opacity(0.6))
                 .tracking(4)
 
-            // Pack visual
             ZStack {
-                // Glow rings
                 ForEach(0..<3, id: \.self) { i in
                     Circle()
                         .stroke(packType.gradientColors[0].opacity(0.15 - Double(i) * 0.04), lineWidth: 1)
                         .frame(width: CGFloat(200 + i * 50))
                 }
-
                 PackSpriteView(packType: packType)
-                    .scaleEffect(packScale)
-                    .rotationEffect(.degrees(packRotation))
+                    .scaleEffect(packIdleScale)
+                    .rotationEffect(.degrees(packIdleRotation))
             }
             .frame(height: 320)
             .onAppear { startPackIdle() }
@@ -101,19 +109,47 @@ struct PackOpeningView: View {
 
     private func startPackIdle() {
         withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
-            packScale = 1.05
+            packIdleScale = 1.05
         }
         withAnimation(.easeInOut(duration: 3.0).repeatForever(autoreverses: true)) {
-            packRotation = 3
+            packIdleRotation = 3
         }
     }
 
-    // MARK: - Opening Animation
+    // MARK: - Opening Animation View
 
-    private var packOpeningAnimation: some View {
+    private var openingView: some View {
         ZStack {
+            // Flash overlay
+            packType.gradientColors[0]
+                .ignoresSafeArea()
+                .opacity(flashOpacity * 0.65)
+                .blendMode(.screen)
+
+            // Pack top half flying up
             PackSpriteView(packType: packType)
-                .scaleEffect(packScale)
+                .mask {
+                    VStack(spacing: 0) {
+                        Rectangle().frame(height: 110)
+                        Color.clear.frame(height: 110)
+                    }
+                }
+                .rotationEffect(.degrees(shakeAngle))
+                .scaleEffect(openingScale)
+                .offset(y: -packTopFly)
+                .opacity(packOpacity)
+
+            // Pack bottom half flying down
+            PackSpriteView(packType: packType)
+                .mask {
+                    VStack(spacing: 0) {
+                        Color.clear.frame(height: 110)
+                        Rectangle().frame(height: 110)
+                    }
+                }
+                .rotationEffect(.degrees(shakeAngle))
+                .scaleEffect(openingScale)
+                .offset(y: packBottomFly)
                 .opacity(packOpacity)
         }
     }
@@ -122,55 +158,145 @@ struct PackOpeningView: View {
         cards = vm.openPack(packType)
         phase = .opening
 
-        withAnimation(.spring(response: 0.25, dampingFraction: 0.5)) {
-            packScale = 1.35
+        // Reset opening state
+        shakeAngle = 0; openingScale = 1.0
+        packTopFly = 0; packBottomFly = 0
+        packOpacity = 1.0; flashOpacity = 0
+
+        // Phase 1: Shake 0–0.55s
+        let angles: [Double] = [0, -9, 9, -8, 8, -7, 7, -6, 6, -3, 0]
+        for (i, angle) in angles.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.055) {
+                withAnimation(.easeInOut(duration: 0.045)) { shakeAngle = angle }
+            }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            withAnimation(.easeOut(duration: 0.35)) {
-                packScale = 0.01
+
+        // Phase 2: Scale up 0.62s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.62) {
+            withAnimation(.spring(response: 0.18, dampingFraction: 0.45)) {
+                openingScale = 1.4
+            }
+        }
+
+        // Phase 3: Flash + tear apart 0.74s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.74) {
+            withAnimation(.easeIn(duration: 0.1)) { flashOpacity = 1.0 }
+            withAnimation(.easeOut(duration: 0.5)) {
+                packTopFly = 340
+                packBottomFly = 340
                 packOpacity = 0
             }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.88) {
+            withAnimation(.easeOut(duration: 0.4)) { flashOpacity = 0 }
+        }
+
+        // Phase 4: Transition to carousel 1.3s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+            carouselIndex = 0
+            flippedCards = []
+            withAnimation(.spring(response: 0.5)) { phase = .carousel }
+            // Auto-flip first card
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                phase = .revealing
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                    flippedCards.insert(0)
+                }
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             }
         }
     }
 
-    // MARK: - Card Reveal
+    // MARK: - Carousel
 
-    private var cardRevealView: some View {
-        let animal = cards[currentIndex]
-        let isLast = currentIndex == cards.count - 1
+    private var carouselPhaseView: some View {
+        VStack(spacing: 0) {
+            // Navigation header
+            HStack(spacing: 20) {
+                Button {
+                    guard carouselIndex > 0 else { return }
+                    navigateTo(carouselIndex - 1)
+                } label: {
+                    Image(systemName: "chevron.left.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(carouselIndex > 0 ? .white.opacity(0.8) : .white.opacity(0.15))
+                }
 
-        return VStack(spacing: 0) {
-            // Header
-            HStack {
-                Text("\(currentIndex + 1) / \(cards.count)")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.4))
+                Text("\(carouselIndex + 1) / \(cards.count)")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                    .frame(width: 60)
+
+                Button {
+                    guard carouselIndex < cards.count - 1 else { return }
+                    navigateTo(carouselIndex + 1)
+                } label: {
+                    Image(systemName: "chevron.right.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(carouselIndex < cards.count - 1 ? .white.opacity(0.8) : .white.opacity(0.15))
+                }
+
                 Spacer()
-                Button { isPresented = false } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white.opacity(0.3))
-                        .font(.title3)
+
+                Button { withAnimation { phase = .summary } } label: {
+                    Image(systemName: "square.grid.2x2.fill")
+                        .font(.title2)
+                        .foregroundStyle(.yellow.opacity(0.85))
                 }
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 28)
+            .padding(.top, 20)
+
+            Text("Desliza o toca para revelar")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.35))
+                .padding(.top, 6)
+
+            Spacer()
+
+            // Card carousel
+            ZStack {
+                ForEach(Array(cards.enumerated()), id: \.offset) { idx, animal in
+                    carouselCardView(idx: idx, animal: animal)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 340)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 10)
+                    .onChanged { val in dragOffset = val.translation.width }
+                    .onEnded { val in
+                        let velocity = val.predictedEndTranslation.width
+                        if velocity < -80, carouselIndex < cards.count - 1 {
+                            navigateTo(carouselIndex + 1)
+                        } else if velocity > 80, carouselIndex > 0 {
+                            navigateTo(carouselIndex - 1)
+                        } else {
+                            withAnimation(.spring(response: 0.3)) { dragOffset = 0 }
+                        }
+                    }
+            )
+
+            // Dot indicators
+            HStack(spacing: 6) {
+                ForEach(0..<cards.count, id: \.self) { idx in
+                    Circle()
+                        .fill(idx == carouselIndex ? Color.white : Color.white.opacity(0.25))
+                        .frame(width: idx == carouselIndex ? 8 : 5)
+                        .animation(.spring(response: 0.3), value: carouselIndex)
+                }
+            }
             .padding(.top, 16)
 
             Spacer()
 
-            // Card flip reveal
-            FlipCardView(animal: animal, isLast: isLast)
-
-            Spacer()
-
-            // Action
-            Button(action: advanceCard) {
+            // Bottom action
+            Button(action: { withAnimation { phase = .summary } }) {
                 HStack(spacing: 8) {
-                    Text(currentIndex < cards.count - 1 ? "Siguiente" : "Ver resumen")
+                    Text(flippedCards.count == cards.count ? "Ver resumen" : "Saltar al resumen")
                         .fontWeight(.semibold)
-                    Image(systemName: currentIndex < cards.count - 1 ? "arrow.right" : "checkmark")
+                    Image(systemName: flippedCards.count == cards.count ? "checkmark" : "forward.fill")
                 }
                 .foregroundStyle(.black)
                 .frame(maxWidth: .infinity)
@@ -178,7 +304,9 @@ struct PackOpeningView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(LinearGradient(
-                            colors: animal.rarity.gradientColors,
+                            colors: flippedCards.count == cards.count
+                                ? packType.gradientColors
+                                : [Color.white.opacity(0.45), Color.white.opacity(0.3)],
                             startPoint: .leading, endPoint: .trailing
                         ))
                 )
@@ -186,24 +314,86 @@ struct PackOpeningView: View {
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
         }
-        .id(currentIndex) // force re-render on index change for animation
-        .transition(.asymmetric(
-            insertion: .move(edge: .trailing).combined(with: .opacity),
-            removal: .move(edge: .leading).combined(with: .opacity)
-        ))
     }
 
-    private func advanceCard() {
-        if currentIndex < cards.count - 1 {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                currentIndex += 1
+    @ViewBuilder
+    private func carouselCardView(idx: Int, animal: Animal) -> some View {
+        let relPos = CGFloat(idx - carouselIndex)
+        let rawOffset = relPos * cardSpacing + dragOffset
+        let normalizedDist = abs(rawOffset) / cardSpacing
+        let scale = max(0.68, 1.0 - normalizedDist * 0.2)
+        let yOffset: CGFloat = normalizedDist * 18
+        let rotDeg = Double(-rawOffset / 30)
+        let isCenter = idx == carouselIndex
+
+        Group {
+            if flippedCards.contains(idx) {
+                AnimalCardView(animal: animal, size: .large)
+                    .overlay(alignment: .bottom) {
+                        if idx == bestCardIndex {
+                            Text("⭐ MEJOR CARTA")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.yellow)
+                                .tracking(2)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(Capsule().fill(Color.black.opacity(0.55)))
+                                .offset(y: 18)
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                    }
+            } else {
+                CardBackView(packType: packType)
+                    .overlay(alignment: .center) {
+                        if isCenter {
+                            VStack(spacing: 6) {
+                                Image(systemName: "hand.tap.fill")
+                                    .font(.title3)
+                                    .foregroundStyle(.white.opacity(0.45))
+                                Text("Toca para revelar")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white.opacity(0.3))
+                            }
+                            .offset(y: 75)
+                        }
+                    }
             }
-        } else {
-            withAnimation { phase = .summary }
+        }
+        .scaleEffect(scale)
+        .rotation3DEffect(.degrees(rotDeg), axis: (x: 0, y: 1, z: 0))
+        .offset(x: rawOffset, y: yOffset)
+        .zIndex(isCenter ? 10 : max(0, 5.0 - normalizedDist))
+        .opacity(abs(rawOffset) > cardSpacing * 2.4 ? 0 : 1)
+        .onTapGesture {
+            guard isCenter, !flippedCards.contains(idx) else { return }
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                flippedCards.insert(idx)
+            }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
     }
 
-    // MARK: - Summary
+    private func navigateTo(_ index: Int) {
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.82)) {
+            carouselIndex = index
+            dragOffset = 0
+        }
+        if !flippedCards.contains(index) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                    flippedCards.insert(index)
+                }
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            }
+        }
+    }
+
+    private var bestCardIndex: Int {
+        cards.indices.max(by: { cards[$0].rarity < cards[$1].rarity }) ?? 0
+    }
+
+    // MARK: - Summary (no overlap fix)
 
     private var summaryView: some View {
         VStack(spacing: 0) {
@@ -213,41 +403,45 @@ struct PackOpeningView: View {
                 .foregroundStyle(.white)
                 .padding(.top, 24)
 
-            // Cards grid
             ScrollView {
-                LazyVGrid(columns: [
-                    GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())
-                ], spacing: 12) {
-                    ForEach(Array(cards.enumerated()), id: \.offset) { idx, animal in
-                        VStack(spacing: 4) {
-                            AnimalCardView(animal: animal, size: .small)
-                            if idx == cards.count - 1 {
-                                Text("MEJOR CARTA")
-                                    .font(.system(size: 8, weight: .bold))
-                                    .foregroundStyle(.yellow)
-                                    .tracking(1)
-                            }
+                VStack(spacing: 16) {
+                    // Row 1: first 3 cards
+                    HStack(spacing: 10) {
+                        ForEach(0..<min(3, cards.count), id: \.self) { idx in
+                            summaryCardCell(idx: idx)
                         }
-                        .scaleEffect(idx == cards.count - 1 ? 1.06 : 1.0)
-                        .animation(.spring(response: 0.3).delay(Double(idx) * 0.08), value: true)
                     }
-                }
-                .padding(20)
+                    .padding(.horizontal, 16)
 
-                // Duplicate coins earned
-                let dupCount = cards.filter { card in
-                    vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0 > 0
-                }.count
-                if dupCount > 0 {
-                    HStack(spacing: 6) {
-                        Image(systemName: "dollarsign.circle.fill")
-                            .foregroundStyle(.yellow)
-                        Text("+\(dupCount * vm.duplicateReward) monedas por duplicados")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.7))
+                    // Row 2: remaining cards centred
+                    if cards.count > 3 {
+                        HStack(spacing: 10) {
+                            Spacer(minLength: 0)
+                            ForEach(3..<cards.count, id: \.self) { idx in
+                                summaryCardCell(idx: idx)
+                            }
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.horizontal, 16)
                     }
-                    .padding(.bottom, 8)
+
+                    // Duplicate coins
+                    let dupCount = cards.filter { card in
+                        vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0 > 0
+                    }.count
+                    if dupCount > 0 {
+                        HStack(spacing: 6) {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .foregroundStyle(.yellow)
+                            Text("+\(dupCount * vm.duplicateReward) monedas por duplicados")
+                                .font(.caption)
+                                .foregroundStyle(.white.opacity(0.7))
+                        }
+                        .padding(.top, 4)
+                    }
                 }
+                .padding(.top, 20)
+                .padding(.bottom, 8)
             }
 
             Button(action: { isPresented = false }) {
@@ -267,7 +461,32 @@ struct PackOpeningView: View {
         }
     }
 
-    // MARK: - Background
+    @ViewBuilder
+    private func summaryCardCell(idx: Int) -> some View {
+        let isBest = idx == bestCardIndex
+        VStack(spacing: 0) {
+            // Space at top for the badge if best card
+            if isBest {
+                Text("MEJOR CARTA")
+                    .font(.system(size: 7, weight: .bold))
+                    .foregroundStyle(.yellow)
+                    .tracking(1)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(Capsule().fill(Color.yellow.opacity(0.2)))
+            } else {
+                // Invisible spacer to keep alignment consistent
+                Text(" ")
+                    .font(.system(size: 7))
+                    .padding(.vertical, 2)
+                    .opacity(0)
+            }
+            AnimalCardView(animal: cards[idx], size: .small)
+        }
+        .animation(.spring(response: 0.3).delay(Double(idx) * 0.08), value: true)
+    }
+
+    // MARK: - Starfield Background
 
     private var starfieldBackground: some View {
         GeometryReader { geo in
@@ -324,62 +543,5 @@ private struct PackSpriteView: View {
                 .frame(width: 160, height: 220)
         }
         .shadow(color: packType.gradientColors[0].opacity(0.5), radius: 20)
-    }
-}
-
-// MARK: - Flip Card
-
-private struct FlipCardView: View {
-    let animal: Animal
-    let isLast: Bool
-
-    @State private var flipped = false
-    @State private var showGlow = false
-
-    var body: some View {
-        ZStack {
-            // Back side
-            CardBackView(packType: .basic)
-                .rotation3DEffect(.degrees(flipped ? 90 : 0), axis: (x: 0, y: 1, z: 0))
-                .opacity(flipped ? 0 : 1)
-
-            // Front side
-            AnimalCardView(animal: animal, size: .large)
-                .rotation3DEffect(.degrees(flipped ? 0 : -90), axis: (x: 0, y: 1, z: 0))
-                .opacity(flipped ? 1 : 0)
-                .shadow(color: animal.rarity.glowColor.opacity(showGlow ? 0.8 : 0), radius: showGlow ? 30 : 0)
-        }
-        .onAppear { reveal() }
-        .overlay(alignment: .top) {
-            if isLast && flipped {
-                Text("⭐ MEJOR CARTA")
-                    .font(.caption2)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.yellow)
-                    .tracking(2)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Color.yellow.opacity(0.2)))
-                    .offset(y: -16)
-                    .transition(.scale.combined(with: .opacity))
-            }
-        }
-        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLast && flipped)
-    }
-
-    private func reveal() {
-        withAnimation(.easeIn(duration: 0.25)) {
-            flipped = false
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                flipped = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                withAnimation(.easeIn(duration: 0.3)) {
-                    showGlow = animal.rarity >= .rare
-                }
-            }
-        }
     }
 }
