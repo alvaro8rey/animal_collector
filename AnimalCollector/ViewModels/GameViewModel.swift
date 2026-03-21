@@ -146,13 +146,13 @@ final class GameViewModel: ObservableObject {
 
         if persistence.isFirstLaunch {
             // Default starting resources
-            coins = 200
+            coins = 99999
             basicPacks = 3
-            persistence.coins = 200
+            persistence.coins = 99999
             persistence.basicPacks = 3
             persistence.isFirstLaunch = false
         } else {
-            coins = persistence.coins
+            coins = max(persistence.coins, 99999)
             basicPacks = persistence.basicPacks
         }
 
