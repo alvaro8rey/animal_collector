@@ -8,8 +8,8 @@ struct PackImageView: View {
             if UIImage(named: "pack_image") != nil {
                 Image("pack_image")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 240, height: 330)
+                    .scaledToFit()
+                    .frame(width: 260)
             } else {
                 PackSpriteView()
             }

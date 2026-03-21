@@ -254,7 +254,7 @@ struct GachaView: View {
                             Color(red: 0.25, green: 0.5, blue: 1.0).opacity(canOpen ? (0.18 - Double(i) * 0.05) : 0.05),
                             lineWidth: 1
                         )
-                        .frame(width: CGFloat(220 + i * 60))
+                        .frame(width: CGFloat(150 + i * 40))
                 }
 
                 PackImageView()
@@ -266,7 +266,6 @@ struct GachaView: View {
                         radius: 24
                     )
             }
-            .frame(height: 380)
             .contentShape(Rectangle())
             .onTapGesture {
                 guard canOpen, !isShaking else { return }
