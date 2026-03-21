@@ -5,16 +5,15 @@ final class PersistenceService {
     private let defaults = UserDefaults.standard
 
     private enum Key {
-        static let collection = "ac_collection"
-        static let coins = "ac_coins"
-        static let basicPacks = "ac_basic_packs"
-        static let premiumPacks = "ac_premium_packs"
-        static let streak = "ac_streak"
-        static let lastStreakDate = "ac_last_streak_date"
-        static let pityCount = "ac_pity_count"
+        static let collection      = "ac_collection"
+        static let availablePacks  = "ac_available_packs"
+        static let isPremium       = "ac_is_premium"
+        static let streak          = "ac_streak"
+        static let lastStreakDate   = "ac_last_streak_date"
+        static let pityCount       = "ac_pity_count"
         static let totalPacksOpened = "ac_total_packs"
         static let dailyClaimedDate = "ac_daily_claimed"
-        static let firstLaunch = "ac_first_launch"
+        static let firstLaunch     = "ac_first_launch"
     }
 
     // MARK: - Collection
@@ -34,19 +33,14 @@ final class PersistenceService {
 
     // MARK: - Simple values
 
-    var coins: Int {
-        get { defaults.integer(forKey: Key.coins) }
-        set { defaults.set(newValue, forKey: Key.coins) }
+    var availablePacks: Int {
+        get { defaults.integer(forKey: Key.availablePacks) }
+        set { defaults.set(newValue, forKey: Key.availablePacks) }
     }
 
-    var basicPacks: Int {
-        get { defaults.integer(forKey: Key.basicPacks) }
-        set { defaults.set(newValue, forKey: Key.basicPacks) }
-    }
-
-    var premiumPacks: Int {
-        get { defaults.integer(forKey: Key.premiumPacks) }
-        set { defaults.set(newValue, forKey: Key.premiumPacks) }
+    var isPremium: Bool {
+        get { defaults.bool(forKey: Key.isPremium) }
+        set { defaults.set(newValue, forKey: Key.isPremium) }
     }
 
     var streak: Int {
@@ -96,7 +90,6 @@ final class PersistenceService {
             } else if !Calendar.current.isDateInToday(last) {
                 streak = 1
             }
-            // Same day: no change
         } else {
             streak = 1
         }

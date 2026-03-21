@@ -7,9 +7,8 @@ final class GameViewModel: ObservableObject {
     // MARK: - Published state
 
     @Published var collection: [Animal] = []
-    @Published var coins: Int = 200
-    @Published var basicPacks: Int = 3
-    @Published var premiumPacks: Int = 0
+    @Published var availablePacks: Int = 5
+    @Published var isPremium: Bool = false
     @Published var streak: Int = 0
     @Published var pityCount: Int = 0
     @Published var totalPacksOpened: Int = 0
@@ -42,14 +41,10 @@ final class GameViewModel: ObservableObject {
 
     func canOpen(_ type: PackType) -> Bool {
         switch type {
-        case .basic: return basicPacks > 0
+        case .basic: return isPremium || availablePacks > 0
         case .daily: return isDailyAvailable
-        case .premium: return premiumPacks > 0
         }
     }
-
-    /// Coins earned per duplicate
-    var duplicateReward: Int { 25 }
 
     // MARK: - Pack opening
 
@@ -57,16 +52,13 @@ final class GameViewModel: ObservableObject {
     func openPack(_ type: PackType) -> [Animal] {
         guard canOpen(type) else { return [] }
 
-        // Deduct resource
         switch type {
         case .basic:
-            basicPacks -= 1
+            if !isPremium { availablePacks -= 1 }
         case .daily:
             isDailyAvailable = false
             persistence.claimDailyAndUpdateStreak()
             streak = persistence.streak
-        case .premium:
-            premiumPacks -= 1
         }
 
         let drawn = GachaEngine.drawCards(
@@ -76,12 +68,10 @@ final class GameViewModel: ObservableObject {
             pityCount: pityCount
         )
 
-        // Update pity counter
         let hasEpicPlus = drawn.contains { $0.rarity >= .epic }
         pityCount = hasEpicPlus ? 0 : pityCount + 1
         totalPacksOpened += 1
 
-        // Process into collection
         for animal in drawn {
             receiveAnimal(animal)
         }
@@ -94,7 +84,6 @@ final class GameViewModel: ObservableObject {
         if let idx = collection.firstIndex(where: { $0.id == animal.id }) {
             if collection[idx].isObtained {
                 collection[idx].duplicateCount += 1
-                coins += duplicateReward
             } else {
                 collection[idx].obtainedDate = Date()
             }
@@ -113,19 +102,21 @@ final class GameViewModel: ObservableObject {
         save()
     }
 
-    func buyBasicPack() {
-        guard coins >= PackType.basic.cost else { return }
-        coins -= PackType.basic.cost
-        basicPacks += 1
+    /// Called after the user watches an ad. Rewards +2 packs.
+    func rewardAdPacks() {
+        availablePacks += 2
         save()
     }
 
-    func claimDailyPack() {
-        guard isDailyAvailable else { return }
-        basicPacks += 1
-        isDailyAvailable = false
-        persistence.claimDailyAndUpdateStreak()
-        streak = persistence.streak
+    /// Activates premium subscription (stub).
+    func activatePremium() {
+        isPremium = true
+        save()
+    }
+
+    /// Cancels premium subscription (stub).
+    func cancelPremium() {
+        isPremium = false
         save()
     }
 
@@ -133,30 +124,24 @@ final class GameViewModel: ObservableObject {
 
     private func load() {
         if let saved = persistence.loadCollection() {
-            // Merge saved collection with current animal catalog
             var merged: [Animal] = saved
             for animal in allAnimals where !merged.contains(where: { $0.id == animal.id }) {
                 merged.append(animal)
             }
             collection = merged
         } else {
-            // First launch: populate with all animals (not obtained)
             collection = allAnimals
         }
 
         if persistence.isFirstLaunch {
-            // Default starting resources
-            coins = 99999
-            basicPacks = 3
-            persistence.coins = 99999
-            persistence.basicPacks = 3
+            availablePacks = 5
+            persistence.availablePacks = 5
             persistence.isFirstLaunch = false
         } else {
-            coins = max(persistence.coins, 99999)
-            basicPacks = persistence.basicPacks
+            availablePacks = persistence.availablePacks
         }
 
-        premiumPacks = persistence.premiumPacks
+        isPremium = persistence.isPremium
         streak = persistence.streak
         pityCount = persistence.pityCount
         totalPacksOpened = persistence.totalPacksOpened
@@ -165,9 +150,8 @@ final class GameViewModel: ObservableObject {
 
     private func save() {
         persistence.saveCollection(collection)
-        persistence.coins = coins
-        persistence.basicPacks = basicPacks
-        persistence.premiumPacks = premiumPacks
+        persistence.availablePacks = availablePacks
+        persistence.isPremium = isPremium
         persistence.pityCount = pityCount
         persistence.totalPacksOpened = totalPacksOpened
     }

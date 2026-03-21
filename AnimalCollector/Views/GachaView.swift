@@ -5,15 +5,15 @@ struct GachaView: View {
     @State private var selectedPack: PackType = .basic
     @State private var isOpeningPack = false
     @State private var pulseStreak = false
+    @State private var showAdSimulator = false
+    @State private var showPremiumView = false
 
     var body: some View {
         NavigationStack {
             ZStack {
-                // Dark gradient background
                 LinearGradient(
                     colors: [Color(white: 0.06), Color(white: 0.03)],
-                    startPoint: .top,
-                    endPoint: .bottom
+                    startPoint: .top, endPoint: .bottom
                 )
                 .ignoresSafeArea()
 
@@ -23,7 +23,9 @@ struct GachaView: View {
                         progressSection
                         packSelector
                         openButton
-                        shopSection
+                        if !vm.isPremium {
+                            refillSection
+                        }
                         dailyMissions
                     }
                     .padding(.horizontal, 20)
@@ -34,6 +36,14 @@ struct GachaView: View {
             .navigationBarHidden(true)
             .fullScreenCover(isPresented: $isOpeningPack) {
                 PackOpeningView(packType: selectedPack, isPresented: $isOpeningPack)
+                    .environmentObject(vm)
+            }
+            .fullScreenCover(isPresented: $showAdSimulator) {
+                AdSimulatorView(isPresented: $showAdSimulator)
+                    .environmentObject(vm)
+            }
+            .sheet(isPresented: $showPremiumView) {
+                PremiumView(isPresented: $showPremiumView)
                     .environmentObject(vm)
             }
         }
@@ -58,22 +68,8 @@ struct GachaView: View {
             // Streak badge
             streakBadge
 
-            // Coins
-            HStack(spacing: 5) {
-                Image(systemName: "dollarsign.circle.fill")
-                    .foregroundStyle(.yellow)
-                Text("\(vm.coins)")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .monospacedDigit()
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(
-                Capsule().fill(Color.yellow.opacity(0.12))
-                    .overlay(Capsule().strokeBorder(Color.yellow.opacity(0.3), lineWidth: 0.8))
-            )
+            // Pack counter / Premium badge
+            packCounterBadge
         }
         .padding(.top, 16)
     }
@@ -98,6 +94,52 @@ struct GachaView: View {
         )
         .padding(.trailing, 8)
         .onAppear { pulseStreak = vm.streak > 0 }
+    }
+
+    @ViewBuilder
+    private var packCounterBadge: some View {
+        if vm.isPremium {
+            // Premium badge
+            Button(action: { showPremiumView = true }) {
+                HStack(spacing: 5) {
+                    Image(systemName: "crown.fill")
+                        .font(.caption)
+                        .foregroundStyle(
+                            LinearGradient(colors: [.yellow, .orange], startPoint: .top, endPoint: .bottom)
+                        )
+                    Text("Premium")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule().fill(Color.yellow.opacity(0.12))
+                        .overlay(Capsule().strokeBorder(Color.yellow.opacity(0.3), lineWidth: 0.8))
+                )
+            }
+        } else {
+            // Pack counter
+            HStack(spacing: 5) {
+                Text("📦")
+                    .font(.subheadline)
+                Text("\(vm.availablePacks)")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(vm.availablePacks == 0 ? .red.opacity(0.8) : .white)
+                    .monospacedDigit()
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule().fill(Color.white.opacity(0.07))
+                    .overlay(Capsule().strokeBorder(
+                        vm.availablePacks == 0 ? Color.red.opacity(0.3) : Color.white.opacity(0.12),
+                        lineWidth: 0.8
+                    ))
+            )
+        }
     }
 
     // MARK: - Progress
@@ -160,7 +202,7 @@ struct GachaView: View {
                     PackSelectorCard(
                         pack: pack,
                         isSelected: selectedPack == pack,
-                        count: packCount(for: pack),
+                        countLabel: countLabel(for: pack),
                         isAvailable: vm.canOpen(pack)
                     )
                     .onTapGesture { selectedPack = pack }
@@ -169,11 +211,12 @@ struct GachaView: View {
         }
     }
 
-    private func packCount(for pack: PackType) -> String {
+    private func countLabel(for pack: PackType) -> String {
         switch pack {
-        case .basic: return "\(vm.basicPacks)"
-        case .daily: return vm.isDailyAvailable ? "1" : "0"
-        case .premium: return "\(vm.premiumPacks)"
+        case .basic:
+            return vm.isPremium ? "∞" : "\(vm.availablePacks)"
+        case .daily:
+            return vm.isDailyAvailable ? "1" : "0"
         }
     }
 
@@ -190,7 +233,7 @@ struct GachaView: View {
                 Text(selectedPack.emoji)
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(canOpen ? "Abrir \(selectedPack.rawValue)" : "No disponible")
+                    Text(canOpen ? "Abrir \(selectedPack.rawValue)" : "Sin sobres disponibles")
                         .font(.headline)
                         .fontWeight(.bold)
                     Text(selectedPack.description)
@@ -224,11 +267,11 @@ struct GachaView: View {
         .animation(.spring(response: 0.3), value: canOpen)
     }
 
-    // MARK: - Shop
+    // MARK: - Refill Section (shown when not premium)
 
-    private var shopSection: some View {
+    private var refillSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Tienda")
+            Text("Conseguir más sobres")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(.white.opacity(0.5))
@@ -236,25 +279,24 @@ struct GachaView: View {
                 .tracking(1)
 
             HStack(spacing: 10) {
-                ShopItemView(
-                    emoji: "📦",
-                    title: "Sobre Básico",
-                    cost: PackType.basic.cost,
-                    canAfford: vm.coins >= PackType.basic.cost
+                // Watch Ad
+                RefillButton(
+                    icon: "play.rectangle.fill",
+                    title: "Ver anuncio",
+                    subtitle: "+2 sobres · Gratis",
+                    gradientColors: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.4, green: 0.2, blue: 0.9)]
                 ) {
-                    vm.buyBasicPack()
+                    showAdSimulator = true
                 }
 
-                ShopItemView(
-                    emoji: "🎁",
-                    title: "Diario",
-                    cost: 0,
-                    canAfford: vm.isDailyAvailable,
-                    isFree: true
+                // Premium
+                RefillButton(
+                    icon: "crown.fill",
+                    title: "Premium",
+                    subtitle: "Sobres ilimitados",
+                    gradientColors: [.yellow, .orange]
                 ) {
-                    if vm.isDailyAvailable {
-                        vm.claimDailyPack()
-                    }
+                    showPremiumView = true
                 }
             }
         }
@@ -303,30 +345,17 @@ struct GachaView: View {
 private struct PackSelectorCard: View {
     let pack: PackType
     let isSelected: Bool
-    let count: String
+    let countLabel: String
     let isAvailable: Bool
-
-    private var countLabel: String {
-        pack == .daily && count == "0" ? "✓" : "×\(count)"
-    }
 
     private var countColor: Color {
         isAvailable ? pack.gradientColors[0] : Color.white.opacity(0.3)
     }
 
-    private var nameColor: Color {
-        isSelected ? Color.white : Color.white.opacity(0.5)
-    }
-
     private var borderGradient: LinearGradient {
-        if isSelected {
-            return pack.gradient
-        }
-        return LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
-    }
-
-    private var fillColor: Color {
-        isSelected ? Color.white.opacity(0.0) : Color.white.opacity(0.04)
+        isSelected
+            ? pack.gradient
+            : LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
     }
 
     var body: some View {
@@ -336,7 +365,7 @@ private struct PackSelectorCard: View {
             Text(pack.rawValue)
                 .font(.caption2)
                 .fontWeight(.semibold)
-                .foregroundStyle(nameColor)
+                .foregroundStyle(isSelected ? .white : .white.opacity(0.5))
             Text(countLabel)
                 .font(.caption2)
                 .foregroundStyle(countColor)
@@ -345,7 +374,7 @@ private struct PackSelectorCard: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(fillColor)
+                .fill(isSelected ? Color.white.opacity(0.0) : Color.white.opacity(0.04))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(isSelected ? AnyShapeStyle(pack.gradient.opacity(0.2)) : AnyShapeStyle(Color.clear))
@@ -359,50 +388,55 @@ private struct PackSelectorCard: View {
     }
 }
 
-// MARK: - Shop Item
+// MARK: - Refill Button
 
-private struct ShopItemView: View {
-    let emoji: String
+private struct RefillButton: View {
+    let icon: String
     let title: String
-    let cost: Int
-    let canAfford: Bool
-    var isFree: Bool = false
+    let subtitle: String
+    let gradientColors: [Color]
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) {
-                Text(emoji).font(.title2)
+            VStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+                                .opacity(0.2)
+                        )
+                        .frame(width: 40, height: 40)
+                    Image(systemName: icon)
+                        .font(.system(size: 17))
+                        .foregroundStyle(
+                            LinearGradient(colors: gradientColors, startPoint: .top, endPoint: .bottom)
+                        )
+                }
                 Text(title)
                     .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white.opacity(0.8))
-                Group {
-                    if isFree {
-                        Text(canAfford ? "GRATIS" : "Reclamado")
-                            .foregroundStyle(canAfford ? .green : .white.opacity(0.3))
-                    } else {
-                        HStack(spacing: 3) {
-                            Image(systemName: "dollarsign.circle.fill").foregroundStyle(.yellow)
-                            Text("\(cost)").foregroundStyle(canAfford ? .white : .red.opacity(0.7))
-                        }
-                    }
-                }
-                .font(.caption2)
-                .fontWeight(.semibold)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                Text(subtitle)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.5))
+                    .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
+            .padding(.vertical, 16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.white.opacity(canAfford ? 0.06 : 0.03))
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.white.opacity(0.05))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(.white.opacity(0.08), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 14)
+                            .strokeBorder(
+                                LinearGradient(colors: gradientColors.map { $0.opacity(0.4) },
+                                               startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 1
+                            )
                     )
             )
         }
-        .disabled(!canAfford)
     }
 }
 

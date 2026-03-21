@@ -457,17 +457,17 @@ struct PackOpeningView: View {
                         .padding(.horizontal, 20)
                     }
 
-                    // Duplicate coins
+                    // Duplicate indicator
                     let dupCount = cards.filter { card in
                         vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0 > 0
                     }.count
                     if dupCount > 0 {
                         HStack(spacing: 6) {
-                            Image(systemName: "dollarsign.circle.fill")
-                                .foregroundStyle(.yellow)
-                            Text("+\(dupCount * vm.duplicateReward) monedas por duplicados")
+                            Image(systemName: "arrow.2.squarepath")
+                                .foregroundStyle(.white.opacity(0.5))
+                            Text("\(dupCount) duplicado\(dupCount > 1 ? "s" : "")")
                                 .font(.caption)
-                                .foregroundStyle(.white.opacity(0.7))
+                                .foregroundStyle(.white.opacity(0.5))
                         }
                         .padding(.top, 4)
                     }
