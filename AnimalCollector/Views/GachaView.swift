@@ -88,7 +88,6 @@ struct GachaView: View {
 
             Spacer()
 
-            streakBadge
             packCounterBadge
         }
         .padding(.top, 16)
