@@ -9,7 +9,7 @@ struct PackImageView: View {
                 Image("pack_image")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 310, height: 430)
+                    .frame(width: 240, height: 330)
             } else {
                 PackSpriteView()
             }

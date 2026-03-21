@@ -266,7 +266,7 @@ struct GachaView: View {
                         radius: 24
                     )
             }
-            .frame(height: 500)
+            .frame(height: 380)
             .contentShape(Rectangle())
             .onTapGesture {
                 guard canOpen, !isShaking else { return }
