@@ -16,38 +16,16 @@ struct PremiumView: View {
 
     var body: some View {
         ZStack {
-            // Background
             LinearGradient(
                 colors: [Color(white: 0.06), Color(white: 0.03)],
                 startPoint: .top, endPoint: .bottom
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                // Header
-                headerSection
-                    .padding(.top, 24)
-
-                // Benefits list
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 12) {
-                        ForEach(benefits, id: \.title) { b in
-                            BenefitRow(icon: b.icon, title: b.title, detail: b.detail)
-                        }
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.top, 28)
-                    .padding(.bottom, 16)
-                }
-
-                Divider()
-                    .background(Color.white.opacity(0.08))
-
-                // Purchase section
-                purchaseSection
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 40)
-                    .padding(.top, 20)
+            if vm.isPremium {
+                activeView
+            } else {
+                paywallView
             }
         }
         .overlay(alignment: .topTrailing) {
@@ -58,6 +36,104 @@ struct PremiumView: View {
                     .foregroundStyle(.white.opacity(0.4))
             }
             .padding(20)
+        }
+    }
+
+    // MARK: - Active (already premium)
+
+    private var activeView: some View {
+        VStack(spacing: 0) {
+            Spacer()
+
+            VStack(spacing: 20) {
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(
+                            colors: [Color.yellow.opacity(0.3), Color.orange.opacity(0.2)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 88, height: 88)
+                    Image(systemName: "crown.fill")
+                        .font(.system(size: 38))
+                        .foregroundStyle(LinearGradient(
+                            colors: [.yellow, .orange],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ))
+                }
+
+                VStack(spacing: 6) {
+                    Text("Eres miembro Premium")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+                    Text("Gracias por tu apoyo 🎉")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.5))
+                }
+
+                VStack(spacing: 10) {
+                    ForEach(benefits, id: \.title) { b in
+                        HStack(spacing: 12) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                                .font(.subheadline)
+                            Text(b.title)
+                                .font(.subheadline)
+                                .foregroundStyle(.white.opacity(0.8))
+                            Spacer()
+                        }
+                    }
+                }
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.white.opacity(0.04))
+                        .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+                )
+                .padding(.horizontal, 24)
+                .padding(.top, 8)
+            }
+
+            Spacer()
+
+            // Cancel subscription (stub)
+            Button(action: {
+                vm.cancelPremium()
+                isPresented = false
+            }) {
+                Text("Cancelar suscripción")
+                    .font(.caption)
+                    .foregroundStyle(.red.opacity(0.5))
+            }
+            .padding(.bottom, 48)
+        }
+    }
+
+    // MARK: - Paywall (not yet premium)
+
+    private var paywallView: some View {
+        VStack(spacing: 0) {
+            headerSection
+                .padding(.top, 24)
+
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 12) {
+                    ForEach(benefits, id: \.title) { b in
+                        BenefitRow(icon: b.icon, title: b.title, detail: b.detail)
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
+                .padding(.bottom, 16)
+            }
+
+            Divider()
+                .background(Color.white.opacity(0.08))
+
+            purchaseSection
+                .padding(.horizontal, 24)
+                .padding(.bottom, 40)
+                .padding(.top, 20)
         }
     }
 
