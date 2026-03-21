@@ -7,6 +7,11 @@ struct AnimalCollectorApp: App {
 
     init() {
         MobileAds.shared.start(completionHandler: nil)
+        #if DEBUG
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = [
+            "cab5d71812d48a303721fc50fc2c0f1d"
+        ]
+        #endif
     }
 
     var body: some Scene {
