@@ -44,7 +44,6 @@ struct PackOpeningView: View {
 
     // Carousel
     @State private var carouselIndex: Int = 0
-    @State private var dragOffset: CGFloat = 0
     @State private var flippedCards: Set<Int> = []
 
     enum Phase { case packIdle, opening, carousel, summary }
@@ -63,7 +62,7 @@ struct PackOpeningView: View {
         }
     }
 
-    private let cardSpacing: CGFloat = 230
+    private let stackOffset: CGFloat = 18
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -272,7 +271,7 @@ struct PackOpeningView: View {
         }
     }
 
-    // MARK: - Carousel
+    // MARK: - Carousel (deck style)
 
     private var carouselPhaseView: some View {
         VStack(spacing: 0) {
@@ -320,38 +319,33 @@ struct PackOpeningView: View {
 
             Spacer()
 
-            ZStack {
-                ForEach(Array(cards.enumerated()), id: \.offset) { idx, animal in
-                    carouselCardView(idx: idx, animal: animal)
+            // Deck: carta actual al frente, resto apiladas detrás a la derecha
+            ZStack(alignment: .leading) {
+                // Cartas restantes apiladas detrás (de atrás hacia adelante)
+                ForEach(Array(((carouselIndex + 1)..<min(cards.count, carouselIndex + 5)).reversed()), id: \.self) { idx in
+                    let depth = CGFloat(idx - carouselIndex)
+                    CardBackView(packType: packType)
+                        .offset(x: depth * stackOffset, y: depth * 7)
+                        .scaleEffect(1.0 - depth * 0.025, anchor: .leading)
+                        .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
+
+                // Carta actual (al frente)
+                deckFrontCard
+                    .zIndex(Double(cards.count) + 1)
+                    .id(carouselIndex)
+                    .transition(.scale(scale: 0.92).combined(with: .opacity))
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 340)
-            .contentShape(Rectangle())
+            .padding(.leading, 28)
+            .padding(.trailing, 80)
             .gesture(
-                DragGesture(minimumDistance: 10)
-                    .onChanged { val in dragOffset = val.translation.width }
+                DragGesture(minimumDistance: 30)
                     .onEnded { val in
-                        let velocity = val.predictedEndTranslation.width
-                        if velocity < -80, carouselIndex < cards.count - 1 {
-                            navigateTo(carouselIndex + 1)
-                        } else if velocity > 80, carouselIndex > 0 {
-                            navigateTo(carouselIndex - 1)
-                        } else {
-                            withAnimation(.spring(response: 0.3)) { dragOffset = 0 }
-                        }
+                        let v = val.predictedEndTranslation.width
+                        if v < -80, carouselIndex < cards.count - 1 { navigateTo(carouselIndex + 1) }
+                        else if v > 80, carouselIndex > 0 { navigateTo(carouselIndex - 1) }
                     }
             )
-
-            HStack(spacing: 6) {
-                ForEach(0..<cards.count, id: \.self) { idx in
-                    Circle()
-                        .fill(idx == carouselIndex ? Color.white : Color.white.opacity(0.25))
-                        .frame(width: idx == carouselIndex ? 8 : 5)
-                        .animation(.spring(response: 0.3), value: carouselIndex)
-                }
-            }
-            .padding(.top, 16)
 
             Spacer()
 
@@ -380,64 +374,46 @@ struct PackOpeningView: View {
     }
 
     @ViewBuilder
-    private func carouselCardView(idx: Int, animal: Animal) -> some View {
-        let relPos = CGFloat(idx - carouselIndex)
-        let rawOffset = relPos * cardSpacing + dragOffset
-        let normalizedDist = abs(rawOffset) / cardSpacing
-        let scale = max(0.68, 1.0 - normalizedDist * 0.2)
-        let yOffset: CGFloat = normalizedDist * 18
-        let rotDeg = Double(-rawOffset / 30)
-        let isCenter = idx == carouselIndex
-        let isBest = idx == bestCardIndex
-
-        Group {
-            if flippedCards.contains(idx) {
-                AnimalCardView(animal: animal, size: .large)
-                    .overlay {
-                        if isBest {
-                            RoundedRectangle(cornerRadius: 12)
-                                .strokeBorder(
-                                    LinearGradient(colors: [.yellow, .orange, .yellow], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                    lineWidth: 2.5
-                                )
-                        }
+    private var deckFrontCard: some View {
+        let isBest = carouselIndex == bestCardIndex
+        if flippedCards.contains(carouselIndex) {
+            AnimalCardView(animal: cards[carouselIndex], size: .large)
+                .overlay {
+                    if isBest {
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(
+                                LinearGradient(colors: [.yellow, .orange, .yellow],
+                                               startPoint: .topLeading, endPoint: .bottomTrailing),
+                                lineWidth: 2.5
+                            )
                     }
-                    .shadow(color: isBest ? .yellow.opacity(0.7) : .clear, radius: isBest ? 20 : 0)
-            } else {
-                CardBackView(packType: packType)
-                    .overlay(alignment: .center) {
-                        if isCenter {
-                            VStack(spacing: 6) {
-                                Image(systemName: "hand.tap.fill")
-                                    .font(.title3)
-                                    .foregroundStyle(.white.opacity(0.45))
-                                Text("Toca para revelar")
-                                    .font(.system(size: 10))
-                                    .foregroundStyle(.white.opacity(0.3))
-                            }
-                            .offset(y: 72)
-                        }
+                }
+                .shadow(color: isBest ? .yellow.opacity(0.7) : .clear, radius: isBest ? 20 : 0)
+        } else {
+            CardBackView(packType: packType)
+                .overlay(alignment: .center) {
+                    VStack(spacing: 6) {
+                        Image(systemName: "hand.tap.fill")
+                            .font(.title3)
+                            .foregroundStyle(.white.opacity(0.45))
+                        Text("Toca para revelar")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.white.opacity(0.3))
                     }
-            }
-        }
-        .scaleEffect(scale)
-        .rotation3DEffect(.degrees(rotDeg), axis: (x: 0, y: 1, z: 0))
-        .offset(x: rawOffset, y: yOffset)
-        .zIndex(isCenter ? 10 : max(0, 5.0 - normalizedDist))
-        .opacity(abs(rawOffset) > cardSpacing * 2.4 ? 0 : 1)
-        .onTapGesture {
-            guard isCenter, !flippedCards.contains(idx) else { return }
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                flippedCards.insert(idx)
-            }
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    .offset(y: 72)
+                }
+                .onTapGesture {
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                        flippedCards.insert(carouselIndex)
+                    }
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
         }
     }
 
     private func navigateTo(_ index: Int) {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.82)) {
             carouselIndex = index
-            dragOffset = 0
         }
         if !flippedCards.contains(index) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
