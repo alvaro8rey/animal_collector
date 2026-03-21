@@ -376,20 +376,6 @@ struct PackOpeningView: View {
                         }
                     }
                     .shadow(color: isBest ? .yellow.opacity(0.7) : .clear, radius: isBest ? 20 : 0)
-                    .overlay(alignment: .bottom) {
-                        if isBest {
-                            Text("⭐ MEJOR CARTA")
-                                .font(.caption2)
-                                .fontWeight(.black)
-                                .foregroundStyle(.black)
-                                .tracking(1.5)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 4)
-                                .background(Capsule().fill(LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing)))
-                                .padding(.bottom, 6)
-                                .transition(.scale.combined(with: .opacity))
-                        }
-                    }
             } else {
                 CardBackView(packType: packType)
                     .overlay(alignment: .center) {
@@ -519,21 +505,6 @@ struct PackOpeningView: View {
                                            startPoint: .topLeading, endPoint: .bottomTrailing),
                             lineWidth: 2
                         )
-                }
-            }
-            .overlay(alignment: .bottom) {
-                if isBest {
-                    Text("MEJOR CARTA")
-                        .font(.system(size: 7, weight: .black))
-                        .foregroundStyle(.black)
-                        .tracking(0.8)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2.5)
-                        .background(
-                            Capsule().fill(LinearGradient(colors: [.yellow, .orange],
-                                                          startPoint: .leading, endPoint: .trailing))
-                        )
-                        .padding(.bottom, 5)
                 }
             }
             .shadow(color: isBest ? .yellow.opacity(0.55) : .clear, radius: isBest ? 14 : 0)

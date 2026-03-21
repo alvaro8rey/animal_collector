@@ -47,18 +47,18 @@ enum PackType: String, CaseIterable, Identifiable {
     // Weights for the last card (guaranteed elevated rarity)
     var lastCardWeights: [Rarity: Int] {
         switch self {
-        case .basic: return [.rare: 55, .epic: 35, .legendary: 10]
-        case .daily: return [.uncommon: 40, .rare: 40, .epic: 15, .legendary: 5]
-        case .premium: return [.rare: 30, .epic: 45, .legendary: 25]
+        case .basic:   return [.rare: 72, .epic: 22, .legendary: 6]
+        case .daily:   return [.uncommon: 52, .rare: 38, .epic: 8, .legendary: 2]
+        case .premium: return [.rare: 50, .epic: 38, .legendary: 12]
         }
     }
 
     // Standard weights for non-last cards
     var standardWeights: [Rarity: Int] {
         switch self {
-        case .basic: return [.common: 40, .uncommon: 33, .rare: 20, .epic: 5, .legendary: 2]
-        case .daily: return [.common: 45, .uncommon: 35, .rare: 15, .epic: 4, .legendary: 1]
-        case .premium: return [.common: 25, .uncommon: 30, .rare: 30, .epic: 12, .legendary: 3]
+        case .basic:   return [.common: 55, .uncommon: 32, .rare: 10, .epic: 2, .legendary: 1]
+        case .daily:   return [.common: 60, .uncommon: 32, .rare: 7,  .epic: 1, .legendary: 0]
+        case .premium: return [.common: 35, .uncommon: 35, .rare: 22, .epic: 6, .legendary: 2]
         }
     }
 }
