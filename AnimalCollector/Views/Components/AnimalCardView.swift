@@ -10,7 +10,9 @@ struct AnimalCardView: View {
         var width: CGFloat {
             switch self { case .small: return 100; case .medium: return 150; case .large: return 220 }
         }
-        var height: CGFloat { width * 1.4 }
+        var height: CGFloat {
+            switch self { case .small: return 160; case .medium: return width * 1.4; case .large: return width * 1.4 }
+        }
         var emojiSize: CGFloat {
             switch self { case .small: return 32; case .medium: return 52; case .large: return 80 }
         }

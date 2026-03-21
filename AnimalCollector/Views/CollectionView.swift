@@ -254,7 +254,7 @@ private struct CollectionCardCell: View {
                         .foregroundStyle(.white.opacity(0.15))
                 }
             }
-            .frame(width: 100, height: 140)
+            .frame(width: 100, height: 160)
             .allowsHitTesting(false)
         }
     }
