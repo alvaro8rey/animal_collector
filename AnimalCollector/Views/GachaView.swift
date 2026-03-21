@@ -317,7 +317,14 @@ private struct PackSelectorCard: View {
     }
 
     private var borderGradient: LinearGradient {
-        isSelected ? pack.gradient : LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
+        if isSelected {
+            return pack.gradient
+        }
+        return LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
+    }
+
+    private var fillColor: Color {
+        isSelected ? Color.white.opacity(0.0) : Color.white.opacity(0.04)
     }
 
     var body: some View {
@@ -336,7 +343,11 @@ private struct PackSelectorCard: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected ? pack.gradient.opacity(0.2) : Color.white.opacity(0.04))
+                .fill(fillColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(isSelected ? AnyShapeStyle(pack.gradient.opacity(0.2)) : AnyShapeStyle(Color.clear))
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .strokeBorder(borderGradient, lineWidth: isSelected ? 1.5 : 1)
