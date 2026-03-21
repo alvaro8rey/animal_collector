@@ -17,6 +17,12 @@ struct AnimalCardView: View {
         var nameFont: Font {
             switch self { case .small: return .caption2; case .medium: return .caption; case .large: return .subheadline }
         }
+        var imageSize: CGFloat {
+            switch self { case .small: return 52; case .medium: return 80; case .large: return 120 }
+        }
+        var imageCornerRadius: CGFloat {
+            switch self { case .small: return 6; case .medium: return 8; case .large: return 12 }
+        }
     }
 
     var body: some View {
@@ -59,10 +65,19 @@ struct AnimalCardView: View {
 
                 Spacer()
 
-                // Emoji / illustration
-                Text(animal.emoji)
-                    .font(.system(size: size.emojiSize))
-                    .shadow(color: animal.rarity.glowColor.opacity(0.6), radius: animal.rarity.glowRadius / 2)
+                // Image (if available in Assets) or emoji fallback
+                if UIImage(named: animal.id) != nil {
+                    Image(animal.id)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: size.imageSize, height: size.imageSize)
+                        .clipShape(RoundedRectangle(cornerRadius: size.imageCornerRadius))
+                        .shadow(color: animal.rarity.glowColor.opacity(0.5), radius: animal.rarity.glowRadius / 2)
+                } else {
+                    Text(animal.emoji)
+                        .font(.system(size: size.emojiSize))
+                        .shadow(color: animal.rarity.glowColor.opacity(0.6), radius: animal.rarity.glowRadius / 2)
+                }
 
                 Spacer()
 

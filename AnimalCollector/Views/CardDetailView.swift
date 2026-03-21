@@ -106,10 +106,20 @@ struct CardDetailView: View {
                     )
 
                 VStack(spacing: 16) {
-                    Text(animal.emoji)
-                        .font(.system(size: 100))
-                        .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
-                                radius: glowPulse ? 24 : 14)
+                    if UIImage(named: animal.id) != nil {
+                        Image(animal.id)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 160, height: 160)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
+                                    radius: glowPulse ? 24 : 14)
+                    } else {
+                        Text(animal.emoji)
+                            .font(.system(size: 100))
+                            .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
+                                    radius: glowPulse ? 24 : 14)
+                    }
 
                     RarityBadgeView(rarity: animal.rarity)
 
