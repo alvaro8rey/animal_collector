@@ -8,6 +8,9 @@ struct GachaView: View {
     @State private var showPremiumView = false
     @State private var packPulse = false
     @State private var dailyBanner = false
+    @State private var shakeAngle: Double = 0
+    @State private var isShaking = false
+    @State private var pendingCards: [Animal] = []
 
     var body: some View {
         NavigationStack {
@@ -48,8 +51,15 @@ struct GachaView: View {
                 }
             }
             .fullScreenCover(isPresented: $isOpeningPack) {
-                PackOpeningView(packType: .basic, isPresented: $isOpeningPack, autoStart: true)
+                PackOpeningView(packType: .basic, isPresented: $isOpeningPack, preDrawnCards: pendingCards)
                     .environmentObject(vm)
+            }
+            .onChange(of: isOpeningPack) { newValue in
+                if !newValue {
+                    shakeAngle = 0
+                    isShaking = false
+                    pendingCards = []
+                }
             }
             .fullScreenCover(isPresented: $showAdSimulator) {
                 AdSimulatorView(isPresented: $showAdSimulator)
@@ -248,33 +258,33 @@ struct GachaView: View {
                 }
 
                 PackImageView()
-                    .scaleEffect(packPulse && canOpen ? 1.03 : 1.0)
+                    .rotationEffect(.degrees(shakeAngle))
+                    .scaleEffect(packPulse && canOpen && !isShaking ? 1.03 : 1.0)
                     .opacity(canOpen ? 1.0 : 0.4)
                     .shadow(
                         color: canOpen ? Color(red: 0.25, green: 0.5, blue: 1.0).opacity(0.5) : .clear,
                         radius: 24
                     )
             }
-            .frame(height: 420)
+            .frame(height: 500)
             .contentShape(Rectangle())
             .onTapGesture {
-                guard canOpen else { return }
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                isOpeningPack = true
+                guard canOpen, !isShaking else { return }
+                openPackWithShake()
             }
 
             // Tap label
-            if canOpen {
+            if canOpen && !isShaking {
                 Text("▲  TOCA PARA ABRIR  ▲")
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundStyle(.yellow)
                     .tracking(2)
                     .onTapGesture {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        isOpeningPack = true
+                        guard !isShaking else { return }
+                        openPackWithShake()
                     }
-            } else {
+            } else if !canOpen {
                 Text("Consigue más sobres viendo un anuncio")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.35))
@@ -312,6 +322,30 @@ struct GachaView: View {
                     showPremiumView = true
                 }
             }
+        }
+    }
+
+    // MARK: - Shake & Open
+
+    private func openPackWithShake() {
+        isShaking = true
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        pendingCards = vm.openPack(.basic).sorted { $0.rarity < $1.rarity }
+
+        let angles: [Double] = [
+            0, -11, 10, -10, 9, -9, 8, -8, 7, -7,
+            6, -6, 5, -5, 5, -5, 4, -4, 4, -4,
+            3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0
+        ]
+        for (i, angle) in angles.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
+                withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
+            }
+        }
+
+        // Al terminar el shake, abrir el carrusel
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.65) {
+            isOpeningPack = true
         }
     }
 

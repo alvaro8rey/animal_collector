@@ -9,7 +9,7 @@ struct PackImageView: View {
                 Image("pack_image")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 260, height: 360)
+                    .frame(width: 310, height: 430)
             } else {
                 PackSpriteView()
             }
@@ -23,12 +23,11 @@ struct PackOpeningView: View {
     @EnvironmentObject var vm: GameViewModel
     let packType: PackType
     @Binding var isPresented: Bool
-    var autoStart: Bool = false
 
     // MARK: State
 
-    @State private var phase: Phase = .packIdle
-    @State private var cards: [Animal] = []
+    @State private var phase: Phase
+    @State private var cards: [Animal]
 
     // Pack idle
     @State private var packIdleScale: CGFloat = 1.0
@@ -49,6 +48,20 @@ struct PackOpeningView: View {
     @State private var flippedCards: Set<Int> = []
 
     enum Phase { case packIdle, opening, carousel, summary }
+
+    // MARK: - Init
+
+    init(packType: PackType, isPresented: Binding<Bool>, preDrawnCards: [Animal]? = nil) {
+        self.packType = packType
+        self._isPresented = isPresented
+        if let preDrawn = preDrawnCards {
+            self._phase = State(initialValue: .carousel)
+            self._cards = State(initialValue: preDrawn)
+        } else {
+            self._phase = State(initialValue: .packIdle)
+            self._cards = State(initialValue: [])
+        }
+    }
 
     private let cardSpacing: CGFloat = 230
 
@@ -75,7 +88,15 @@ struct PackOpeningView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear { if autoStart { startOpening() } }
+        .onAppear {
+            if phase == .carousel {
+                // Empezamos directamente en el carrusel: auto-revelar primera carta
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { flippedCards.insert(0) }
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                }
+            }
+        }
     }
 
     // MARK: - Pack Idle (tap to open)
