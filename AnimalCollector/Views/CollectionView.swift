@@ -188,7 +188,10 @@ struct CollectionView: View {
             ], spacing: 12) {
                 ForEach(filteredAnimals) { animal in
                     CollectionCardCell(animal: animal)
-                        .onTapGesture { selectedAnimal = animal }
+                        .onTapGesture {
+                            guard animal.isObtained else { return }
+                            selectedAnimal = animal
+                        }
                 }
             }
             .padding(.horizontal, 16)
@@ -221,29 +224,38 @@ private struct CollectionCardCell: View {
     let animal: Animal
 
     var body: some View {
-        ZStack {
-            AnimalCardView(animal: animal, isRevealed: animal.isObtained, size: .small)
+        if animal.isObtained {
+            ZStack(alignment: .topTrailing) {
+                AnimalCardView(animal: animal, isRevealed: true, size: .small)
 
-            if !animal.isObtained {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.black.opacity(0.65))
-                Image(systemName: "lock.fill")
-                    .foregroundStyle(.white.opacity(0.25))
-                    .font(.title3)
-            }
-
-            if animal.isFavorite {
-                VStack {
-                    HStack {
-                        Spacer()
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 10))
-                            .foregroundStyle(.red)
-                            .padding(4)
-                    }
-                    Spacer()
+                if animal.isFavorite {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.red)
+                        .padding(5)
                 }
             }
+        } else {
+            // Completamente oculta — sin datos, sin interacción
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(white: 0.09))
+
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(Color.white.opacity(0.07), lineWidth: 1)
+
+                VStack(spacing: 6) {
+                    Image(systemName: "lock.fill")
+                        .font(.title2)
+                        .foregroundStyle(.white.opacity(0.18))
+                    Text("???")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white.opacity(0.15))
+                }
+            }
+            .frame(width: 100, height: 140)
+            .allowsHitTesting(false)
         }
     }
 }
