@@ -66,6 +66,7 @@ struct GachaView: View {
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
+                    .monospacedDigit()
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -81,12 +82,13 @@ struct GachaView: View {
         HStack(spacing: 4) {
             Text("🔥")
                 .font(.subheadline)
-                .scaleEffect(pulseStreak ? 1.15 : 1.0)
+                .shadow(color: .orange.opacity(pulseStreak ? 0.85 : 0.0), radius: pulseStreak ? 7 : 1)
                 .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: pulseStreak)
             Text("\(vm.streak)")
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .foregroundStyle(.orange)
+                .monospacedDigit()
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
