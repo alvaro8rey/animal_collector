@@ -9,7 +9,7 @@ struct PackImageView: View {
                 Image("pack_image")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 280)
+                    .frame(width: 260, height: 360)
             } else {
                 PackSpriteView()
             }
@@ -23,6 +23,7 @@ struct PackOpeningView: View {
     @EnvironmentObject var vm: GameViewModel
     let packType: PackType
     @Binding var isPresented: Bool
+    var autoStart: Bool = false
 
     // MARK: State
 
@@ -74,6 +75,7 @@ struct PackOpeningView: View {
             }
         }
         .navigationBarHidden(true)
+        .onAppear { if autoStart { startOpening() } }
     }
 
     // MARK: - Pack Idle (tap to open)
@@ -193,20 +195,27 @@ struct PackOpeningView: View {
         shakeAngle = 0; openingScale = 1.0; packOpacity = 1.0
         flashOpacity = 0; ringScale = 0.01; ringOpacity = 0; burstProgress = 0
 
-        let angles: [Double] = [0, -11, 10, -10, 9, -9, 8, -8, 6, -4, 0]
+        // Shake: 31 frames × 0.05s ≈ 1.55s (+1s respecto al anterior)
+        let angles: [Double] = [
+            0, -11, 10, -10, 9, -9, 8, -8, 7, -7,
+            6, -6, 5, -5, 5, -5, 4, -4, 4, -4,
+            3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0
+        ]
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.56) {
+        // Scale up (0.56 + 1.0 = 1.56s)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.56) {
             withAnimation(.spring(response: 0.14, dampingFraction: 0.38)) {
                 openingScale = 1.5
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.70) {
+        // Flash + burst + ring (0.70 + 1.0 = 1.70s)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.70) {
             withAnimation(.easeIn(duration: 0.07)) { flashOpacity = 1.0 }
             withAnimation(.easeOut(duration: 0.18)) {
                 packOpacity = 0
@@ -219,14 +228,17 @@ struct PackOpeningView: View {
             withAnimation(.easeIn(duration: 0.15)) { ringOpacity = 0.9 }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.78) {
+        // Flash fades (0.78 + 1.0 = 1.78s)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.78) {
             withAnimation(.easeOut(duration: 0.45)) { flashOpacity = 0 }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.05) {
+        // Ring fades (1.05 + 1.0 = 2.05s)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.05) {
             withAnimation(.easeOut(duration: 0.45)) { ringOpacity = 0 }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.35) {
+        // Carousel (1.35 + 1.0 = 2.35s)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.35) {
             carouselIndex = 0
             flippedCards = []
             withAnimation(.spring(response: 0.5)) { phase = .carousel }

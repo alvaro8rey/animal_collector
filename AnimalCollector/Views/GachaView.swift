@@ -48,7 +48,7 @@ struct GachaView: View {
                 }
             }
             .fullScreenCover(isPresented: $isOpeningPack) {
-                PackOpeningView(packType: .basic, isPresented: $isOpeningPack)
+                PackOpeningView(packType: .basic, isPresented: $isOpeningPack, autoStart: true)
                     .environmentObject(vm)
             }
             .fullScreenCover(isPresented: $showAdSimulator) {
@@ -255,7 +255,7 @@ struct GachaView: View {
                         radius: 24
                     )
             }
-            .frame(height: 340)
+            .frame(height: 420)
             .contentShape(Rectangle())
             .onTapGesture {
                 guard canOpen else { return }
