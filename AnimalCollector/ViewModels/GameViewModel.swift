@@ -40,10 +40,17 @@ final class GameViewModel: ObservableObject {
     }
 
     func canOpen(_ type: PackType) -> Bool {
-        switch type {
-        case .basic: return isPremium || availablePacks > 0
-        case .daily: return isDailyAvailable
-        }
+        return isPremium || availablePacks > 0
+    }
+
+    /// Checks if the daily reward is available and, if so, adds +1 pack to the pool.
+    func claimDailyIfAvailable() {
+        guard isDailyAvailable else { return }
+        isDailyAvailable = false
+        availablePacks += 1
+        persistence.claimDailyAndUpdateStreak()
+        streak = persistence.streak
+        save()
     }
 
     // MARK: - Pack opening
@@ -52,14 +59,7 @@ final class GameViewModel: ObservableObject {
     func openPack(_ type: PackType) -> [Animal] {
         guard canOpen(type) else { return [] }
 
-        switch type {
-        case .basic:
-            if !isPremium { availablePacks -= 1 }
-        case .daily:
-            isDailyAvailable = false
-            persistence.claimDailyAndUpdateStreak()
-            streak = persistence.streak
-        }
+        if !isPremium { availablePacks -= 1 }
 
         let drawn = GachaEngine.drawCards(
             count: type.cardsPerPack,

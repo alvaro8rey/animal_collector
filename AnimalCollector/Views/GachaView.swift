@@ -2,11 +2,12 @@ import SwiftUI
 
 struct GachaView: View {
     @EnvironmentObject var vm: GameViewModel
-    @State private var selectedPack: PackType = .basic
     @State private var isOpeningPack = false
     @State private var pulseStreak = false
     @State private var showAdSimulator = false
     @State private var showPremiumView = false
+    @State private var packPulse = false
+    @State private var dailyBanner = false
 
     var body: some View {
         NavigationStack {
@@ -21,8 +22,7 @@ struct GachaView: View {
                     VStack(spacing: 24) {
                         headerBar
                         progressSection
-                        packSelector
-                        openButton
+                        packSection
                         if !vm.isPremium {
                             refillSection
                         }
@@ -34,8 +34,21 @@ struct GachaView: View {
             }
             .navigationTitle("")
             .navigationBarHidden(true)
+            .onAppear {
+                let wasDailyAvailable = vm.isDailyAvailable
+                vm.claimDailyIfAvailable()
+                if wasDailyAvailable {
+                    withAnimation(.spring(response: 0.4)) { dailyBanner = true }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        withAnimation { dailyBanner = false }
+                    }
+                }
+                withAnimation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true)) {
+                    packPulse = true
+                }
+            }
             .fullScreenCover(isPresented: $isOpeningPack) {
-                PackOpeningView(packType: selectedPack, isPresented: $isOpeningPack)
+                PackOpeningView(packType: .basic, isPresented: $isOpeningPack)
                     .environmentObject(vm)
             }
             .fullScreenCover(isPresented: $showAdSimulator) {
@@ -65,10 +78,7 @@ struct GachaView: View {
 
             Spacer()
 
-            // Streak badge
             streakBadge
-
-            // Pack counter / Premium badge
             packCounterBadge
         }
         .padding(.top, 16)
@@ -99,7 +109,6 @@ struct GachaView: View {
     @ViewBuilder
     private var packCounterBadge: some View {
         if vm.isPremium {
-            // Premium badge
             Button(action: { showPremiumView = true }) {
                 HStack(spacing: 5) {
                     Image(systemName: "crown.fill")
@@ -120,7 +129,6 @@ struct GachaView: View {
                 )
             }
         } else {
-            // Pack counter
             HStack(spacing: 5) {
                 Text("📦")
                     .font(.subheadline)
@@ -186,88 +194,95 @@ struct GachaView: View {
         )
     }
 
-    // MARK: - Pack Selector
+    // MARK: - Pack Section (main interactive area)
 
-    private var packSelector: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Elige tu sobre")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white.opacity(0.5))
-                .textCase(.uppercase)
-                .tracking(1)
+    private var packSection: some View {
+        let canOpen = vm.isPremium || vm.availablePacks > 0
 
-            HStack(spacing: 10) {
-                ForEach(PackType.allCases) { pack in
-                    PackSelectorCard(
-                        pack: pack,
-                        isSelected: selectedPack == pack,
-                        countLabel: countLabel(for: pack),
-                        isAvailable: vm.canOpen(pack)
-                    )
-                    .onTapGesture { selectedPack = pack }
+        return VStack(spacing: 16) {
+
+            // Daily reward banner
+            if dailyBanner {
+                HStack(spacing: 8) {
+                    Text("🎁")
+                    Text("+1 sobre diario añadido")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(
+                    Capsule()
+                        .fill(Color.green.opacity(0.18))
+                        .overlay(Capsule().strokeBorder(Color.green.opacity(0.4), lineWidth: 1))
+                )
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
-        }
-    }
 
-    private func countLabel(for pack: PackType) -> String {
-        switch pack {
-        case .basic:
-            return vm.isPremium ? "∞" : "\(vm.availablePacks)"
-        case .daily:
-            return vm.isDailyAvailable ? "1" : "0"
-        }
-    }
-
-    // MARK: - Open Button
-
-    private var openButton: some View {
-        let canOpen = vm.canOpen(selectedPack)
-
-        return Button(action: {
-            guard canOpen else { return }
-            isOpeningPack = true
-        }) {
-            HStack(spacing: 12) {
-                Text(selectedPack.emoji)
-                    .font(.title3)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(canOpen ? "Abrir \(selectedPack.rawValue)" : "Sin sobres disponibles")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                    Text(selectedPack.description)
-                        .font(.caption)
-                        .opacity(0.8)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
+            // Pack count label
+            if vm.isPremium {
+                Text("Sobres ilimitados")
+                    .font(.subheadline)
                     .fontWeight(.semibold)
+                    .foregroundStyle(.yellow.opacity(0.85))
+            } else {
+                Text(vm.availablePacks == 0
+                     ? "Sin sobres disponibles"
+                     : "\(vm.availablePacks) sobre\(vm.availablePacks != 1 ? "s" : "") disponible\(vm.availablePacks != 1 ? "s" : "")")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(vm.availablePacks == 0 ? .red.opacity(0.8) : .white)
+                    .animation(.spring(response: 0.3), value: vm.availablePacks)
             }
-            .foregroundStyle(canOpen ? .black : .white.opacity(0.4))
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        canOpen
-                        ? LinearGradient(colors: selectedPack.gradientColors, startPoint: .leading, endPoint: .trailing)
-                        : LinearGradient(colors: [Color(white: 0.12)], startPoint: .leading, endPoint: .trailing)
+
+            // Pack image — tappable
+            ZStack {
+                ForEach(0..<3, id: \.self) { i in
+                    Circle()
+                        .stroke(
+                            Color(red: 0.25, green: 0.5, blue: 1.0).opacity(canOpen ? (0.18 - Double(i) * 0.05) : 0.05),
+                            lineWidth: 1
+                        )
+                        .frame(width: CGFloat(220 + i * 60))
+                }
+
+                PackImageView()
+                    .scaleEffect(packPulse && canOpen ? 1.03 : 1.0)
+                    .opacity(canOpen ? 1.0 : 0.4)
+                    .shadow(
+                        color: canOpen ? Color(red: 0.25, green: 0.5, blue: 1.0).opacity(0.5) : .clear,
+                        radius: 24
                     )
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(
-                        canOpen ? .clear : Color.white.opacity(0.08),
-                        lineWidth: 1
-                    )
-            )
+            }
+            .frame(height: 340)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                guard canOpen else { return }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                isOpeningPack = true
+            }
+
+            // Tap label
+            if canOpen {
+                Text("▲  TOCA PARA ABRIR  ▲")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.yellow)
+                    .tracking(2)
+                    .onTapGesture {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        isOpeningPack = true
+                    }
+            } else {
+                Text("Consigue más sobres viendo un anuncio")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.35))
+            }
         }
-        .disabled(!canOpen)
-        .animation(.spring(response: 0.3), value: canOpen)
     }
 
-    // MARK: - Refill Section (shown when not premium)
+    // MARK: - Refill Section
 
     private var refillSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -279,7 +294,6 @@ struct GachaView: View {
                 .tracking(1)
 
             HStack(spacing: 10) {
-                // Watch Ad
                 RefillButton(
                     icon: "play.rectangle.fill",
                     title: "Ver anuncio",
@@ -289,7 +303,6 @@ struct GachaView: View {
                     showAdSimulator = true
                 }
 
-                // Premium
                 RefillButton(
                     icon: "crown.fill",
                     title: "Premium",
@@ -316,7 +329,7 @@ struct GachaView: View {
             VStack(spacing: 8) {
                 MissionRowView(
                     icon: "gift.fill",
-                    title: "Abrir el sobre diario",
+                    title: "Reclamar recompensa diaria",
                     isDone: !vm.isDailyAvailable
                 )
                 MissionRowView(
@@ -337,54 +350,6 @@ struct GachaView: View {
                     .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             )
         }
-    }
-}
-
-// MARK: - Pack Selector Card
-
-private struct PackSelectorCard: View {
-    let pack: PackType
-    let isSelected: Bool
-    let countLabel: String
-    let isAvailable: Bool
-
-    private var countColor: Color {
-        isAvailable ? pack.gradientColors[0] : Color.white.opacity(0.3)
-    }
-
-    private var borderGradient: LinearGradient {
-        isSelected
-            ? pack.gradient
-            : LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
-    }
-
-    var body: some View {
-        VStack(spacing: 6) {
-            Text(pack.emoji)
-                .font(.title2)
-            Text(pack.rawValue)
-                .font(.caption2)
-                .fontWeight(.semibold)
-                .foregroundStyle(isSelected ? .white : .white.opacity(0.5))
-            Text(countLabel)
-                .font(.caption2)
-                .foregroundStyle(countColor)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected ? Color.white.opacity(0.0) : Color.white.opacity(0.04))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(isSelected ? AnyShapeStyle(pack.gradient.opacity(0.2)) : AnyShapeStyle(Color.clear))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(borderGradient, lineWidth: isSelected ? 1.5 : 1)
-                )
-        )
-        .animation(.spring(response: 0.25), value: isSelected)
     }
 }
 
