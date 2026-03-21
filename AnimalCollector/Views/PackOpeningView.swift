@@ -62,7 +62,9 @@ struct PackOpeningView: View {
         }
     }
 
-    private let stackOffset: CGFloat = 18
+    private let largeCardWidth: CGFloat = 220
+    private let largeCardHeight: CGFloat = 308
+    private let stackOffset: CGFloat = 28
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -320,13 +322,14 @@ struct PackOpeningView: View {
             Spacer()
 
             // Deck: carta actual al frente, resto apiladas detrás a la derecha
-            ZStack(alignment: .leading) {
+            ZStack(alignment: .topLeading) {
                 // Cartas restantes apiladas detrás (de atrás hacia adelante)
+                // Todas usan el mismo frame que la carta grande para que sobresalgan
                 ForEach(Array(((carouselIndex + 1)..<min(cards.count, carouselIndex + 5)).reversed()), id: \.self) { idx in
                     let depth = CGFloat(idx - carouselIndex)
                     CardBackView(packType: packType)
-                        .offset(x: depth * stackOffset, y: depth * 7)
-                        .scaleEffect(1.0 - depth * 0.025, anchor: .leading)
+                        .frame(width: largeCardWidth, height: largeCardHeight)
+                        .offset(x: depth * stackOffset, y: depth * 8)
                         .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
 
@@ -337,7 +340,6 @@ struct PackOpeningView: View {
                     .transition(.scale(scale: 0.92).combined(with: .opacity))
             }
             .padding(.leading, 28)
-            .padding(.trailing, 80)
             .gesture(
                 DragGesture(minimumDistance: 30)
                     .onEnded { val in
@@ -391,6 +393,7 @@ struct PackOpeningView: View {
                 .shadow(color: isBest ? .yellow.opacity(0.7) : .clear, radius: isBest ? 20 : 0)
         } else {
             CardBackView(packType: packType)
+                .frame(width: largeCardWidth, height: largeCardHeight)
                 .overlay(alignment: .center) {
                     VStack(spacing: 6) {
                         Image(systemName: "hand.tap.fill")
