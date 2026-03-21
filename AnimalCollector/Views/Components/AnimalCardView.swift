@@ -20,7 +20,7 @@ struct AnimalCardView: View {
             switch self { case .small: return .caption2; case .medium: return .caption; case .large: return .subheadline }
         }
         var imageSize: CGFloat {
-            switch self { case .small: return 52; case .medium: return 80; case .large: return 120 }
+            switch self { case .small: return 52; case .medium: return 80; case .large: return 160 }
         }
         var imageCornerRadius: CGFloat {
             switch self { case .small: return 6; case .medium: return 8; case .large: return 12 }
