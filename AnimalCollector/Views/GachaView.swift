@@ -304,6 +304,22 @@ private struct PackSelectorCard: View {
     let count: String
     let isAvailable: Bool
 
+    private var countLabel: String {
+        pack == .daily && count == "0" ? "✓" : "×\(count)"
+    }
+
+    private var countColor: Color {
+        isAvailable ? pack.gradientColors[0] : Color.white.opacity(0.3)
+    }
+
+    private var nameColor: Color {
+        isSelected ? Color.white : Color.white.opacity(0.5)
+    }
+
+    private var borderGradient: LinearGradient {
+        isSelected ? pack.gradient : LinearGradient(colors: [Color.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing)
+    }
+
     var body: some View {
         VStack(spacing: 6) {
             Text(pack.emoji)
@@ -311,10 +327,10 @@ private struct PackSelectorCard: View {
             Text(pack.rawValue)
                 .font(.caption2)
                 .fontWeight(.semibold)
-                .foregroundStyle(isSelected ? .white : .white.opacity(0.5))
-            Text(pack == .daily && count == "0" ? "✓" : "×\(count)")
+                .foregroundStyle(nameColor)
+            Text(countLabel)
                 .font(.caption2)
-                .foregroundStyle(isAvailable ? pack.gradientColors[0] : .white.opacity(0.3))
+                .foregroundStyle(countColor)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
@@ -323,10 +339,7 @@ private struct PackSelectorCard: View {
                 .fill(isSelected ? pack.gradient.opacity(0.2) : Color.white.opacity(0.04))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(
-                            isSelected ? pack.gradient : LinearGradient(colors: [.white.opacity(0.08)], startPoint: .leading, endPoint: .trailing),
-                            lineWidth: isSelected ? 1.5 : 1
-                        )
+                        .strokeBorder(borderGradient, lineWidth: isSelected ? 1.5 : 1)
                 )
         )
         .animation(.spring(response: 0.25), value: isSelected)
