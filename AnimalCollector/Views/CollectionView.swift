@@ -248,8 +248,8 @@ private struct CollectionCardCell: View {
 
                 Text(animal.emoji)
                     .font(.system(size: 68))
-                    .blur(radius: 9)
-                    .opacity(0.07)
+                    .blur(radius: 7)
+                    .opacity(0.18)
                     .saturation(0)
             }
             .frame(width: 100, height: 160)
