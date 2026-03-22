@@ -9,6 +9,7 @@ struct AdSimulatorView: View {
 
     @State private var coordinator: RewardedAdCoordinator?
     @State private var phase: Phase = .loading
+    @State private var hasStarted = false
 
     private enum Phase { case loading, failed, rewarded }
 
@@ -27,7 +28,11 @@ struct AdSimulatorView: View {
                 rewardedView
             }
         }
-        .onAppear { loadAndShow() }
+        .onAppear {
+            guard !hasStarted else { return }
+            hasStarted = true
+            loadAndShow()
+        }
     }
 
     // MARK: - Loading
