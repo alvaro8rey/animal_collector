@@ -559,7 +559,8 @@ struct PackOpeningView: View {
                     CHHapticParameterCurve.ControlPoint(relativeTime: 0.6,  value: 0.85),
                     CHHapticParameterCurve.ControlPoint(relativeTime: 1.1,  value: 0.35),
                     CHHapticParameterCurve.ControlPoint(relativeTime: 1.5,  value: 0.0)
-                ]
+                ],
+                relativeTime: 0.05
             )
             // Impacto fuerte al explotar el sobre
             let burstEvent = CHHapticEvent(
