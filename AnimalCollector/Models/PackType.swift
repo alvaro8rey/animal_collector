@@ -35,7 +35,7 @@ enum PackType: String, CaseIterable, Identifiable {
     // Weights for the last card (guaranteed elevated rarity)
     var lastCardWeights: [Rarity: Int] {
         switch self {
-        case .basic: return [.rare: 78, .epic: 17, .legendary: 5]
+        case .basic: return [.rare: 90, .epic: 8, .legendary: 2]
         case .daily: return [.uncommon: 62, .rare: 35, .epic: 3, .legendary: 0]
         }
     }
@@ -43,7 +43,7 @@ enum PackType: String, CaseIterable, Identifiable {
     // Standard weights for non-last cards (out of 1000 for finer control)
     var standardWeights: [Rarity: Int] {
         switch self {
-        case .basic: return [.common: 630, .uncommon: 270, .rare: 80, .epic: 15, .legendary: 5]
+        case .basic: return [.common: 639, .uncommon: 274, .rare: 81, .epic: 5, .legendary: 1]
         case .daily: return [.common: 650, .uncommon: 280, .rare: 70, .epic: 0,  .legendary: 0]
         }
     }

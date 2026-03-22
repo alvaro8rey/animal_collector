@@ -51,7 +51,7 @@ enum GachaEngine {
     // MARK: - Private helpers
 
     /// Pick a rarity then a candidate, biased toward already-obtained animals.
-    /// 70 % chance of duplicate when the player owns at least one animal of that rarity.
+    /// 80 % chance of duplicate when the player owns at least one animal of that rarity.
     private static func draw(
         from animals: [Animal],
         weights: [Rarity: Int],
@@ -71,9 +71,9 @@ enum GachaEngine {
         let obtained = candidates.filter {  obtainedIds.contains($0.id) }
         let newOnes  = candidates.filter { !obtainedIds.contains($0.id) }
 
-        // Both pools non-empty → apply bias (70 % duplicate, 30 % new)
+        // Both pools non-empty → apply bias (80 % duplicate, 20 % new)
         if !obtained.isEmpty && !newOnes.isEmpty {
-            return Double.random(in: 0..<1) < 0.70
+            return Double.random(in: 0..<1) < 0.80
                 ? obtained.randomElement()!
                 : newOnes.randomElement()!
         }
