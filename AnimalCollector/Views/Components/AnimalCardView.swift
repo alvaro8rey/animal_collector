@@ -135,22 +135,8 @@ struct AnimalCardView: View {
 
         cardContent
 
-        // Diagonal shimmer sweep
-        TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            let x = (t * 0.3).truncatingRemainder(dividingBy: 2.0) - 0.5
-            RoundedRectangle(cornerRadius: 12)
-                .fill(LinearGradient(
-                    colors: [.clear, .white.opacity(0.18), .white.opacity(0.06), .clear],
-                    startPoint: UnitPoint(x: x, y: 0),
-                    endPoint: UnitPoint(x: x + 0.7, y: 1)
-                ))
-        }
-
-        // Orbiting sparkles (medium and large only)
-        if size != .small {
-            SecretSparklesView(radius: size == .large ? 62 : 44)
-        }
+        // Crystal shimmer: multiple light bands crossing the card
+        CrystalShimmerView()
 
         // Animated rainbow border
         TimelineView(.animation) { ctx in
@@ -221,37 +207,100 @@ struct AnimalCardView: View {
     }
 }
 
-// MARK: - Secret Sparkles
+// MARK: - Crystal Shimmer
 
-/// Fixed-radius orbiting particles for the secret card.
-/// Each particle orbits at a constant radius and only varies in opacity,
-/// so the motion stays perfectly circular.
-private struct SecretSparklesView: View {
-    let radius: CGFloat
-    private let symbols = ["✦", "★", "✧", "✦", "★", "✧"]
-    private let count = 6
+/// Simulates light catching a holographic/crystal surface:
+/// several thin diagonal highlight bands sweep across at different speeds and angles,
+/// plus small fixed-position glint flashes.
+private struct CrystalShimmerView: View {
+
+    // Each band: (speed, xOffset, angle, opacity, width)
+    private let bands: [(speed: Double, phase: Double, angle: Double, opacity: Double, width: Double)] = [
+        (speed: 0.28, phase: 0.0,  angle: 28,  opacity: 0.22, width: 0.18),
+        (speed: 0.18, phase: 0.6,  angle: -20, opacity: 0.14, width: 0.10),
+        (speed: 0.38, phase: 1.1,  angle: 15,  opacity: 0.18, width: 0.08),
+        (speed: 0.12, phase: 0.3,  angle: -35, opacity: 0.10, width: 0.14),
+    ]
+
+    // Fixed glint positions (unit coords) and phase offsets
+    private let glints: [(x: Double, y: Double, phase: Double)] = [
+        (0.18, 0.15, 0.0),
+        (0.82, 0.28, 1.3),
+        (0.35, 0.75, 0.7),
+        (0.72, 0.68, 2.1),
+        (0.55, 0.42, 0.4),
+    ]
 
     var body: some View {
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            ZStack {
-                ForEach(0..<count, id: \.self) { i in
-                    let fi = Double(i)
-                    let phaseOffset = fi / Double(count)               // evenly spaced
-                    let angle = (t * 0.4 + phaseOffset) * .pi * 2     // constant speed
-                    let hue = (t * 0.06 + fi * (1.0 / Double(count))).truncatingRemainder(dividingBy: 1)
-                    let opacity = 0.4 + 0.6 * (0.5 + 0.5 * sin(t * 1.2 + fi * 1.1))
+            Canvas { context, size in
+                // --- Sweep bands ---
+                for band in bands {
+                    let cycle = (t * band.speed + band.phase).truncatingRemainder(dividingBy: 2.4) - 0.7
+                    let rad = band.angle * Double.pi / 180
+                    let w = band.width * Double(size.width)
 
-                    Text(symbols[i])
-                        .font(.system(size: 8, weight: .medium))
-                        .foregroundStyle(
-                            Color(hue: hue, saturation: 0.85, brightness: 1.0)
-                                .opacity(opacity)
-                        )
-                        .offset(
-                            x: radius * CGFloat(cos(angle)),
-                            y: radius * CGFloat(sin(angle))
-                        )
+                    // band centre in x
+                    let cx = cycle * Double(size.width) * 1.3
+
+                    // build a thin diagonal gradient strip
+                    var path = Path(CGRect(x: 0, y: 0, width: size.width, height: size.height))
+
+                    // perpendicular to the angle: start/end points of the gradient
+                    let dx = cos(rad) * w
+                    let dy = sin(rad) * w
+                    let mid = CGPoint(x: cx, y: Double(size.height) * 0.5)
+                    let start = CGPoint(x: mid.x - dx, y: mid.y - dy)
+                    let end   = CGPoint(x: mid.x + dx, y: mid.y + dy)
+
+                    context.fill(path, with: .linearGradient(
+                        Gradient(stops: [
+                            .init(color: .clear,                               location: 0),
+                            .init(color: .white.opacity(band.opacity * 0.3),   location: 0.35),
+                            .init(color: .white.opacity(band.opacity),          location: 0.5),
+                            .init(color: .white.opacity(band.opacity * 0.3),   location: 0.65),
+                            .init(color: .clear,                               location: 1),
+                        ]),
+                        startPoint: start,
+                        endPoint: end
+                    ))
+                }
+
+                // --- Point glints ---
+                for glint in glints {
+                    let pulse = 0.5 + 0.5 * sin(t * 1.8 + glint.phase)
+                    let alpha = pulse * pulse  // sharper flicker
+                    let gx = glint.x * Double(size.width)
+                    let gy = glint.y * Double(size.height)
+                    let r = 3.0 + 4.0 * pulse
+
+                    // Outer soft halo
+                    let halo = Path(ellipseIn: CGRect(x: gx - r * 2, y: gy - r * 2, width: r * 4, height: r * 4))
+                    context.fill(halo, with: .radialGradient(
+                        Gradient(colors: [.white.opacity(alpha * 0.35), .clear]),
+                        center: CGPoint(x: gx, y: gy),
+                        startRadius: 0, endRadius: r * 2
+                    ))
+
+                    // Bright core
+                    let core = Path(ellipseIn: CGRect(x: gx - r * 0.4, y: gy - r * 0.4, width: r * 0.8, height: r * 0.8))
+                    context.fill(core, with: .color(.white.opacity(alpha * 0.9)))
+
+                    // Cross flare — horizontal
+                    let hFlare = Path(CGRect(x: gx - r * 1.8, y: gy - 0.6, width: r * 3.6, height: 1.2))
+                    context.fill(hFlare, with: .linearGradient(
+                        Gradient(colors: [.clear, .white.opacity(alpha * 0.6), .clear]),
+                        startPoint: CGPoint(x: gx - r * 1.8, y: gy),
+                        endPoint:   CGPoint(x: gx + r * 1.8, y: gy)
+                    ))
+                    // Cross flare — vertical
+                    let vFlare = Path(CGRect(x: gx - 0.6, y: gy - r * 1.8, width: 1.2, height: r * 3.6))
+                    context.fill(vFlare, with: .linearGradient(
+                        Gradient(colors: [.clear, .white.opacity(alpha * 0.6), .clear]),
+                        startPoint: CGPoint(x: gx, y: gy - r * 1.8),
+                        endPoint:   CGPoint(x: gx, y: gy + r * 1.8)
+                    ))
                 }
             }
         }
