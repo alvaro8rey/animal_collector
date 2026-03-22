@@ -47,7 +47,7 @@ enum GachaEngine {
         }
         // Secret injection: 0.3 % chance per pack to replace one card
         let secretPool = allAnimals.filter { $0.rarity == .secret }
-        if !secretPool.isEmpty, Double.random(in: 0..<1) < 1.0 {
+        if !secretPool.isEmpty, Double.random(in: 0..<1) < 0.003 {
             let replaceIdx = Int.random(in: 0..<result.count)
             result[replaceIdx] = secretPool.randomElement()!
         }

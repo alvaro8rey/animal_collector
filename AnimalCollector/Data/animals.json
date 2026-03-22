@@ -4018,5 +4018,29 @@
     "emoji": "🐟",
     "collectionNumber": 335,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Latimeria_chalumnae"
+  },
+  {
+    "id": "hydra_dulce",
+    "name": "Hydra de Agua Dulce",
+    "scientificName": "Hydra vulgaris",
+    "category": "???",
+    "rarity": "Secret",
+    "description": "Un animal casi inmortal. La hydra no envejece: sus celulas madre se renuevan sin cesar, haciendo que la muerte por vejez sea practicamente imposible en condiciones ideales.",
+    "funFact": "Si cortas una hydra en varios trozos, cada fragmento regenera un animal completo. Su nombre proviene del monstruo de la mitologia griega al que le crecian cabezas al cortarlas.",
+    "emoji": "🪸",
+    "collectionNumber": 336,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hydra_(animal)"
+  },
+  {
+    "id": "tardigrado",
+    "name": "Tardigrado",
+    "scientificName": "Ramazzottius varieornatus",
+    "category": "???",
+    "rarity": "Secret",
+    "description": "El animal mas resistente del universo conocido. Sobrevive al vacio del espacio, radiacion letal, presiones abisales y temperaturas de -272 C a +150 C entrando en criptobiosis.",
+    "funFact": "En criptobiosis su metabolismo cae al 0,01% y puede permanecer asi decadas. La NASA los expuso directamente al vacio solar y sobrevivieron.",
+    "emoji": "🐾",
+    "collectionNumber": 337,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tardigrada"
   }
 ]
