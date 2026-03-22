@@ -61,7 +61,7 @@ struct AdCardView: View {
         #if DEBUG
         return "ca-app-pub-3940256099942544/6300978111" // Google test banner
         #else
-        return "ca-app-pub-9606090335798660/YOUR_BANNER_ID" // TODO: replace with real ID
+        return "ca-app-pub-9606090335798660/1746255808"
         #endif
     }
 }
