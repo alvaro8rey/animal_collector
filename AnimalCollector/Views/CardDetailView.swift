@@ -24,7 +24,7 @@ struct CardDetailView: View {
             )
             .ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 24) {
 
                     // Card art
