@@ -124,11 +124,16 @@ final class GameViewModel: ObservableObject {
 
     private func load() {
         if let saved = persistence.loadCollection() {
-            var merged: [Animal] = saved
-            for animal in allAnimals where !merged.contains(where: { $0.id == animal.id }) {
-                merged.append(animal)
+            // Start from fresh JSON data so static fields (e.g. wikipediaURL) are always current,
+            // then overlay mutable state (obtainedDate, duplicateCount, isFavorite) from saved data.
+            collection = allAnimals.map { base in
+                guard let saved = saved.first(where: { $0.id == base.id }) else { return base }
+                var updated = base
+                updated.obtainedDate   = saved.obtainedDate
+                updated.duplicateCount = saved.duplicateCount
+                updated.isFavorite     = saved.isFavorite
+                return updated
             }
-            collection = merged
         } else {
             collection = allAnimals
         }
