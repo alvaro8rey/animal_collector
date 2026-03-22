@@ -15,6 +15,9 @@ packages:
   Kingfisher:
     url: https://github.com/onevcat/Kingfisher
     from: "7.0.0"
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads
+    from: "11.0.0"
 
 targets:
   AnimalCollector:
@@ -22,6 +25,7 @@ targets:
     platform: iOS
     dependencies:
       - package: Kingfisher
+      - package: GoogleMobileAds
     sources:
       - path: AnimalCollector
         excludes:
