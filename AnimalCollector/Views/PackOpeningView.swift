@@ -896,152 +896,31 @@ struct RevealCardView: View {
     var isNew: Bool = false
     @State private var glowPulse = false
 
-    private let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
+    private let rainbow: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
 
     var body: some View {
         ZStack {
-            // Background
             if animal.rarity == .secret {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(LinearGradient(
-                        colors: [Color(red: 0.05, green: 0.02, blue: 0.14), Color(red: 0.02, green: 0.01, blue: 0.10)],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
-                    ))
+                secretRevealBackground
             } else {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(LinearGradient(
-                        colors: [Color(white: 0.13), Color(white: 0.07)],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
-                    ))
+                normalRevealBackground
             }
 
-            // Rarity shimmer
+            revealContent
+
             if animal.rarity == .secret {
-                TimelineView(.animation) { ctx in
-                    let t = ctx.date.timeIntervalSinceReferenceDate
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(AngularGradient(
-                            colors: rainbowColors.map { $0.opacity(0.09) },
-                            center: .center,
-                            startAngle: .degrees(t * 28),
-                            endAngle: .degrees(t * 28 + 360)
-                        ))
-                }
-                // Shimmer sweep
-                TimelineView(.animation) { ctx in
-                    let t = ctx.date.timeIntervalSinceReferenceDate
-                    let x = (t * 0.35).truncatingRemainder(dividingBy: 1.8) - 0.4
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(LinearGradient(
-                            colors: [.clear, .white.opacity(0.16), .clear],
-                            startPoint: UnitPoint(x: x, y: 0),
-                            endPoint: UnitPoint(x: x + 0.6, y: 1)
-                        ))
-                }
-            } else {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(LinearGradient(
-                        colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
-                    ))
-            }
-
-            VStack(spacing: 0) {
-                // Top row: number + NEW badge + rarity badge
-                HStack {
-                    Text(animal.rarity == .secret ? "✦ ✦ ✦" : "#\(String(format: "%03d", animal.collectionNumber))")
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundStyle(.white.opacity(0.35))
-                    if isNew {
-                        Text("NUEVO")
-                            .font(.system(size: 9, weight: .black))
-                            .foregroundStyle(.black)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Capsule().fill(Color.yellow))
-                    }
-                    Spacer()
-                    RarityBadgeView(rarity: animal.rarity, compact: true)
-                }
-                .padding(.horizontal, 14)
-                .padding(.top, 12)
-
-                Spacer()
-
-                // Image
-                AnimalRemoteImage(
-                    animalId: animal.id,
-                    emoji: animal.emoji,
-                    glowColor: animal.rarity.glowColor,
-                    glowRadius: glowPulse ? 20 : 10
-                )
-                .frame(width: 215, height: 215)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
-                        radius: glowPulse ? 26 : 14)
-
-                Spacer()
-
-                // Name + scientific name
-                VStack(spacing: 3) {
-                    Text(animal.name)
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-
-                    Text(animal.scientificName)
-                        .font(.system(size: 10))
-                        .italic()
-                        .foregroundStyle(.white.opacity(0.40))
-                }
-                .padding(.horizontal, 14)
-
-                // Category pill
-                Text("\(animal.category.icon) \(animal.category.rawValue)")
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundStyle(animal.category.color.opacity(0.9))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Capsule().fill(animal.category.color.opacity(0.15)))
-                    .padding(.top, 6)
-                    .padding(.bottom, 14)
-            }
-
-            // Orbiting sparkles for secret (large reveal card)
-            if animal.rarity == .secret {
-                TimelineView(.animation) { ctx in
-                    let t = ctx.date.timeIntervalSinceReferenceDate
-                    ZStack {
-                        ForEach(0..<8, id: \.self) { i in
-                            let fi = Double(i)
-                            let angle = (t * 0.45 + fi / 8.0) * .pi * 2
-                            let r: CGFloat = 72 + 18 * CGFloat(sin(t * 0.9 + fi))
-                            Text(["✦", "★", "✧", "·", "✦", "★", "✧", "·"][i])
-                                .font(.system(size: CGFloat(7 + 5 * abs(sin(t * 0.6 + fi)))))
-                                .foregroundStyle(
-                                    Color(hue: (t * 0.06 + fi * 0.13).truncatingRemainder(dividingBy: 1),
-                                          saturation: 0.9, brightness: 1.0).opacity(0.85)
-                                )
-                                .offset(x: r * CGFloat(cos(angle)), y: r * CGFloat(sin(angle)))
-                        }
-                    }
-                }
-            }
-
-            // Border
-            if animal.rarity == .secret {
+                // Holographic sweeps
+                secretRevealSweeps
+                // Glint flashes (reusing shared GlintView)
+                GlintView()
+                // Rainbow border
                 TimelineView(.animation) { ctx in
                     let t = ctx.date.timeIntervalSinceReferenceDate
                     RoundedRectangle(cornerRadius: 16)
                         .strokeBorder(
-                            AngularGradient(
-                                colors: rainbowColors,
-                                center: .center,
-                                startAngle: .degrees(t * 45),
-                                endAngle: .degrees(t * 45 + 360)
-                            ),
+                            AngularGradient(colors: rainbow, center: .center,
+                                            startAngle: .degrees(t * 45),
+                                            endAngle: .degrees(t * 45 + 360)),
                             lineWidth: 3
                         )
                 }
@@ -1053,7 +932,7 @@ struct RevealCardView: View {
         .frame(width: 270, height: 378)
         .shadow(
             color: animal.rarity == .secret
-                ? Color(red: 0.8, green: 0.2, blue: 1.0).opacity(glowPulse ? 0.8 : 0.5)
+                ? Color(red: 0.7, green: 0.1, blue: 1.0).opacity(glowPulse ? 0.85 : 0.55)
                 : animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
             radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6
         )
@@ -1063,6 +942,118 @@ struct RevealCardView: View {
                     glowPulse = true
                 }
             }
+        }
+    }
+
+    // Normal background + shimmer
+    @ViewBuilder private var normalRevealBackground: some View {
+        RoundedRectangle(cornerRadius: 16)
+            .fill(LinearGradient(
+                colors: [Color(white: 0.13), Color(white: 0.07)],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            ))
+        RoundedRectangle(cornerRadius: 16)
+            .fill(LinearGradient(
+                colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
+                startPoint: .topLeading, endPoint: .bottomTrailing
+            ))
+    }
+
+    // Secret: dark base + iridescent color wash
+    @ViewBuilder private var secretRevealBackground: some View {
+        RoundedRectangle(cornerRadius: 16)
+            .fill(Color(red: 0.04, green: 0.01, blue: 0.12))
+
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: [
+                        Color(hue: (t * 0.04).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.6).opacity(0.55),
+                        Color(hue: ((t * 0.04) + 0.33).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.5).opacity(0.45),
+                        Color(hue: ((t * 0.04) + 0.66).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.4).opacity(0.50),
+                    ],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+        }
+    }
+
+    // Two diagonal bright sweeps
+    @ViewBuilder private var secretRevealSweeps: some View {
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            let pos = CGFloat((t * 0.4).truncatingRemainder(dividingBy: 2.5)) - 0.5
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: [.clear, .white.opacity(0.08), .white.opacity(0.40), .white.opacity(0.08), .clear],
+                    startPoint: UnitPoint(x: pos, y: 0),
+                    endPoint: UnitPoint(x: pos + 0.55, y: 1)
+                ))
+        }
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            let pos = CGFloat((t * 0.25 + 1.2).truncatingRemainder(dividingBy: 2.5)) - 0.5
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: [.clear, .white.opacity(0.18), .clear],
+                    startPoint: UnitPoint(x: pos + 0.4, y: 0),
+                    endPoint: UnitPoint(x: pos, y: 1)
+                ))
+        }
+    }
+
+    private var revealContent: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text(animal.rarity == .secret ? "✦ ✦ ✦" : "#\(String(format: "%03d", animal.collectionNumber))")
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .foregroundStyle(.white.opacity(0.5))
+                if isNew {
+                    Text("NUEVO")
+                        .font(.system(size: 9, weight: .black))
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 6).padding(.vertical, 2)
+                        .background(Capsule().fill(Color.yellow))
+                }
+                Spacer()
+                RarityBadgeView(rarity: animal.rarity, compact: true)
+            }
+            .padding(.horizontal, 14).padding(.top, 12)
+
+            Spacer()
+
+            AnimalRemoteImage(
+                animalId: animal.id, emoji: animal.emoji,
+                glowColor: animal.rarity.glowColor,
+                glowRadius: glowPulse ? 20 : 10
+            )
+            .frame(width: 215, height: 215)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
+                    radius: glowPulse ? 26 : 14)
+
+            Spacer()
+
+            VStack(spacing: 3) {
+                Text(animal.name)
+                    .font(.headline).fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center).lineLimit(2)
+                Text(animal.scientificName)
+                    .font(.system(size: 10)).italic()
+                    .foregroundStyle(.white.opacity(0.40))
+            }
+            .padding(.horizontal, 14)
+
+            Text("\(animal.category.icon) \(animal.category.rawValue)")
+                .font(.system(size: 9, weight: .medium))
+                .foregroundStyle(animal.category.color.opacity(0.9))
+                .padding(.horizontal, 8).padding(.vertical, 3)
+                .background(Capsule().fill(animal.category.color.opacity(0.15)))
+                .padding(.top, 6).padding(.bottom, 14)
         }
     }
 }

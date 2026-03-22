@@ -35,9 +35,6 @@ struct AnimalCardView: View {
         var height: CGFloat {
             switch self { case .small: return 160; case .medium: return width * 1.4; case .large: return width * 1.4 }
         }
-        var emojiSize: CGFloat {
-            switch self { case .small: return 32; case .medium: return 52; case .large: return 80 }
-        }
         var nameFont: Font {
             switch self { case .small: return .caption2; case .medium: return .caption; case .large: return .subheadline }
         }
@@ -49,20 +46,18 @@ struct AnimalCardView: View {
         }
     }
 
-    private let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
+    private let rainbow: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
 
     var body: some View {
         ZStack {
             if animal.rarity == .secret {
-                secretCardLayers
+                secretCard
             } else {
-                normalCardLayers
+                normalCard
             }
 
-            // Not obtained overlay
             if !animal.isObtained && !isRevealed {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.black.opacity(0.7))
+                RoundedRectangle(cornerRadius: 12).fill(Color.black.opacity(0.7))
                 Image(systemName: "lock.fill")
                     .foregroundStyle(.white.opacity(0.4))
                     .font(.title2)
@@ -71,7 +66,7 @@ struct AnimalCardView: View {
         .frame(width: size.width, height: size.height)
         .shadow(
             color: animal.rarity == .secret
-                ? Color(red: 0.75, green: 0.15, blue: 1.0).opacity(0.75)
+                ? Color(red: 0.7, green: 0.1, blue: 1.0).opacity(0.8)
                 : animal.rarity.glowColor.opacity(0.4),
             radius: animal.rarity.glowRadius
         )
@@ -80,13 +75,12 @@ struct AnimalCardView: View {
     // MARK: - Normal card
 
     @ViewBuilder
-    private var normalCardLayers: some View {
+    private var normalCard: some View {
         RoundedRectangle(cornerRadius: 12)
             .fill(LinearGradient(
                 colors: [Color(white: 0.12), Color(white: 0.08)],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             ))
-
         if animal.rarity >= .rare {
             RoundedRectangle(cornerRadius: 12)
                 .fill(LinearGradient(
@@ -94,7 +88,6 @@ struct AnimalCardView: View {
                     startPoint: .topLeading, endPoint: .bottomTrailing
                 ))
         }
-
         cardContent
         RoundedRectangle(cornerRadius: 12)
             .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth)
@@ -103,48 +96,66 @@ struct AnimalCardView: View {
     // MARK: - Secret card
 
     @ViewBuilder
-    private var secretCardLayers: some View {
-        // Deep nebula background
+    private var secretCard: some View {
+        // 1. Dark base
         RoundedRectangle(cornerRadius: 12)
-            .fill(LinearGradient(
-                colors: [
-                    Color(red: 0.08, green: 0.02, blue: 0.18),
-                    Color(red: 0.03, green: 0.01, blue: 0.10)
-                ],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            ))
+            .fill(Color(red: 0.04, green: 0.01, blue: 0.12))
 
-        // Radial inner glow — brighter center
-        RoundedRectangle(cornerRadius: 12)
-            .fill(RadialGradient(
-                colors: [Color(red: 0.5, green: 0.1, blue: 0.8).opacity(0.18), .clear],
-                center: .center, startRadius: 0, endRadius: 80
-            ))
-
-        // Rotating prismatic overlay
+        // 2. Iridescent color wash — slow hue rotation, very visible
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             RoundedRectangle(cornerRadius: 12)
-                .fill(AngularGradient(
-                    colors: rainbowColors.map { $0.opacity(0.09) },
-                    center: .center,
-                    startAngle: .degrees(t * 22),
-                    endAngle: .degrees(t * 22 + 360)
+                .fill(LinearGradient(
+                    colors: [
+                        Color(hue: (t * 0.04).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.6).opacity(0.55),
+                        Color(hue: ((t * 0.04) + 0.33).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.5).opacity(0.45),
+                        Color(hue: ((t * 0.04) + 0.66).truncatingRemainder(dividingBy: 1),
+                              saturation: 0.9, brightness: 0.4).opacity(0.50),
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
                 ))
         }
 
+        // 3. Content on top of color wash
         cardContent
 
-        // Crystal shimmer: multiple light bands crossing the card
-        CrystalShimmerView()
+        // 4. Holographic sweep — a wide bright band crossing the card
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            let pos = CGFloat((t * 0.4).truncatingRemainder(dividingBy: 2.5)) - 0.5
+            RoundedRectangle(cornerRadius: 12)
+                .fill(LinearGradient(
+                    colors: [.clear, .white.opacity(0.08), .white.opacity(0.38), .white.opacity(0.08), .clear],
+                    startPoint: UnitPoint(x: pos, y: 0),
+                    endPoint: UnitPoint(x: pos + 0.55, y: 1)
+                ))
+        }
 
-        // Animated rainbow border
+        // 5. Second sweep at different angle and speed
+        TimelineView(.animation) { ctx in
+            let t = ctx.date.timeIntervalSinceReferenceDate
+            let pos = CGFloat((t * 0.25 + 1.2).truncatingRemainder(dividingBy: 2.5)) - 0.5
+            RoundedRectangle(cornerRadius: 12)
+                .fill(LinearGradient(
+                    colors: [.clear, .white.opacity(0.0), .white.opacity(0.18), .clear],
+                    startPoint: UnitPoint(x: pos + 0.4, y: 0),
+                    endPoint: UnitPoint(x: pos, y: 1)
+                ))
+        }
+
+        // 6. Glint flashes — bright dots that flicker at fixed positions
+        GlintView()
+
+        // 7. Animated rainbow border
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(
                     AngularGradient(
-                        colors: rainbowColors,
+                        colors: rainbow,
                         center: .center,
                         startAngle: .degrees(t * 40),
                         endAngle: .degrees(t * 40 + 360)
@@ -154,14 +165,14 @@ struct AnimalCardView: View {
         }
     }
 
-    // MARK: - Shared content
+    // MARK: - Card content
 
     private var cardContent: some View {
         VStack(spacing: 6) {
             HStack {
                 Text(animal.rarity == .secret ? "✦ ✦ ✦" : "#\(String(format: "%03d", animal.collectionNumber))")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
-                    .foregroundStyle(.white.opacity(0.35))
+                    .foregroundStyle(.white.opacity(0.5))
                 Spacer()
                 RarityBadgeView(rarity: animal.rarity, compact: true)
             }
@@ -176,16 +187,6 @@ struct AnimalCardView: View {
             )
             .frame(width: size.imageSize, height: size.imageSize)
             .clipShape(RoundedRectangle(cornerRadius: size.imageCornerRadius))
-            .overlay {
-                if animal.rarity == .secret {
-                    RoundedRectangle(cornerRadius: size.imageCornerRadius)
-                        .strokeBorder(
-                            LinearGradient(colors: [.purple.opacity(0.6), .cyan.opacity(0.4)],
-                                           startPoint: .topLeading, endPoint: .bottomTrailing),
-                            lineWidth: 1.5
-                        )
-                }
-            }
 
             Spacer()
 
@@ -207,100 +208,63 @@ struct AnimalCardView: View {
     }
 }
 
-// MARK: - Crystal Shimmer
+// MARK: - Glint flashes
 
-/// Simulates light catching a holographic/crystal surface:
-/// several thin diagonal highlight bands sweep across at different speeds and angles,
-/// plus small fixed-position glint flashes.
-private struct CrystalShimmerView: View {
-
-    // Each band: (speed, xOffset, angle, opacity, width)
-    private let bands: [(speed: Double, phase: Double, angle: Double, opacity: Double, width: Double)] = [
-        (speed: 0.28, phase: 0.0,  angle: 28,  opacity: 0.22, width: 0.18),
-        (speed: 0.18, phase: 0.6,  angle: -20, opacity: 0.14, width: 0.10),
-        (speed: 0.38, phase: 1.1,  angle: 15,  opacity: 0.18, width: 0.08),
-        (speed: 0.12, phase: 0.3,  angle: -35, opacity: 0.10, width: 0.14),
-    ]
-
-    // Fixed glint positions (unit coords) and phase offsets
-    private let glints: [(x: Double, y: Double, phase: Double)] = [
-        (0.18, 0.15, 0.0),
-        (0.82, 0.28, 1.3),
-        (0.35, 0.75, 0.7),
-        (0.72, 0.68, 2.1),
-        (0.55, 0.42, 0.4),
+/// Small bright spots that flicker at fixed positions, like light catching facets of a gem.
+struct GlintView: View {
+    private let spots: [(x: CGFloat, y: CGFloat, speed: Double, phase: Double)] = [
+        (0.15, 0.12, 1.7, 0.0),
+        (0.85, 0.20, 2.1, 1.3),
+        (0.25, 0.78, 1.4, 2.6),
+        (0.78, 0.72, 1.9, 0.8),
+        (0.50, 0.45, 1.5, 1.9),
     ]
 
     var body: some View {
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            Canvas { context, size in
-                // --- Sweep bands ---
-                for band in bands {
-                    let cycle = (t * band.speed + band.phase).truncatingRemainder(dividingBy: 2.4) - 0.7
-                    let rad = band.angle * Double.pi / 180
-                    let w = band.width * Double(size.width)
+            GeometryReader { geo in
+                ZStack {
+                    ForEach(spots.indices, id: \.self) { i in
+                        let s = spots[i]
+                        let pulse = (sin(t * s.speed + s.phase) + 1) / 2  // 0…1
+                        let bright = pulse * pulse  // sharper peak
+                        let size = 2.0 + 7.0 * bright
+                        let x = s.x * geo.size.width
+                        let y = s.y * geo.size.height
 
-                    // band centre in x
-                    let cx = cycle * Double(size.width) * 1.3
+                        ZStack {
+                            // Soft halo
+                            Circle()
+                                .fill(RadialGradient(
+                                    colors: [.white.opacity(bright * 0.5), .clear],
+                                    center: .center, startRadius: 0, endRadius: size * 2.5
+                                ))
+                                .frame(width: size * 5, height: size * 5)
 
-                    // build a thin diagonal gradient strip
-                    var path = Path(CGRect(x: 0, y: 0, width: size.width, height: size.height))
+                            // Bright core
+                            Circle()
+                                .fill(.white.opacity(bright * 0.95))
+                                .frame(width: size * 0.8, height: size * 0.8)
 
-                    // perpendicular to the angle: start/end points of the gradient
-                    let dx = cos(rad) * w
-                    let dy = sin(rad) * w
-                    let mid = CGPoint(x: cx, y: Double(size.height) * 0.5)
-                    let start = CGPoint(x: mid.x - dx, y: mid.y - dy)
-                    let end   = CGPoint(x: mid.x + dx, y: mid.y + dy)
+                            // Horizontal flare
+                            Rectangle()
+                                .fill(LinearGradient(
+                                    colors: [.clear, .white.opacity(bright * 0.7), .clear],
+                                    startPoint: .leading, endPoint: .trailing
+                                ))
+                                .frame(width: size * 4, height: 1.2)
 
-                    context.fill(path, with: .linearGradient(
-                        Gradient(stops: [
-                            .init(color: .clear,                               location: 0),
-                            .init(color: .white.opacity(band.opacity * 0.3),   location: 0.35),
-                            .init(color: .white.opacity(band.opacity),          location: 0.5),
-                            .init(color: .white.opacity(band.opacity * 0.3),   location: 0.65),
-                            .init(color: .clear,                               location: 1),
-                        ]),
-                        startPoint: start,
-                        endPoint: end
-                    ))
-                }
-
-                // --- Point glints ---
-                for glint in glints {
-                    let pulse = 0.5 + 0.5 * sin(t * 1.8 + glint.phase)
-                    let alpha = pulse * pulse  // sharper flicker
-                    let gx = glint.x * Double(size.width)
-                    let gy = glint.y * Double(size.height)
-                    let r = 3.0 + 4.0 * pulse
-
-                    // Outer soft halo
-                    let halo = Path(ellipseIn: CGRect(x: gx - r * 2, y: gy - r * 2, width: r * 4, height: r * 4))
-                    context.fill(halo, with: .radialGradient(
-                        Gradient(colors: [.white.opacity(alpha * 0.35), .clear]),
-                        center: CGPoint(x: gx, y: gy),
-                        startRadius: 0, endRadius: r * 2
-                    ))
-
-                    // Bright core
-                    let core = Path(ellipseIn: CGRect(x: gx - r * 0.4, y: gy - r * 0.4, width: r * 0.8, height: r * 0.8))
-                    context.fill(core, with: .color(.white.opacity(alpha * 0.9)))
-
-                    // Cross flare — horizontal
-                    let hFlare = Path(CGRect(x: gx - r * 1.8, y: gy - 0.6, width: r * 3.6, height: 1.2))
-                    context.fill(hFlare, with: .linearGradient(
-                        Gradient(colors: [.clear, .white.opacity(alpha * 0.6), .clear]),
-                        startPoint: CGPoint(x: gx - r * 1.8, y: gy),
-                        endPoint:   CGPoint(x: gx + r * 1.8, y: gy)
-                    ))
-                    // Cross flare — vertical
-                    let vFlare = Path(CGRect(x: gx - 0.6, y: gy - r * 1.8, width: 1.2, height: r * 3.6))
-                    context.fill(vFlare, with: .linearGradient(
-                        Gradient(colors: [.clear, .white.opacity(alpha * 0.6), .clear]),
-                        startPoint: CGPoint(x: gx, y: gy - r * 1.8),
-                        endPoint:   CGPoint(x: gx, y: gy + r * 1.8)
-                    ))
+                            // Vertical flare
+                            Rectangle()
+                                .fill(LinearGradient(
+                                    colors: [.clear, .white.opacity(bright * 0.7), .clear],
+                                    startPoint: .top, endPoint: .bottom
+                                ))
+                                .frame(width: 1.2, height: size * 4)
+                        }
+                        .position(x: x, y: y)
+                    }
                 }
             }
         }
@@ -315,33 +279,26 @@ struct CardBackView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
-                .fill(
-                    LinearGradient(
-                        colors: [Color(white: 0.1), Color(white: 0.06)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .fill(LinearGradient(
+                    colors: [Color(white: 0.1), Color(white: 0.06)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
 
             RoundedRectangle(cornerRadius: 12)
                 .fill(packType.gradient.opacity(0.15))
 
-            // Pattern
             VStack(spacing: 8) {
                 ForEach(0..<5, id: \.self) { _ in
                     HStack(spacing: 8) {
                         ForEach(0..<4, id: \.self) { _ in
-                            Text("🐾")
-                                .font(.system(size: 14))
-                                .opacity(0.12)
+                            Text("🐾").font(.system(size: 14)).opacity(0.12)
                         }
                     }
                 }
             }
 
             VStack {
-                Text(packType.emoji)
-                    .font(.system(size: 48))
+                Text(packType.emoji).font(.system(size: 48))
                 Text("AnimalCards")
                     .font(.caption)
                     .fontWeight(.bold)
