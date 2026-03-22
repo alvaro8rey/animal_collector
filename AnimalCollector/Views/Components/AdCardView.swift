@@ -54,7 +54,7 @@ struct AdCardView: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color.white.opacity(0.07), lineWidth: 1)
         }
-        .frame(width: 250, height: 350)
+        .frame(width: 270, height: 378)
     }
 
     private var adUnitID: String {

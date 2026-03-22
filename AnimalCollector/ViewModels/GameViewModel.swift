@@ -61,11 +61,13 @@ final class GameViewModel: ObservableObject {
 
         if !isPremium { availablePacks -= 1 }
 
+        let obtainedIds = Set(collection.filter { $0.isObtained }.map { $0.id })
         let drawn = GachaEngine.drawCards(
             count: type.cardsPerPack,
             packType: type,
             allAnimals: allAnimals,
-            pityCount: pityCount
+            pityCount: pityCount,
+            obtainedIds: obtainedIds
         )
 
         let hasEpicPlus = drawn.contains { $0.rarity >= .epic }

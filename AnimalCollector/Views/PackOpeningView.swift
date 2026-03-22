@@ -82,9 +82,9 @@ struct PackOpeningView: View {
         }
     }
 
-    private let largeCardWidth: CGFloat = 250
-    private let largeCardHeight: CGFloat = 350
-    private let stackOffset: CGFloat = 24
+    private let largeCardWidth: CGFloat = 270
+    private let largeCardHeight: CGFloat = 378
+    private let stackOffset: CGFloat = 36
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -766,7 +766,7 @@ struct RevealCardView: View {
                     glowColor: animal.rarity.glowColor,
                     glowRadius: glowPulse ? 20 : 10
                 )
-                .frame(width: 200, height: 200)
+                .frame(width: 215, height: 215)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.7 : 0.35),
                         radius: glowPulse ? 22 : 12)
@@ -804,7 +804,7 @@ struct RevealCardView: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
         }
-        .frame(width: 250, height: 350)
+        .frame(width: 270, height: 378)
         .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
                 radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6)
         .onAppear {
