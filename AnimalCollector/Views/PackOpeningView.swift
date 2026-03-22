@@ -109,7 +109,6 @@ struct PackOpeningView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
-            setupHapticEngine()
             if phase == .carousel {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
                     if !cards.isEmpty && cards[0].rarity != .legendary {
@@ -526,43 +525,23 @@ struct PackOpeningView: View {
 
     // MARK: - Haptics
 
-    private func setupHapticEngine() {
+    private func playShakeHaptics() {
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         do {
-            hapticEngine = try CHHapticEngine()
-            try hapticEngine?.start()
-            hapticEngine?.resetHandler = { [self] in
-                try? self.hapticEngine?.start()
-            }
-        } catch {}
-    }
+            // Crear y arrancar el motor justo antes de usarlo
+            let engine = try CHHapticEngine()
+            hapticEngine = engine // retener referencia
+            try engine.start()
 
-    private func playShakeHaptics() {
-        guard let engine = hapticEngine,
-              CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
-        do {
-            // Vibración continua durante el shake (~1.5s)
             let shakeEvent = CHHapticEvent(
                 eventType: .hapticContinuous,
                 parameters: [
                     CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
-                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.7)
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
                 ],
                 relativeTime: 0.05,
-                duration: 1.5
+                duration: 1.45
             )
-            // Intensidad decrece a medida que el shake se suaviza
-            let intensityCurve = CHHapticParameterCurve(
-                parameterID: .hapticIntensityControl,
-                controlPoints: [
-                    CHHapticParameterCurve.ControlPoint(relativeTime: 0.0,  value: 1.0),
-                    CHHapticParameterCurve.ControlPoint(relativeTime: 0.6,  value: 0.85),
-                    CHHapticParameterCurve.ControlPoint(relativeTime: 1.1,  value: 0.35),
-                    CHHapticParameterCurve.ControlPoint(relativeTime: 1.5,  value: 0.0)
-                ],
-                relativeTime: 0.05
-            )
-            // Impacto fuerte al explotar el sobre
             let burstEvent = CHHapticEvent(
                 eventType: .hapticTransient,
                 parameters: [
@@ -571,7 +550,7 @@ struct PackOpeningView: View {
                 ],
                 relativeTime: 1.65
             )
-            let pattern = try CHHapticPattern(events: [shakeEvent, burstEvent], parameterCurves: [intensityCurve])
+            let pattern = try CHHapticPattern(events: [shakeEvent, burstEvent], parameterCurves: [])
             let player = try engine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
         } catch {}
