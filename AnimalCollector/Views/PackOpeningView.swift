@@ -117,6 +117,11 @@ struct PackOpeningView: View {
         .navigationBarHidden(true)
         .onAppear {
             if phase == .carousel {
+                // Set ad slot here for the preDrawnCards path (startOpening() is not called)
+                if !vm.isPremium && cards.count >= 3 {
+                    adSlotIndex = Int.random(in: 1..<cards.count)
+                    flippedCards.insert(adSlotIndex)
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
                     if !cards.isEmpty && cards[0].rarity != .legendary {
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { _ = flippedCards.insert(0) }
