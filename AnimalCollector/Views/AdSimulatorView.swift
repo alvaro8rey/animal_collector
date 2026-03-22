@@ -209,7 +209,13 @@ final class RewardedAdCoordinator: NSObject, FullScreenContentDelegate {
             return
         }
 
-        ad.present(from: root) { [weak self] in
+        // Subir hasta el VC más alto para no bloquear presentaciones modales ya activas
+        var topVC = root
+        while let presented = topVC.presentedViewController {
+            topVC = presented
+        }
+
+        ad.present(from: topVC) { [weak self] in
             // Este bloque solo se llama si el usuario VIO el anuncio completo
             self?.onRewarded()
         }
