@@ -13,6 +13,7 @@ struct GachaView: View {
     @State private var pendingCards: [Animal] = []
     @State private var frozenProgress: Double? = nil
     @State private var frozenObtainedCount: Int? = nil
+    @State private var selectedAnimal: Animal? = nil
 
     var body: some View {
         NavigationStack {
@@ -79,6 +80,9 @@ struct GachaView: View {
             .sheet(isPresented: $showPremiumView) {
                 PremiumView(isPresented: $showPremiumView)
                     .environmentObject(vm)
+            }
+            .sheet(item: $selectedAnimal) { animal in
+                CardDetailView(animal: animal)
             }
         }
     }
@@ -558,6 +562,7 @@ struct GachaView: View {
                     HStack(spacing: 12) {
                         ForEach(Array(recent)) { animal in
                             AnimalCardView(animal: animal, size: .small)
+                                .onTapGesture { selectedAnimal = animal }
                         }
                     }
                     .padding(.horizontal, 2)
