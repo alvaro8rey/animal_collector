@@ -84,7 +84,7 @@ struct PackOpeningView: View {
 
     private let largeCardWidth: CGFloat = 270
     private let largeCardHeight: CGFloat = 378
-    private let stackOffset: CGFloat = 36
+    private let stackOffset: CGFloat = 46
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -369,7 +369,7 @@ struct PackOpeningView: View {
             ZStack(alignment: .topLeading) {
                 // Cartas restantes apiladas detrás (de atrás hacia adelante)
                 // Todas usan el mismo frame que la carta grande para que sobresalgan
-                ForEach(Array(((carouselIndex + 1)..<min(totalCarouselCount, carouselIndex + 5)).reversed()), id: \.self) { idx in
+                ForEach(Array(((carouselIndex + 1)..<min(totalCarouselCount, carouselIndex + 6)).reversed()), id: \.self) { idx in
                     let depth = CGFloat(idx - carouselIndex)
                     CardBackView(packType: packType)
                         .frame(width: largeCardWidth, height: largeCardHeight)
