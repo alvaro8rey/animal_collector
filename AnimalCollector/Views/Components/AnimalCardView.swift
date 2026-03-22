@@ -65,10 +65,12 @@ struct AnimalCardView: View {
         }
         .frame(width: size.width, height: size.height)
         .shadow(
-            color: animal.rarity == .secret
-                ? Color(red: 0.7, green: 0.1, blue: 1.0).opacity(0.8)
-                : animal.rarity.glowColor.opacity(0.4),
-            radius: animal.rarity.glowRadius
+            color: size == .small
+                ? .clear
+                : animal.rarity == .secret
+                    ? Color(red: 0.7, green: 0.1, blue: 1.0).opacity(size == .large ? 0.8 : 0.45)
+                    : animal.rarity.glowColor.opacity(size == .large ? 0.4 : 0.2),
+            radius: size == .large ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.4
         )
     }
 
@@ -101,18 +103,19 @@ struct AnimalCardView: View {
         RoundedRectangle(cornerRadius: 12)
             .fill(Color(red: 0.04, green: 0.01, blue: 0.12))
 
-        // 2. Iridescent color wash — slow hue rotation, very visible
+        // 2. Iridescent color wash — slow hue rotation
+        let washOpacity: Double = size == .small ? 0.28 : size == .medium ? 0.40 : 0.55
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             RoundedRectangle(cornerRadius: 12)
                 .fill(LinearGradient(
                     colors: [
                         Color(hue: (t * 0.04).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.6).opacity(0.55),
+                              saturation: 0.9, brightness: 0.6).opacity(washOpacity),
                         Color(hue: ((t * 0.04) + 0.33).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.5).opacity(0.45),
+                              saturation: 0.9, brightness: 0.5).opacity(washOpacity * 0.82),
                         Color(hue: ((t * 0.04) + 0.66).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.4).opacity(0.50),
+                              saturation: 0.9, brightness: 0.4).opacity(washOpacity * 0.91),
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
