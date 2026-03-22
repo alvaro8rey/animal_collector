@@ -46,7 +46,11 @@ struct GachaView: View {
                         withAnimation { dailyBanner = false }
                     }
                 }
-                packPulse = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true)) {
+                        packPulse = true
+                    }
+                }
             }
             .fullScreenCover(isPresented: $isOpeningPack) {
                 PackOpeningView(packType: .basic, isPresented: $isOpeningPack, preDrawnCards: pendingCards)
@@ -257,7 +261,6 @@ struct GachaView: View {
                 PackImageView()
                     .rotationEffect(.degrees(shakeAngle))
                     .scaleEffect(packPulse && canOpen && !isShaking ? 1.03 : 1.0)
-                    .animation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true), value: packPulse)
                     .opacity(canOpen ? 1.0 : 0.4)
                     .shadow(
                         color: canOpen ? Color(red: 0.25, green: 0.5, blue: 1.0).opacity(0.5) : .clear,
