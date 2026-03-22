@@ -371,28 +371,36 @@ struct GachaView: View {
         }
     }
 
-    // MARK: - Recent Captures (Premium only)
+    // MARK: - Recent Captures
 
     private var recentCaptures: some View {
         let recent = vm.collection
             .filter(\.isObtained)
             .sorted { ($0.obtainedDate ?? .distantPast) > ($1.obtainedDate ?? .distantPast) }
-            .prefix(8)
+            .prefix(10)
 
         return VStack(alignment: .leading, spacing: 12) {
-            Text("Últimas capturas")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white.opacity(0.5))
-                .textCase(.uppercase)
-                .tracking(1)
+            HStack {
+                Text("Últimas capturas")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white.opacity(0.5))
+                    .textCase(.uppercase)
+                    .tracking(1)
+                Spacer()
+                if !recent.isEmpty {
+                    Text("\(vm.obtainedCount) obtenidos")
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.3))
+                }
+            }
 
             if recent.isEmpty {
                 Text("Abre tu primer sobre para ver tus capturas aquí.")
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.35))
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 20)
+                    .padding(.vertical, 24)
                     .background(
                         RoundedRectangle(cornerRadius: 14)
                             .fill(Color.white.opacity(0.04))
@@ -400,13 +408,13 @@ struct GachaView: View {
                     )
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         ForEach(Array(recent)) { animal in
-                            RecentCaptureCard(animal: animal)
+                            AnimalCardView(animal: animal, size: .small)
                         }
                     }
                     .padding(.horizontal, 2)
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 6)
                 }
             }
         }
@@ -499,49 +507,6 @@ private struct RefillButton: View {
                     )
             )
         }
-    }
-}
-
-// MARK: - Recent Capture Card
-
-private struct RecentCaptureCard: View {
-    let animal: Animal
-
-    var body: some View {
-        VStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(animal.rarity.color.opacity(0.15))
-                    .frame(width: 52, height: 52)
-                Text(animal.emoji)
-                    .font(.system(size: 28))
-            }
-
-            Text(animal.name)
-                .font(.caption2)
-                .fontWeight(.medium)
-                .foregroundStyle(.white.opacity(0.85))
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-                .frame(width: 72)
-
-            Text(animal.rarity.displayName)
-                .font(.system(size: 9, weight: .semibold))
-                .foregroundStyle(animal.rarity.color)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Capsule().fill(animal.rarity.color.opacity(0.15)))
-        }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.white.opacity(0.04))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .strokeBorder(animal.rarity.color.opacity(0.2), lineWidth: 1)
-                )
-        )
     }
 }
 
