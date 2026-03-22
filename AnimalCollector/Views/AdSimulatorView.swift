@@ -160,26 +160,47 @@ struct AdSimulatorView: View {
 
                 Spacer()
 
-                // CTA button
-                Button(action: { isPresented = false }) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "gift.fill")
-                            .font(.headline)
-                        Text("¡Abrir sobres!")
-                            .font(.headline)
-                            .fontWeight(.bold)
+                // Buttons
+                VStack(spacing: 12) {
+                    Button(action: { isPresented = false }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "gift.fill")
+                                .font(.headline)
+                            Text("¡Abrir sobres!")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                        }
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 18)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(LinearGradient(
+                                    colors: [Color(red: 1.0, green: 0.85, blue: 0.2), Color(red: 1.0, green: 0.55, blue: 0.1)],
+                                    startPoint: .leading, endPoint: .trailing
+                                ))
+                        )
+                        .shadow(color: Color.yellow.opacity(0.4), radius: 12)
                     }
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(LinearGradient(
-                                colors: [Color(red: 1.0, green: 0.85, blue: 0.2), Color(red: 1.0, green: 0.55, blue: 0.1)],
-                                startPoint: .leading, endPoint: .trailing
-                            ))
-                    )
-                    .shadow(color: Color.yellow.opacity(0.4), radius: 12)
+
+                    Button(action: { watchAnotherAd() }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "play.rectangle.fill")
+                                .font(.subheadline)
+                            Text("Ver otro anuncio (+2 sobres)")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundStyle(.white.opacity(0.75))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color.white.opacity(0.08))
+                                .overlay(RoundedRectangle(cornerRadius: 14)
+                                    .strokeBorder(.white.opacity(0.15), lineWidth: 1))
+                        )
+                    }
                 }
                 .padding(.horizontal, 32)
                 .padding(.bottom, 52)
@@ -207,43 +228,50 @@ struct AdSimulatorView: View {
         guard !rewardAppeared else { return }
         rewardAppeared = true
 
-        // Particles burst
-        withAnimation(.spring(response: 0.9, dampingFraction: 0.65)) {
+        // Particles + title: immediate
+        withAnimation(.spring(response: 0.7, dampingFraction: 0.65)) {
             particleProgress = 1.0
         }
-
-        // Title drops in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
-                titleScale = 1.0
-                titleOpacity = 1.0
-            }
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.6)) {
+            titleScale = 1.0
+            titleOpacity = 1.0
         }
 
-        // Pack 1 bounces in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.55)) {
+        // Pack 1: almost instant
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.55)) {
                 pack1Scale = 1.0
                 pack1Opacity = 1.0
             }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
 
-        // Pack 2 bounces in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.52) {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.55)) {
+        // Pack 2: just after pack 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.55)) {
                 pack2Scale = 1.0
                 pack2Opacity = 1.0
             }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
 
-        // Glow pulse starts
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+        // Glow pulse
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
                 glowPulse = true
             }
         }
+    }
+
+    private func watchAnotherAd() {
+        // Reset animation state
+        rewardAppeared = false
+        pack1Scale = 0.3;  pack2Scale = 0.3
+        pack1Opacity = 0;  pack2Opacity = 0
+        titleScale = 0.5;  titleOpacity = 0
+        glowPulse = false; particleProgress = 0
+        phase = .loading
+        loadAndShow()
     }
 
     // MARK: - Ad logic
