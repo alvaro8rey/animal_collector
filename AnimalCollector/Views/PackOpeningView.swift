@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreHaptics
 
 // MARK: - Pack Image View (shared between GachaView and PackOpeningView)
 
@@ -46,6 +47,9 @@ struct PackOpeningView: View {
     @State private var carouselIndex: Int = 0
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
+
+    // Haptic engine
+    @State private var hapticEngine: CHHapticEngine?
 
     // Legendary reveal
     @State private var showingLegendaryReveal = false
@@ -105,6 +109,7 @@ struct PackOpeningView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
+            setupHapticEngine()
             if phase == .carousel {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
                     if !cards.isEmpty && cards[0].rarity != .legendary {
@@ -239,18 +244,12 @@ struct PackOpeningView: View {
             6, -6, 5, -5, 5, -5, 4, -4, 4, -4,
             3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0
         ]
-        // Un solo generador preparado antes del loop para que el motor táctil esté listo
-        let shakeGen = UIImpactFeedbackGenerator(style: .rigid)
-        shakeGen.prepare()
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
-                if i > 0 && i < 20 && i % 2 == 1 {
-                    shakeGen.impactOccurred(intensity: i < 12 ? 1.0 : 0.4)
-                    shakeGen.prepare() // mantiene el motor caliente para el siguiente pulso
-                }
             }
         }
+        playShakeHaptics()
 
         // Scale up (0.56 + 1.0 = 1.56s)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.56) {
@@ -523,6 +522,58 @@ struct PackOpeningView: View {
     private func summaryCardCell(idx: Int) -> some View {
         AnimalCardView(animal: cards[idx], size: .small)
             .animation(.spring(response: 0.3).delay(Double(idx) * 0.08), value: true)
+    }
+
+    // MARK: - Haptics
+
+    private func setupHapticEngine() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        do {
+            hapticEngine = try CHHapticEngine()
+            try hapticEngine?.start()
+            hapticEngine?.resetHandler = { [self] in
+                try? self.hapticEngine?.start()
+            }
+        } catch {}
+    }
+
+    private func playShakeHaptics() {
+        guard let engine = hapticEngine,
+              CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        do {
+            // Vibración continua durante el shake (~1.5s)
+            let shakeEvent = CHHapticEvent(
+                eventType: .hapticContinuous,
+                parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.7)
+                ],
+                relativeTime: 0.05,
+                duration: 1.5
+            )
+            // Intensidad decrece a medida que el shake se suaviza
+            let intensityCurve = CHHapticParameterCurve(
+                parameterID: .hapticIntensityControl,
+                controlPoints: [
+                    .init(relativeTime: 0.0,  value: 1.0),
+                    .init(relativeTime: 0.6,  value: 0.85),
+                    .init(relativeTime: 1.1,  value: 0.35),
+                    .init(relativeTime: 1.5,  value: 0.0)
+                ]
+            )
+            // Impacto fuerte al explotar el sobre
+            let burstEvent = CHHapticEvent(
+                eventType: .hapticTransient,
+                parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 1.0)
+                ],
+                relativeTime: 1.65
+            )
+            let pattern = try CHHapticPattern(events: [shakeEvent, burstEvent], parameterCurves: [intensityCurve])
+            let player = try engine.makePlayer(with: pattern)
+            try player.start(atTime: CHHapticTimeImmediate)
+        } catch {}
     }
 
     // MARK: - Legendary Reveal
