@@ -130,9 +130,26 @@ struct AdSimulatorView: View {
     // MARK: - Ad logic
 
     private func loadAndShow() {
-        // En debug/simulador usar el ID de test oficial de Google para evitar errores de vídeo
+        #if targetEnvironment(simulator)
+        // El simulador no puede reproducir vídeo de AdMob → simular el anuncio directamente
+        simulateFakeAd()
+        #else
+        loadRealAd()
+        #endif
+    }
+
+    // Simulación fake para el simulador: muestra "anuncio" durante 3 s y otorga recompensa
+    private func simulateFakeAd() {
+        Task {
+            try? await Task.sleep(for: .seconds(3))
+            vm.rewardAdPacks()
+            phase = .rewarded
+        }
+    }
+
+    private func loadRealAd() {
         #if DEBUG
-        let adUnitID = "ca-app-pub-3940256099942544/1712485313"
+        let adUnitID = "ca-app-pub-3940256099942544/1712485313"  // ID de test oficial de Google
         #else
         let adUnitID = "ca-app-pub-9606090335798660/1210235038"
         #endif
