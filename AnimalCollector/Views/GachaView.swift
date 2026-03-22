@@ -388,130 +388,13 @@ struct GachaView: View {
                 .tracking(1)
 
             VStack(spacing: 10) {
-                // Global completion
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Completado")
-                            .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.75))
-                        Spacer()
-                        Text("\(Int(vm.collectionProgress * 100))%  ·  \(vm.obtainedCount)/\(vm.allAnimals.count)")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white)
-                            .monospacedDigit()
-                    }
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 4).fill(Color.white.opacity(0.08))
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
-                                .frame(width: geo.size.width * vm.collectionProgress)
-                                .animation(.spring(response: 0.8), value: vm.collectionProgress)
-                        }
-                    }
-                    .frame(height: 6)
-                }
-
+                statsGlobalProgress
                 Divider().background(Color.white.opacity(0.08))
-
-                // Rarity breakdown
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Por rareza")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.4))
-
-                    ForEach(Rarity.allCases.filter { $0 != .secret }.reversed(), id: \.self) { rarity in
-                        let total    = vm.allAnimals.filter { $0.rarity == rarity }.count
-                        let obtained = vm.collection.filter { $0.rarity == rarity && $0.isObtained }.count
-                        let pct      = total > 0 ? Double(obtained) / Double(total) : 0
-
-                        HStack(spacing: 10) {
-                            Text(rarity.displayName)
-                                .font(.caption)
-                                .foregroundStyle(rarity.color)
-                                .frame(width: 72, alignment: .leading)
-
-                            GeometryReader { geo in
-                                ZStack(alignment: .leading) {
-                                    RoundedRectangle(cornerRadius: 3).fill(Color.white.opacity(0.07))
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .fill(LinearGradient(colors: rarity.gradientColors, startPoint: .leading, endPoint: .trailing))
-                                        .frame(width: geo.size.width * pct)
-                                        .animation(.spring(response: 0.8), value: pct)
-                                }
-                            }
-                            .frame(height: 5)
-
-                            Text("\(obtained)/\(total)")
-                                .font(.caption2)
-                                .foregroundStyle(.white.opacity(0.4))
-                                .monospacedDigit()
-                                .frame(width: 36, alignment: .trailing)
-                        }
-                    }
-                }
-
+                statsRarityBreakdown
                 Divider().background(Color.white.opacity(0.08))
-
-                // Category breakdown
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Por categoría")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.4))
-
-                    let columns = [GridItem(.flexible()), GridItem(.flexible())]
-                    LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(Category.allCases.filter { $0.isPublic }, id: \.self) { cat in
-                            let (obtained, total) = vm.progress(for: cat)
-                            let pct = total > 0 ? Double(obtained) / Double(total) : 0
-
-                            VStack(alignment: .leading, spacing: 5) {
-                                HStack(spacing: 4) {
-                                    Text(cat.icon)
-                                        .font(.caption)
-                                    Text(cat.rawValue)
-                                        .font(.caption2)
-                                        .foregroundStyle(cat.color)
-                                    Spacer()
-                                    Text("\(obtained)/\(total)")
-                                        .font(.system(size: 9))
-                                        .foregroundStyle(.white.opacity(0.4))
-                                        .monospacedDigit()
-                                }
-                                GeometryReader { geo in
-                                    ZStack(alignment: .leading) {
-                                        RoundedRectangle(cornerRadius: 3).fill(Color.white.opacity(0.07))
-                                        RoundedRectangle(cornerRadius: 3)
-                                            .fill(cat.color)
-                                            .frame(width: geo.size.width * pct)
-                                            .animation(.spring(response: 0.8), value: pct)
-                                    }
-                                }
-                                .frame(height: 4)
-                            }
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(cat.color.opacity(0.07))
-                                    .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(cat.color.opacity(0.15), lineWidth: 1))
-                            )
-                        }
-                    }
-                }
-
+                statsCategoryBreakdown
                 Divider().background(Color.white.opacity(0.08))
-
-                // Quick numbers row
-                HStack(spacing: 0) {
-                    StatPill(value: "\(vm.streak)", label: "Racha", icon: "flame.fill", color: .orange)
-                    Divider().frame(height: 32).background(Color.white.opacity(0.1))
-                    StatPill(value: "\(vm.totalPacksOpened)", label: "Sobres", icon: "shippingbox.fill", color: .blue)
-                    Divider().frame(height: 32).background(Color.white.opacity(0.1))
-                    StatPill(value: "\(vm.collection.map(\.duplicateCount).reduce(0, +))", label: "Duplicados", icon: "doc.on.doc.fill", color: .purple)
-                    Divider().frame(height: 32).background(Color.white.opacity(0.1))
-                    StatPill(value: "\(vm.collection.filter(\.isFavorite).count)", label: "Favoritos", icon: "heart.fill", color: .red)
-                }
+                statsQuickRow
             }
             .padding(16)
             .background(
@@ -519,6 +402,74 @@ struct GachaView: View {
                     .fill(Color.white.opacity(0.04))
                     .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             )
+        }
+    }
+
+    private var statsGlobalProgress: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("Completado")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.75))
+                Spacer()
+                Text("\(Int(vm.collectionProgress * 100))%  ·  \(vm.obtainedCount)/\(vm.allAnimals.filter { $0.category != .secret }.count)")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white)
+                    .monospacedDigit()
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4).fill(Color.white.opacity(0.08))
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
+                        .frame(width: geo.size.width * vm.collectionProgress)
+                        .animation(.spring(response: 0.8), value: vm.collectionProgress)
+                }
+            }
+            .frame(height: 6)
+        }
+    }
+
+    private var statsRarityBreakdown: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Por rareza")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.4))
+
+            ForEach(Rarity.allCases.filter { $0 != .secret }.reversed(), id: \.self) { rarity in
+                StatsRarityRow(rarity: rarity,
+                               total: vm.allAnimals.filter { $0.rarity == rarity }.count,
+                               obtained: vm.collection.filter { $0.rarity == rarity && $0.isObtained }.count)
+            }
+        }
+    }
+
+    private var statsCategoryBreakdown: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Por categoría")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.4))
+
+            let columns = [GridItem(.flexible()), GridItem(.flexible())]
+            LazyVGrid(columns: columns, spacing: 8) {
+                ForEach(Category.allCases.filter { $0.isPublic }, id: \.self) { cat in
+                    let (obtained, total) = vm.progress(for: cat)
+                    StatsCategoryCell(cat: cat, obtained: obtained, total: total)
+                }
+            }
+        }
+    }
+
+    private var statsQuickRow: some View {
+        HStack(spacing: 0) {
+            StatPill(value: "\(vm.streak)", label: "Racha", icon: "flame.fill", color: .orange)
+            Divider().frame(height: 32).background(Color.white.opacity(0.1))
+            StatPill(value: "\(vm.totalPacksOpened)", label: "Sobres", icon: "shippingbox.fill", color: .blue)
+            Divider().frame(height: 32).background(Color.white.opacity(0.1))
+            StatPill(value: "\(vm.collection.map(\.duplicateCount).reduce(0, +))", label: "Duplicados", icon: "doc.on.doc.fill", color: .purple)
+            Divider().frame(height: 32).background(Color.white.opacity(0.1))
+            StatPill(value: "\(vm.collection.filter(\.isFavorite).count)", label: "Favoritos", icon: "heart.fill", color: .red)
         }
     }
 
@@ -739,5 +690,75 @@ private struct MissionRowView: View {
                 .disabled(!isCompleted)
             }
         }
+    }
+}
+
+// MARK: - Stats helpers
+
+private struct StatsRarityRow: View {
+    let rarity: Rarity
+    let total: Int
+    let obtained: Int
+
+    var body: some View {
+        let pct = total > 0 ? Double(obtained) / Double(total) : 0
+        HStack(spacing: 10) {
+            Text(rarity.displayName)
+                .font(.caption)
+                .foregroundStyle(rarity.color)
+                .frame(width: 72, alignment: .leading)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3).fill(Color.white.opacity(0.07))
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(LinearGradient(colors: rarity.gradientColors, startPoint: .leading, endPoint: .trailing))
+                        .frame(width: geo.size.width * pct)
+                        .animation(.spring(response: 0.8), value: pct)
+                }
+            }
+            .frame(height: 5)
+            Text("\(obtained)/\(total)")
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.4))
+                .monospacedDigit()
+                .frame(width: 36, alignment: .trailing)
+        }
+    }
+}
+
+private struct StatsCategoryCell: View {
+    let cat: Category
+    let obtained: Int
+    let total: Int
+
+    var body: some View {
+        let pct = total > 0 ? Double(obtained) / Double(total) : 0
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(spacing: 4) {
+                Text(cat.icon).font(.caption)
+                Text(cat.rawValue).font(.caption2).foregroundStyle(cat.color)
+                Spacer()
+                Text("\(obtained)/\(total)")
+                    .font(.system(size: 9))
+                    .foregroundStyle(.white.opacity(0.4))
+                    .monospacedDigit()
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3).fill(Color.white.opacity(0.07))
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(cat.color)
+                        .frame(width: geo.size.width * pct)
+                        .animation(.spring(response: 0.8), value: pct)
+                }
+            }
+            .frame(height: 4)
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(cat.color.opacity(0.07))
+                .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(cat.color.opacity(0.15), lineWidth: 1))
+        )
     }
 }
