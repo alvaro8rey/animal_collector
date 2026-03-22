@@ -371,10 +371,20 @@ struct PackOpeningView: View {
                 // Todas usan el mismo frame que la carta grande para que sobresalgan
                 ForEach(Array(((carouselIndex + 1)..<min(totalCarouselCount, carouselIndex + 6)).reversed()), id: \.self) { idx in
                     let depth = CGFloat(idx - carouselIndex)
-                    CardBackView(packType: packType)
-                        .frame(width: largeCardWidth, height: largeCardHeight)
-                        .offset(x: depth * stackOffset, y: 0)
-                        .zIndex(Double(cards.count) - Double(idx - carouselIndex))
+                    ZStack {
+                        if adSlotIndex >= 0 && idx == adSlotIndex {
+                            AdCardView()
+                        } else {
+                            let ai = animalIndex(for: idx)
+                            if ai < cards.count {
+                                RevealCardView(animal: cards[ai], isNew: false)
+                            }
+                        }
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.black.opacity(0.68))
+                    }
+                    .offset(x: depth * stackOffset, y: 0)
+                    .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
 
                 // Carta actual (al frente)
