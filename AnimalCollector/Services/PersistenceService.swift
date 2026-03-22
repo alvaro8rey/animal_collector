@@ -5,15 +5,23 @@ final class PersistenceService {
     private let defaults = UserDefaults.standard
 
     private enum Key {
-        static let collection      = "ac_collection"
-        static let availablePacks  = "ac_available_packs"
-        static let isPremium       = "ac_is_premium"
-        static let streak          = "ac_streak"
-        static let lastStreakDate   = "ac_last_streak_date"
-        static let pityCount       = "ac_pity_count"
-        static let totalPacksOpened = "ac_total_packs"
-        static let dailyClaimedDate = "ac_daily_claimed"
-        static let firstLaunch     = "ac_first_launch"
+        static let collection        = "ac_collection"
+        static let availablePacks    = "ac_available_packs"
+        static let isPremium         = "ac_is_premium"
+        static let streak            = "ac_streak"
+        static let lastStreakDate     = "ac_last_streak_date"
+        static let pityCount         = "ac_pity_count"
+        static let totalPacksOpened  = "ac_total_packs"
+        static let dailyClaimedDate  = "ac_daily_claimed"
+        static let firstLaunch       = "ac_first_launch"
+        // Daily missions
+        static let claimedMissionIds = "ac_claimed_mission_ids"
+        static let claimedMissionDate = "ac_claimed_mission_date"
+        static let packsOpenedTodayCount = "ac_packs_today_count"
+        static let packsOpenedTodayDate  = "ac_packs_today_date"
+        static let gotRareDateKey    = "ac_got_rare_date"
+        static let gotEpicDateKey    = "ac_got_epic_date"
+        static let gotDupDateKey     = "ac_got_dup_date"
     }
 
     // MARK: - Collection
@@ -73,6 +81,61 @@ final class PersistenceService {
     var isDailyAvailable: Bool {
         guard let last = dailyClaimedDate else { return true }
         return !Calendar.current.isDateInToday(last)
+    }
+
+    // MARK: - Daily Missions
+
+    /// Set of mission IDs claimed today. Automatically resets if date is not today.
+    var claimedMissionIds: Set<String> {
+        get {
+            guard let date = defaults.object(forKey: Key.claimedMissionDate) as? Date,
+                  Calendar.current.isDateInToday(date) else { return [] }
+            return Set(defaults.stringArray(forKey: Key.claimedMissionIds) ?? [])
+        }
+        set {
+            defaults.set(Array(newValue), forKey: Key.claimedMissionIds)
+            defaults.set(Date(), forKey: Key.claimedMissionDate)
+        }
+    }
+
+    /// Number of packs opened today. Resets on a new day.
+    var packsOpenedToday: Int {
+        get {
+            guard let date = defaults.object(forKey: Key.packsOpenedTodayDate) as? Date,
+                  Calendar.current.isDateInToday(date) else { return 0 }
+            return defaults.integer(forKey: Key.packsOpenedTodayCount)
+        }
+        set {
+            defaults.set(newValue, forKey: Key.packsOpenedTodayCount)
+            defaults.set(Date(), forKey: Key.packsOpenedTodayDate)
+        }
+    }
+
+    /// Whether a Rare+ card was obtained today.
+    var gotRareToday: Bool {
+        get {
+            guard let date = defaults.object(forKey: Key.gotRareDateKey) as? Date else { return false }
+            return Calendar.current.isDateInToday(date)
+        }
+        set { defaults.set(newValue ? Date() : nil, forKey: Key.gotRareDateKey) }
+    }
+
+    /// Whether an Epic+ card was obtained today.
+    var gotEpicToday: Bool {
+        get {
+            guard let date = defaults.object(forKey: Key.gotEpicDateKey) as? Date else { return false }
+            return Calendar.current.isDateInToday(date)
+        }
+        set { defaults.set(newValue ? Date() : nil, forKey: Key.gotEpicDateKey) }
+    }
+
+    /// Whether a duplicate was obtained today.
+    var gotDuplicateToday: Bool {
+        get {
+            guard let date = defaults.object(forKey: Key.gotDupDateKey) as? Date else { return false }
+            return Calendar.current.isDateInToday(date)
+        }
+        set { defaults.set(newValue ? Date() : nil, forKey: Key.gotDupDateKey) }
     }
 
     // MARK: - Streak logic

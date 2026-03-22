@@ -14,6 +14,14 @@ final class GameViewModel: ObservableObject {
     @Published var totalPacksOpened: Int = 0
     @Published var isDailyAvailable: Bool = true
 
+    // Daily missions
+    @Published var todayMissions: [DailyMission] = DailyMission.todaysMissions()
+    @Published var claimedMissionIds: Set<String> = []
+    @Published var packsOpenedToday: Int = 0
+    @Published var gotRareToday: Bool = false
+    @Published var gotEpicToday: Bool = false
+    @Published var gotDuplicateToday: Bool = false
+
     // MARK: - Dependencies
 
     private let persistence = PersistenceService.shared
@@ -28,6 +36,37 @@ final class GameViewModel: ObservableObject {
     // MARK: - Computed
 
     var obtainedCount: Int { collection.filter(\.isObtained).count }
+
+    // MARK: - Mission helpers
+
+    func isMissionCompleted(_ mission: DailyMission) -> Bool {
+        switch mission.condition {
+        case .claimDailyReward:   return !isDailyAvailable
+        case .openPacksToday1:    return packsOpenedToday >= 1
+        case .openPacksToday3:    return packsOpenedToday >= 3
+        case .openPacksToday5:    return packsOpenedToday >= 5
+        case .getRareToday:       return gotRareToday
+        case .getEpicToday:       return gotEpicToday
+        case .getDuplicateToday:  return gotDuplicateToday
+        case .haveAnimals10:      return obtainedCount >= 10
+        case .haveAnimals25:      return obtainedCount >= 25
+        case .haveAnimals50:      return obtainedCount >= 50
+        case .haveFavorite:       return collection.contains { $0.isFavorite }
+        case .haveStreak3:        return streak >= 3
+        }
+    }
+
+    func isMissionClaimed(_ mission: DailyMission) -> Bool {
+        claimedMissionIds.contains(mission.id)
+    }
+
+    func claimMission(_ mission: DailyMission) {
+        guard isMissionCompleted(mission) && !isMissionClaimed(mission) else { return }
+        availablePacks += mission.rewardPacks
+        claimedMissionIds.insert(mission.id)
+        persistence.claimedMissionIds = claimedMissionIds
+        save()
+    }
 
     var collectionProgress: Double {
         allAnimals.isEmpty ? 0 : Double(obtainedCount) / Double(allAnimals.count)
@@ -74,8 +113,26 @@ final class GameViewModel: ObservableObject {
         pityCount = hasEpicPlus ? 0 : pityCount + 1
         totalPacksOpened += 1
 
+        // Daily mission tracking
+        packsOpenedToday += 1
+        persistence.packsOpenedToday = packsOpenedToday
+
         for animal in drawn {
+            let wasDuplicate = collection.first(where: { $0.id == animal.id })?.isObtained == true
             receiveAnimal(animal)
+            if wasDuplicate && !gotDuplicateToday {
+                gotDuplicateToday = true
+                persistence.gotDuplicateToday = true
+            }
+        }
+
+        if !gotRareToday && drawn.contains(where: { $0.rarity >= .rare }) {
+            gotRareToday = true
+            persistence.gotRareToday = true
+        }
+        if !gotEpicToday && drawn.contains(where: { $0.rarity >= .epic }) {
+            gotEpicToday = true
+            persistence.gotEpicToday = true
         }
 
         save()
@@ -153,6 +210,13 @@ final class GameViewModel: ObservableObject {
         pityCount = persistence.pityCount
         totalPacksOpened = persistence.totalPacksOpened
         isDailyAvailable = persistence.isDailyAvailable
+
+        // Daily missions
+        claimedMissionIds = persistence.claimedMissionIds
+        packsOpenedToday  = persistence.packsOpenedToday
+        gotRareToday      = persistence.gotRareToday
+        gotEpicToday      = persistence.gotEpicToday
+        gotDuplicateToday = persistence.gotDuplicateToday
     }
 
     private func save() {

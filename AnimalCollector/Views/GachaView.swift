@@ -372,29 +372,29 @@ struct GachaView: View {
 
     private var dailyMissions: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Misiones")
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white.opacity(0.5))
-                .textCase(.uppercase)
-                .tracking(1)
+            HStack {
+                Text("Misiones diarias")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white.opacity(0.5))
+                    .textCase(.uppercase)
+                    .tracking(1)
+                Spacer()
+                // Reset countdown
+                Text("Se renuevan a medianoche")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.3))
+            }
 
             VStack(spacing: 8) {
-                MissionRowView(
-                    icon: "gift.fill",
-                    title: "Reclamar recompensa diaria",
-                    isDone: !vm.isDailyAvailable
-                )
-                MissionRowView(
-                    icon: "square.grid.3x3.fill",
-                    title: "Revisar tu colección",
-                    isDone: vm.obtainedCount > 0
-                )
-                MissionRowView(
-                    icon: "star.fill",
-                    title: "Conseguir una carta Rare+",
-                    isDone: vm.collection.contains { $0.isObtained && $0.rarity >= .rare }
-                )
+                ForEach(vm.todayMissions) { mission in
+                    MissionRowView(
+                        mission: mission,
+                        isCompleted: vm.isMissionCompleted(mission),
+                        isClaimed: vm.isMissionClaimed(mission),
+                        onClaim: { vm.claimMission(mission) }
+                    )
+                }
             }
             .padding(14)
             .background(
@@ -461,28 +461,52 @@ private struct RefillButton: View {
 // MARK: - Mission Row
 
 private struct MissionRowView: View {
-    let icon: String
-    let title: String
-    let isDone: Bool
+    let mission: DailyMission
+    let isCompleted: Bool
+    let isClaimed: Bool
+    let onClaim: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: isDone ? "checkmark.circle.fill" : icon)
-                .foregroundStyle(isDone ? .green : .white.opacity(0.4))
+            // State icon
+            Image(systemName: isClaimed ? "checkmark.circle.fill" : mission.icon)
+                .foregroundStyle(isClaimed ? .green : isCompleted ? .yellow : .white.opacity(0.35))
                 .font(.subheadline)
                 .frame(width: 20)
 
-            Text(title)
+            // Title
+            Text(mission.title)
                 .font(.subheadline)
-                .foregroundStyle(isDone ? .white.opacity(0.4) : .white.opacity(0.8))
-                .strikethrough(isDone, color: .white.opacity(0.3))
+                .foregroundStyle(isClaimed ? .white.opacity(0.35) : .white.opacity(0.85))
+                .strikethrough(isClaimed, color: .white.opacity(0.3))
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
 
-            Spacer()
+            Spacer(minLength: 8)
 
-            if isDone {
+            // Claim button / reward badge
+            if isClaimed {
                 Text("✓")
                     .font(.caption)
                     .foregroundStyle(.green.opacity(0.7))
+            } else {
+                Button(action: onClaim) {
+                    HStack(spacing: 3) {
+                        Text("+\(mission.rewardPacks)")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        Image(systemName: "shippingbox.fill")
+                            .font(.caption2)
+                    }
+                    .foregroundStyle(isCompleted ? .black : .white.opacity(0.4))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(
+                        Capsule()
+                            .fill(isCompleted ? Color.yellow : Color.white.opacity(0.08))
+                    )
+                }
+                .disabled(!isCompleted)
             }
         }
     }
