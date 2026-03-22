@@ -9,6 +9,7 @@ struct CardDetailView: View {
     @State private var appear = false
     @State private var cardScale: CGFloat = 0.85
     @State private var glowPulse = false
+    @State private var showFullscreenImage = false
 
     var body: some View {
         ZStack {
@@ -70,6 +71,23 @@ struct CardDetailView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $showFullscreenImage) {
+            ZStack {
+                Color.black.ignoresSafeArea()
+                KFImage(URL(string: "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev/\(animal.id).webp"))
+                    .placeholder { Text(animal.emoji).font(.system(size: 80)) }
+                    .resizable()
+                    .scaledToFit()
+                    .padding(24)
+                Button { showFullscreenImage = false } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(.white.opacity(0.7))
+                        .padding(20)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
+        }
     }
 
     // MARK: - Card Art
@@ -115,6 +133,15 @@ struct CardDetailView: View {
                     )
                     .frame(width: 160, height: 160)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .onTapGesture { showFullscreenImage = true }
+                    .overlay(alignment: .bottomTrailing) {
+                        Image(systemName: "arrow.up.left.and.arrow.down.right")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.6))
+                            .padding(5)
+                            .background(Circle().fill(Color.black.opacity(0.45)))
+                            .padding(6)
+                    }
 
                     RarityBadgeView(rarity: animal.rarity)
 
@@ -195,6 +222,29 @@ struct CardDetailView: View {
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.75))
                 .lineSpacing(4)
+
+            if !animal.wikipediaURL.isEmpty, let url = URL(string: animal.wikipediaURL) {
+                Link(destination: url) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "globe")
+                            .font(.caption)
+                        Text("Ver en Wikipedia")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 9))
+                    }
+                    .foregroundStyle(.blue.opacity(0.85))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.blue.opacity(0.08))
+                            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(.blue.opacity(0.2), lineWidth: 1))
+                    )
+                }
+            }
         }
         .padding(18)
         .background(

@@ -10,6 +10,7 @@ struct Animal: Identifiable, Codable, Equatable {
     let funFact: String
     let emoji: String
     let collectionNumber: Int
+    let wikipediaURL: String
 
     // Mutable state (saved to disk, absent in animals.json)
     var obtainedDate: Date?
@@ -33,6 +34,7 @@ struct Animal: Identifiable, Codable, Equatable {
         funFact          = try c.decode(String.self,   forKey: .funFact)
         emoji            = try c.decode(String.self,   forKey: .emoji)
         collectionNumber = try c.decode(Int.self,      forKey: .collectionNumber)
+        wikipediaURL     = try c.decodeIfPresent(String.self, forKey: .wikipediaURL) ?? ""
         obtainedDate     = try c.decodeIfPresent(Date.self, forKey: .obtainedDate)
         duplicateCount   = try c.decodeIfPresent(Int.self,  forKey: .duplicateCount) ?? 0
         isFavorite       = try c.decodeIfPresent(Bool.self, forKey: .isFavorite)     ?? false

@@ -400,7 +400,7 @@ struct PackOpeningView: View {
     @ViewBuilder
     private var deckFrontCard: some View {
         if flippedCards.contains(carouselIndex) {
-            AnimalCardView(animal: cards[carouselIndex], size: .large)
+            RevealCardView(animal: cards[carouselIndex])
         } else {
             CardBackView(packType: packType)
                 .frame(width: largeCardWidth, height: largeCardHeight)
@@ -671,6 +671,100 @@ struct PackOpeningView: View {
             }
         }
         .ignoresSafeArea()
+    }
+}
+
+// MARK: - Reveal Card (shown during pack opening, richer than collection card)
+
+struct RevealCardView: View {
+    let animal: Animal
+    @State private var glowPulse = false
+
+    var body: some View {
+        ZStack {
+            // Background
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: [Color(white: 0.13), Color(white: 0.07)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+
+            // Rarity shimmer
+            RoundedRectangle(cornerRadius: 16)
+                .fill(LinearGradient(
+                    colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+
+            VStack(spacing: 0) {
+                // Top row: number + rarity badge
+                HStack {
+                    Text("#\(String(format: "%03d", animal.collectionNumber))")
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.white.opacity(0.35))
+                    Spacer()
+                    RarityBadgeView(rarity: animal.rarity, compact: true)
+                }
+                .padding(.horizontal, 14)
+                .padding(.top, 12)
+
+                Spacer()
+
+                // Image
+                AnimalRemoteImage(
+                    animalId: animal.id,
+                    emoji: animal.emoji,
+                    glowColor: animal.rarity.glowColor,
+                    glowRadius: glowPulse ? 20 : 10
+                )
+                .frame(width: 180, height: 180)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.7 : 0.35),
+                        radius: glowPulse ? 22 : 12)
+
+                Spacer()
+
+                // Name + scientific name
+                VStack(spacing: 3) {
+                    Text(animal.name)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+
+                    Text(animal.scientificName)
+                        .font(.system(size: 10))
+                        .italic()
+                        .foregroundStyle(.white.opacity(0.40))
+                }
+                .padding(.horizontal, 14)
+
+                // Category pill
+                Text("\(animal.category.icon) \(animal.category.rawValue)")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(animal.category.color.opacity(0.9))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(animal.category.color.opacity(0.15)))
+                    .padding(.top, 6)
+                    .padding(.bottom, 14)
+            }
+
+            // Border
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
+        }
+        .frame(width: 220, height: 308)
+        .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
+                radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                    glowPulse = true
+                }
+            }
+        }
     }
 }
 

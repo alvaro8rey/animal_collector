@@ -8,7 +8,8 @@
     "description": "Habita las profundidades abisales y nada agitando sus aletas en forma de oreja.",
     "funFact": "Puede vivir hasta 7.000 metros de profundidad, donde la presión aplastaría cualquier submarino.",
     "emoji": "🐙",
-    "collectionNumber": 1
+    "collectionNumber": 1,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Grimpoteuthis"
   },
   {
     "id": "mantis-shrimp",
@@ -19,7 +20,8 @@
     "description": "Posee los ojos más complejos del reino animal y uno de los golpes más rápidos del mundo.",
     "funFact": "Su golpe alcanza los 80 km/h con la fuerza de una bala, capaz de romper vidrio de acuario.",
     "emoji": "🦐",
-    "collectionNumber": 2
+    "collectionNumber": 2,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Stomatopoda"
   },
   {
     "id": "blobfish",
@@ -30,7 +32,8 @@
     "description": "A gran profundidad tiene forma normal, pero al subirlo la descompresión lo deforma.",
     "funFact": "Su aspecto 'triste' no existe en su hábitat real. Solo ocurre al sacarlo del fondo.",
     "emoji": "😔",
-    "collectionNumber": 3
+    "collectionNumber": 3,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Psychrolutes_marcidus"
   },
   {
     "id": "giant-squid",
@@ -41,7 +44,8 @@
     "description": "El invertebrado más grande del planeta. Vive en aguas profundas y casi nunca se ve vivo.",
     "funFact": "Tiene ojos del tamaño de una pelota de baloncesto, los más grandes del reino animal.",
     "emoji": "🦑",
-    "collectionNumber": 4
+    "collectionNumber": 4,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Architeuthis"
   },
   {
     "id": "blue-whale",
@@ -52,7 +56,8 @@
     "description": "El animal más grande que jamás ha existido en la historia de la Tierra.",
     "funFact": "Su corazón pesa tanto como un coche y late solo 2 veces por minuto en apnea.",
     "emoji": "🐋",
-    "collectionNumber": 5
+    "collectionNumber": 5,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Balaenoptera_musculus"
   },
   {
     "id": "leafy-sea-dragon",
@@ -63,7 +68,8 @@
     "description": "Maestro del camuflaje marino, imita a la perfección algas y plantas flotantes.",
     "funFact": "Son los machos quienes transportan y cuidan los huevos hasta que eclosionan.",
     "emoji": "🐉",
-    "collectionNumber": 6
+    "collectionNumber": 6,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phycodurus_eques"
   },
   {
     "id": "immortal-jellyfish",
@@ -74,7 +80,8 @@
     "description": "La única criatura conocida capaz de revertir su envejecimiento y evitar la muerte biológica.",
     "funFact": "Cuando envejece o es dañada puede volver a su estado juvenil y vivir indefinidamente.",
     "emoji": "🪼",
-    "collectionNumber": 7
+    "collectionNumber": 7,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Turritopsis_dohrnii"
   },
   {
     "id": "narwhal",
@@ -85,7 +92,8 @@
     "description": "El unicornio del Ártico, famoso por su colmillo en espiral que puede medir hasta 3 metros.",
     "funFact": "Su cuerno no es un cuerno sino un diente canino con millones de terminaciones nerviosas.",
     "emoji": "🦄",
-    "collectionNumber": 8
+    "collectionNumber": 8,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Monodon_monoceros"
   },
   {
     "id": "anglerfish",
@@ -96,7 +104,8 @@
     "description": "Habita las zonas abisales usando su propio cebo luminoso para atrapar presas en la oscuridad.",
     "funFact": "El macho es 10 veces más pequeño que la hembra y se fusiona con ella para siempre.",
     "emoji": "🎣",
-    "collectionNumber": 9
+    "collectionNumber": 9,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Melanocetus_johnsonii"
   },
   {
     "id": "hammerhead-shark",
@@ -107,7 +116,8 @@
     "description": "Su cabeza en forma de T le permite detectar los campos eléctricos de sus presas.",
     "funFact": "Puede ver en 360 grados verticalmente gracias a la posición extrema de sus ojos.",
     "emoji": "🦈",
-    "collectionNumber": 10
+    "collectionNumber": 10,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Sphyrna_lewini"
   },
   {
     "id": "goliath-beetle",
@@ -118,7 +128,8 @@
     "description": "Uno de los insectos más grandes y pesados del mundo, del tamaño de un puño adulto.",
     "funFact": "Puede pesar hasta 100 gramos, más que algunos ratones y pequeños pájaros.",
     "emoji": "🪲",
-    "collectionNumber": 11
+    "collectionNumber": 11,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Goliathus"
   },
   {
     "id": "orchid-mantis",
@@ -129,7 +140,8 @@
     "description": "Imita a la perfección una flor de orquídea para atraer a sus presas con engaño.",
     "funFact": "Los insectos polinizadores la visitan convencidos de que es una flor real.",
     "emoji": "🌸",
-    "collectionNumber": 12
+    "collectionNumber": 12,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hymenopus_coronatus"
   },
   {
     "id": "glowworm",
@@ -140,7 +152,8 @@
     "description": "Crea espectáculos de luz azul en las cuevas de Nueva Zelanda que parecen cielos estrellados.",
     "funFact": "Usan la bioluminiscencia para atraer insectos hacia sus redes pegajosas colgantes.",
     "emoji": "✨",
-    "collectionNumber": 13
+    "collectionNumber": 13,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Arachnocampa_luminosa"
   },
   {
     "id": "atlas-moth",
@@ -151,7 +164,8 @@
     "description": "Una de las polillas más grandes del mundo, con una envergadura de hasta 30 cm.",
     "funFact": "No tiene boca. Solo vive para reproducirse usando las reservas del capullo.",
     "emoji": "🦋",
-    "collectionNumber": 14
+    "collectionNumber": 14,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Attacus_atlas"
   },
   {
     "id": "bullet-ant",
@@ -162,7 +176,8 @@
     "description": "Su picadura es la más dolorosa registrada entre todos los insectos conocidos.",
     "funFact": "El dolor de su picadura se describe como recibir un disparo y dura hasta 24 horas.",
     "emoji": "🐜",
-    "collectionNumber": 15
+    "collectionNumber": 15,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Paraponera_clavata"
   },
   {
     "id": "jewel-beetle",
@@ -173,7 +188,8 @@
     "description": "Sus élitros metálicos brillan como joyas preciosas cambiando de color según el ángulo.",
     "funFact": "Incluso después de muertos, su color iridiscente permanece intacto por siglos.",
     "emoji": "💎",
-    "collectionNumber": 16
+    "collectionNumber": 16,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Chrysochroa_fulminans"
   },
   {
     "id": "titan-beetle",
@@ -184,7 +200,8 @@
     "description": "El escarabajo más grande del mundo, puede alcanzar los 17 cm de longitud.",
     "funFact": "Sus mandíbulas pueden cortar madera y quebrar un lápiz por la mitad sin esfuerzo.",
     "emoji": "🪲",
-    "collectionNumber": 17
+    "collectionNumber": 17,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Titanus_giganteus"
   },
   {
     "id": "morpho-butterfly",
@@ -195,7 +212,8 @@
     "description": "Sus alas azules iridiscentes son un fenómeno óptico, no un pigmento químico.",
     "funFact": "El azul viene de la difracción de la luz en nanoestructuras. El color nunca se destiñe.",
     "emoji": "🦋",
-    "collectionNumber": 18
+    "collectionNumber": 18,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Morpho_menelaus"
   },
   {
     "id": "platypus",
@@ -206,7 +224,8 @@
     "description": "Un mamífero que pone huevos, tiene pico de pato, cola de castor y patas de nutria.",
     "funFact": "Los machos tienen espolones venenosos en las patas traseras. Es el único mamífero venenoso.",
     "emoji": "🦆",
-    "collectionNumber": 19
+    "collectionNumber": 19,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ornithorhynchus_anatinus"
   },
   {
     "id": "aye-aye",
@@ -217,7 +236,8 @@
     "description": "El primate más extraño del mundo, con un dedo medio larguísimo y ojos enormes.",
     "funFact": "Usa su dedo alargado como un gancho para extraer larvas de troncos como un pájaro carpintero.",
     "emoji": "🐒",
-    "collectionNumber": 20
+    "collectionNumber": 20,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Daubentonia_madagascariensis"
   },
   {
     "id": "naked-mole-rat",
@@ -228,7 +248,8 @@
     "description": "Vive en colonias subterráneas y es prácticamente inmune al cáncer.",
     "funFact": "Puede vivir 30 años sin envejecer visiblemente y no siente dolor en su piel.",
     "emoji": "🐭",
-    "collectionNumber": 21
+    "collectionNumber": 21,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Heterocephalus_glaber"
   },
   {
     "id": "star-nosed-mole",
@@ -239,7 +260,8 @@
     "description": "Tiene 22 tentáculos en la nariz con los que detecta presas en milisegundos.",
     "funFact": "Es el mamífero que come más rápido del mundo: identifica y engulle su presa en 227 ms.",
     "emoji": "⭐",
-    "collectionNumber": 22
+    "collectionNumber": 22,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Condylura_cristata"
   },
   {
     "id": "proboscis-monkey",
@@ -250,7 +272,8 @@
     "description": "Su enorme nariz colgante actúa como caja de resonancia y amplificador de sonido.",
     "funFact": "Son excelentes nadadores y tienen membranas entre los dedos para cruzar ríos.",
     "emoji": "🐒",
-    "collectionNumber": 23
+    "collectionNumber": 23,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nasalis_larvatus"
   },
   {
     "id": "pangolin",
@@ -261,7 +284,8 @@
     "description": "El único mamífero completamente cubierto de escamas de queratina, como una alcachofa viviente.",
     "funFact": "Es el animal más traficado ilegalmente del mundo. Al enrollarse forma una bola impenetrable.",
     "emoji": "🦔",
-    "collectionNumber": 24
+    "collectionNumber": 24,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Manis"
   },
   {
     "id": "saiga-antelope",
@@ -272,7 +296,8 @@
     "description": "Su nariz enorme y flexible filtra el polvo de las estepas asiáticas y calienta el aire frío.",
     "funFact": "En 2015, el 60% de la población mundial murió de repente en pocos días. Aún es un misterio.",
     "emoji": "🦌",
-    "collectionNumber": 25
+    "collectionNumber": 25,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Saiga_tatarica"
   },
   {
     "id": "tapir",
@@ -283,7 +308,8 @@
     "description": "Pariente evolutivo del caballo y el rinoceronte, con una pequeña trompa prensil.",
     "funFact": "Sus heces contienen semillas intactas que germinarán lejos. Es un jardinero del bosque.",
     "emoji": "🐽",
-    "collectionNumber": 26
+    "collectionNumber": 26,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tapirus_terrestris"
   },
   {
     "id": "fossa",
@@ -294,7 +320,8 @@
     "description": "El mayor depredador endémico de Madagascar, parece un cruce entre gato y mangosta.",
     "funFact": "Puede escalar árboles con la cabeza hacia abajo gracias a sus tobillos totalmente rotatorios.",
     "emoji": "🐱",
-    "collectionNumber": 27
+    "collectionNumber": 27,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Cryptoprocta_ferox"
   },
   {
     "id": "binturong",
@@ -305,7 +332,8 @@
     "description": "Un mamífero asiático con cola prensil que huele exactamente a palomitas de maíz.",
     "funFact": "El olor a palomitas viene de una sustancia en su orina que usan para marcar territorio.",
     "emoji": "🐻",
-    "collectionNumber": 28
+    "collectionNumber": 28,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Arctictis_binturong"
   },
   {
     "id": "kakapo",
@@ -316,7 +344,8 @@
     "description": "El loro más pesado y el único que no puede volar. Al borde de la extinción.",
     "funFact": "Solo quedan unos 250 ejemplares. Solo se reproduce cada 2-4 años cuando un árbol florece.",
     "emoji": "🦜",
-    "collectionNumber": 29
+    "collectionNumber": 29,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Strigops_habroptila"
   },
   {
     "id": "shoebill",
@@ -327,7 +356,8 @@
     "description": "Su enorme pico en forma de zueco le permite capturar peces grandes y hasta cocodrilos bebé.",
     "funFact": "Puede mantenerse completamente inmóvil durante horas esperando a su presa. Aterradora paciencia.",
     "emoji": "🦢",
-    "collectionNumber": 30
+    "collectionNumber": 30,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Balaeniceps_rex"
   },
   {
     "id": "hoatzin",
@@ -338,7 +368,8 @@
     "description": "Una ave primitiva que digiere hojas mediante fermentación como las vacas.",
     "funFact": "Los polluelos nacen con garras en las alas que les ayudan a trepar árboles al escapar.",
     "emoji": "🐦",
-    "collectionNumber": 31
+    "collectionNumber": 31,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Opisthocomus_hoazin"
   },
   {
     "id": "potoo",
@@ -349,7 +380,8 @@
     "description": "Maestro del camuflaje, imita con perfección absoluta un trozo de madera seca.",
     "funFact": "Duerme de pie sobre una rama con los ojos entreabiertos, aparentando ser un palo.",
     "emoji": "🦉",
-    "collectionNumber": 32
+    "collectionNumber": 32,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nyctibius_griseus"
   },
   {
     "id": "harpy-eagle",
@@ -360,7 +392,8 @@
     "description": "El ave rapaz más grande y poderosa del mundo, cazadora de monos y perezosos.",
     "funFact": "Sus garras son del tamaño de las de un oso grizzly y pueden levantar animales de 7 kg.",
     "emoji": "🦅",
-    "collectionNumber": 33
+    "collectionNumber": 33,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Harpia_harpyja"
   },
   {
     "id": "bird-of-paradise",
@@ -371,7 +404,8 @@
     "description": "Su plumaje es tan oscuro que absorbe el 99.95% de la luz visible, el más negro conocido.",
     "funFact": "El macho despliega sus plumas formando un disco perfecto azul eléctrico para atraer hembras.",
     "emoji": "🐦",
-    "collectionNumber": 34
+    "collectionNumber": 34,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Lophorina_superba"
   },
   {
     "id": "secretary-bird",
@@ -382,7 +416,8 @@
     "description": "Ave rapaz que caza serpientes con sus poderosas patas, incluyendo cobras.",
     "funFact": "Puede patear con una fuerza 5 veces mayor que su propio peso corporal.",
     "emoji": "🦅",
-    "collectionNumber": 35
+    "collectionNumber": 35,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Sagittarius_serpentarius"
   },
   {
     "id": "frigatebird",
@@ -393,7 +428,8 @@
     "description": "El macho infla una bolsa roja brillante del tamaño de un balón para cortejar.",
     "funFact": "Puede dormir mientras vuela usando solo la mitad del cerebro a la vez.",
     "emoji": "🎈",
-    "collectionNumber": 36
+    "collectionNumber": 36,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Fregata_magnificens"
   },
   {
     "id": "thorny-dragon",
@@ -404,7 +440,8 @@
     "description": "Un lagarto australiano cubierto de espinas que absorbe el agua a través de su piel.",
     "funFact": "Puede recolectar agua del suelo húmedo y la arena usando solo su piel como esponja.",
     "emoji": "🦎",
-    "collectionNumber": 37
+    "collectionNumber": 37,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Moloch_horridus"
   },
   {
     "id": "marine-iguana",
@@ -415,7 +452,8 @@
     "description": "El único lagarto marino del mundo. Se zambulle en el océano para buscar algas.",
     "funFact": "Puede reducir su ritmo cardíaco a la mitad para aguantar más tiempo bajo el agua fría.",
     "emoji": "🦎",
-    "collectionNumber": 38
+    "collectionNumber": 38,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Amblyrhynchus_cristatus"
   },
   {
     "id": "draco-lizard",
@@ -426,7 +464,8 @@
     "description": "Planea entre árboles con sus costillas extendidas formando alas de verdad.",
     "funFact": "Sus costillas se extienden hasta 7 cm para crear una membrana de planeo eficiente.",
     "emoji": "🐉",
-    "collectionNumber": 39
+    "collectionNumber": 39,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Draco_volans"
   },
   {
     "id": "komodo-dragon",
@@ -437,7 +476,8 @@
     "description": "El lagarto más grande del mundo, con veneno anticoagulante y bacteria mortal.",
     "funFact": "Las hembras pueden reproducirse sin macho a través de partenogénesis.",
     "emoji": "🐊",
-    "collectionNumber": 40
+    "collectionNumber": 40,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Varanus_komodoensis"
   },
   {
     "id": "leaf-tailed-gecko",
@@ -448,7 +488,8 @@
     "description": "Su cola imita con detalle perfecto una hoja muerta: venas, manchas y bordes irregulares.",
     "funFact": "Tiene los ojos más grandes en proporción a su cuerpo de todo el reino reptil.",
     "emoji": "🍂",
-    "collectionNumber": 41
+    "collectionNumber": 41,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Uroplatus_phantasticus"
   },
   {
     "id": "flying-snake",
@@ -459,7 +500,8 @@
     "description": "Se lanza desde árboles y planea aplastando su cuerpo en forma aerodinámica.",
     "funFact": "Puede planear hasta 10 metros y maniobrar en el aire como un frisbee.",
     "emoji": "🐍",
-    "collectionNumber": 42
+    "collectionNumber": 42,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Chrysopelea_paradisi"
   },
   {
     "id": "axolotl",
@@ -470,7 +512,8 @@
     "description": "El animal que nunca crece. Mantiene sus branquias externas y aspecto juvenil de por vida.",
     "funFact": "Puede regenerar corazón, cerebro, médula espinal y extremidades amputadas a la perfección.",
     "emoji": "🦎",
-    "collectionNumber": 43
+    "collectionNumber": 43,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ambystoma_mexicanum"
   },
   {
     "id": "glass-frog",
@@ -481,7 +524,8 @@
     "description": "Su vientre es completamente transparente, dejando ver todos sus órganos internos.",
     "funFact": "Puedes ver su corazón latir y su estómago digerir comida a través de su piel.",
     "emoji": "🐸",
-    "collectionNumber": 44
+    "collectionNumber": 44,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Centrolenidae"
   },
   {
     "id": "purple-frog",
@@ -492,7 +536,8 @@
     "description": "Descubierta en 2003, solo sale de la tierra 2 semanas al año para reproducirse.",
     "funFact": "Vivió junto a los dinosaurios. Es un fósil viviente de 180 millones de años.",
     "emoji": "🫐",
-    "collectionNumber": 45
+    "collectionNumber": 45,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nasikabatrachus_sahyadrensis"
   },
   {
     "id": "paedophryne",
@@ -503,7 +548,8 @@
     "description": "El vertebrado más pequeño del mundo, descubierto en Papúa Nueva Guinea en 2012.",
     "funFact": "Mide solo 7.7 mm. Cabría perfectamente sobre la uña de tu dedo meñique.",
     "emoji": "🔬",
-    "collectionNumber": 46
+    "collectionNumber": 46,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Paedophryne_amauensis"
   },
   {
     "id": "thylacine",
@@ -514,7 +560,8 @@
     "description": "El mayor marsupial carnívoro moderno, extinto oficialmente en 1936.",
     "funFact": "El último individuo murió en un zoológico el 7 de septiembre de 1936 por descuido humano.",
     "emoji": "🐯",
-    "collectionNumber": 47
+    "collectionNumber": 47,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Thylacinus_cynocephalus"
   },
   {
     "id": "dodo",
@@ -525,7 +572,8 @@
     "description": "El ave no voladora que se convirtió en el símbolo de la extinción causada por el ser humano.",
     "funFact": "Se extinguió en menos de 80 años tras la llegada de humanos a la isla Mauricio.",
     "emoji": "🐦",
-    "collectionNumber": 48
+    "collectionNumber": 48,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Raphus_cucullatus"
   },
   {
     "id": "woolly-mammoth",
@@ -536,7 +584,8 @@
     "description": "El gigante peludo del Pleistoceno, extinto hace apenas 4.000 años.",
     "funFact": "Los últimos mamuts vivieron en la isla Wrangel mientras ya existían las pirámides de Egipto.",
     "emoji": "🦣",
-    "collectionNumber": 49
+    "collectionNumber": 49,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mammuthus_primigenius"
   },
   {
     "id": "megalodon",
@@ -547,7 +596,8 @@
     "description": "El mayor tiburón que jamás existió, con dientes del tamaño de la mano humana.",
     "funFact": "Sus dientes medían 18 cm y su mordida fue la más poderosa de cualquier animal conocido.",
     "emoji": "🦈",
-    "collectionNumber": 50
+    "collectionNumber": 50,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Otodus_megalodon"
   },
   {
     "id": "stonefish",
@@ -558,7 +608,8 @@
     "description": "El pez más venenoso del mundo. Su camuflaje lo hace indistinguible de una roca marina.",
     "funFact": "Sus espinas dorsales inyectan veneno que provoca dolor extremo y puede ser mortal sin antídoto.",
     "emoji": "🪨",
-    "collectionNumber": 51
+    "collectionNumber": 51,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Synanceia_verrucosa"
   },
   {
     "id": "giant-manta-ray",
@@ -569,7 +620,8 @@
     "description": "La mayor raya del mundo, con una envergadura que puede superar los 7 metros.",
     "funFact": "Tiene el cerebro más grande entre todos los peces. Puede reconocerse a sí misma en un espejo.",
     "emoji": "🌊",
-    "collectionNumber": 52
+    "collectionNumber": 52,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Manta_birostris"
   },
   {
     "id": "pygmy-seahorse",
@@ -580,7 +632,8 @@
     "description": "El menor vertebrado marino, apenas 2 cm de largo, mimetizado a la perfección con corales gorgonia.",
     "funFact": "Fue descubierto accidentalmente al examinar un coral en el laboratorio, tan perfecto es su camuflaje.",
     "emoji": "🐠",
-    "collectionNumber": 53
+    "collectionNumber": 53,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hippocampus_bargibanti"
   },
   {
     "id": "vampire-squid",
@@ -591,7 +644,8 @@
     "description": "Habita en zonas del océano completamente sin oxígeno, donde ningún depredador puede seguirle.",
     "funFact": "Su nombre completo significa 'calamar vampiro del infierno'. Lanza nubes de mucosidad bioluminiscente para escapar.",
     "emoji": "🦑",
-    "collectionNumber": 54
+    "collectionNumber": 54,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Vampyroteuthis_infernalis"
   },
   {
     "id": "whale-shark",
@@ -602,7 +656,8 @@
     "description": "El pez más grande del planeta, llegando a los 12 metros. Completamente inofensivo para los humanos.",
     "funFact": "Filtra hasta 6.000 litros de agua por hora para alimentarse de plancton microscópico.",
     "emoji": "🐋",
-    "collectionNumber": 55
+    "collectionNumber": 55,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Rhincodon_typus"
   },
   {
     "id": "nautilus",
@@ -613,7 +668,8 @@
     "description": "Un fósil viviente que lleva 500 millones de años sin cambiar. Su concha en espiral es matemáticamente perfecta.",
     "funFact": "No tiene cerebro centralizado sino un sistema nervioso difuso. Puede llegar a vivir hasta 20 años.",
     "emoji": "🐚",
-    "collectionNumber": 56
+    "collectionNumber": 56,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nautilus_pompilius"
   },
   {
     "id": "sailfish",
@@ -624,7 +680,8 @@
     "description": "El pez más rápido del océano, alcanzando los 110 km/h en esprint.",
     "funFact": "Despliega su aleta dorsal como una vela para acorralar bancos de peces antes de atacar.",
     "emoji": "🐟",
-    "collectionNumber": 57
+    "collectionNumber": 57,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Istiophorus_platypterus"
   },
   {
     "id": "vaquita",
@@ -635,7 +692,8 @@
     "description": "La marsopa más pequeña del mundo y el cetáceo más amenazado del planeta Tierra.",
     "funFact": "Solo quedan unos 10 individuos en el mundo, todos en el golfo de California. Su extinción es inminente.",
     "emoji": "🐬",
-    "collectionNumber": 58
+    "collectionNumber": 58,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phocoena_sinus"
   },
   {
     "id": "bombardier-beetle",
@@ -646,7 +704,8 @@
     "description": "Dispara una mezcla química ardiente desde su abdomen con un estallido audible cuando se siente amenazado.",
     "funFact": "La reacción química alcanza los 100 °C y puede repetirse hasta 20 veces seguidas.",
     "emoji": "💥",
-    "collectionNumber": 59
+    "collectionNumber": 59,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Brachinus_crepitans"
   },
   {
     "id": "death-head-moth",
@@ -657,7 +716,8 @@
     "description": "Su tórax presenta una marca natural con forma de calavera humana que la convirtió en símbolo del terror.",
     "funFact": "Puede robar miel de colmenas imitando el olor de la abeja reina para no ser atacada.",
     "emoji": "💀",
-    "collectionNumber": 60
+    "collectionNumber": 60,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Acherontia_atropos"
   },
   {
     "id": "firefly",
@@ -668,7 +728,8 @@
     "description": "Produce luz fría con una eficiencia del 100 %, sin perder energía en calor como una bombilla.",
     "funFact": "En esta especie solo las hembras brillan. Los machos sin luz buscan a la hembra siguiendo su resplandor.",
     "emoji": "✨",
-    "collectionNumber": 61
+    "collectionNumber": 61,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Lampyris_noctiluca"
   },
   {
     "id": "giant-stick-insect",
@@ -679,7 +740,8 @@
     "description": "El insecto más largo del mundo, superando los 35 cm con las patas extendidas.",
     "funFact": "Sus huevos tienen un apéndice graso llamado elaisoma que las hormigas recolectan, dispersando los huevos.",
     "emoji": "🌿",
-    "collectionNumber": 62
+    "collectionNumber": 62,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phobaeticus_chani"
   },
   {
     "id": "glasswing-butterfly",
@@ -690,7 +752,8 @@
     "description": "Sus alas son completamente transparentes gracias a nanoestructuras que eliminan la reflexión de la luz.",
     "funFact": "La transparencia la protege mejor que el camuflaje clásico porque no proyecta sombra al posarse.",
     "emoji": "🦋",
-    "collectionNumber": 63
+    "collectionNumber": 63,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Greta_oto"
   },
   {
     "id": "hercules-beetle",
@@ -701,7 +764,8 @@
     "description": "El insecto más fuerte del mundo puede cargar 850 veces su propio peso corporal.",
     "funFact": "Sus cuernos, que pueden ser más largos que el resto de su cuerpo, se usan en duelos entre machos.",
     "emoji": "🪲",
-    "collectionNumber": 64
+    "collectionNumber": 64,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dynastes_hercules"
   },
   {
     "id": "leafcutter-ant",
@@ -712,7 +776,8 @@
     "description": "Construye colonias de millones de individuos con autopistas, granjas de hongos y vertederos propios.",
     "funFact": "No come las hojas que corta. Las usa como abono para cultivar un hongo que es su único alimento.",
     "emoji": "🍃",
-    "collectionNumber": 65
+    "collectionNumber": 65,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Atta_cephalotes"
   },
   {
     "id": "babirusa",
@@ -723,7 +788,8 @@
     "description": "Un cerdo salvaje indonesio cuyos colmillos perforan su propio hocico y siguen creciendo hacia arriba.",
     "funFact": "Si no desgasta sus colmillos, pueden llegar a clavarse en el cráneo y matarlo.",
     "emoji": "🐗",
-    "collectionNumber": 66
+    "collectionNumber": 66,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Babyrousa_babyrussa"
   },
   {
     "id": "meerkat",
@@ -734,7 +800,8 @@
     "description": "Pequeño mangosta que vive en grupos muy organizados con centinelas, guarderías y maestros.",
     "funFact": "Son inmunes al veneno de serpientes y escorpiones, y enseñan a sus crías a cazar con presas vivas.",
     "emoji": "🦦",
-    "collectionNumber": 67
+    "collectionNumber": 67,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Suricata_suricatta"
   },
   {
     "id": "dugong",
@@ -745,7 +812,8 @@
     "description": "El único herbívoro marino estrictamente vegetariano y pariente del elefante que inspiró el mito de las sirenas.",
     "funFact": "Sus pulmones ocupan toda la longitud del cuerpo para ayudarle a mantenerse horizontal bajo el agua.",
     "emoji": "🐘",
-    "collectionNumber": 68
+    "collectionNumber": 68,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dugong_dugon"
   },
   {
     "id": "okapi",
@@ -756,7 +824,8 @@
     "description": "El pariente más cercano de la jirafa, descubierto por la ciencia occidental apenas en 1901.",
     "funFact": "Puede limpiar sus propios ojos y orejas con su lengua de 30 cm.",
     "emoji": "🦒",
-    "collectionNumber": 69
+    "collectionNumber": 69,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Okapia_johnstoni"
   },
   {
     "id": "wolverine",
@@ -767,7 +836,8 @@
     "description": "El mustélido más grande del mundo, capaz de repeler osos y lobos para robar su comida.",
     "funFact": "Su nombre latino significa 'tragón'. Puede consumir un alce entero con huesos incluidos.",
     "emoji": "🦡",
-    "collectionNumber": 70
+    "collectionNumber": 70,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Gulo_gulo"
   },
   {
     "id": "tarsier",
@@ -778,7 +848,8 @@
     "description": "Tiene los ojos más grandes en proporción al cuerpo de todos los mamíferos. Son fijos en el cráneo.",
     "funFact": "Como sus ojos no pueden moverse, gira la cabeza 180 grados en cada dirección, 360 en total.",
     "emoji": "🐒",
-    "collectionNumber": 71
+    "collectionNumber": 71,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tarsius_syrichta"
   },
   {
     "id": "quokka",
@@ -789,7 +860,8 @@
     "description": "Un marsupial australiano famoso por ser el animal más sonriente del mundo.",
     "funFact": "En situaciones de peligro, los machos pueden lanzar a sus crías hacia el depredador como distracción para escapar.",
     "emoji": "🦘",
-    "collectionNumber": 72
+    "collectionNumber": 72,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Setonix_brachyurus"
   },
   {
     "id": "tasmanian-devil",
@@ -800,7 +872,8 @@
     "description": "El mayor marsupial carnívoro viviente, con la mordida más fuerte por kilo corporal de cualquier mamífero.",
     "funFact": "Sus chillidos nocturnos aterradores le dieron el nombre. Puede devorar animales enteros, huesos incluidos.",
     "emoji": "😈",
-    "collectionNumber": 73
+    "collectionNumber": 73,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Sarcophilus_harrisii"
   },
   {
     "id": "saola",
@@ -811,7 +884,8 @@
     "description": "Uno de los mamíferos más raros del mundo, descubierto en las selvas de Vietnam en 1992.",
     "funFact": "Nunca ha sido fotografiado en libertad por un científico. Solo existen imágenes de cámaras trampa.",
     "emoji": "🦌",
-    "collectionNumber": 74
+    "collectionNumber": 74,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Pseudoryx_nghetinhensis"
   },
   {
     "id": "sumatran-rhino",
@@ -822,7 +896,8 @@
     "description": "El rinoceronte más pequeño y el único cubierto de pelo. Quedan menos de 80 individuos en el mundo.",
     "funFact": "Es el pariente vivo más cercano del rinoceronte lanudo prehistórico.",
     "emoji": "🦏",
-    "collectionNumber": 75
+    "collectionNumber": 75,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dicerorhinus_sumatrensis"
   },
   {
     "id": "panther-chameleon",
@@ -833,7 +908,8 @@
     "description": "Cambia de color en milisegundos gracias a cristales de guanina que manipulan la luz como un prisma.",
     "funFact": "Cada población de Madagascar tiene su propio patrón de colores único, como un dialecto visual.",
     "emoji": "🦎",
-    "collectionNumber": 76
+    "collectionNumber": 76,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Furcifer_pardalis"
   },
   {
     "id": "gila-monster",
@@ -844,7 +920,8 @@
     "description": "Uno de los pocos lagartos venenosos del mundo. Muerde, retiene y mastica para inyectar el veneno.",
     "funFact": "De su veneno se deriva la exenatida, un fármaco utilizado para tratar la diabetes de tipo 2.",
     "emoji": "🦎",
-    "collectionNumber": 77
+    "collectionNumber": 77,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Heloderma_suspectum"
   },
   {
     "id": "leatherback-turtle",
@@ -855,7 +932,8 @@
     "description": "La tortuga marina más grande del mundo. No tiene caparazón óseo sino una piel coriácea flexible.",
     "funFact": "Puede sumergirse hasta 1.280 metros de profundidad y bucear durante más de 85 minutos.",
     "emoji": "🐢",
-    "collectionNumber": 78
+    "collectionNumber": 78,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dermochelys_coriacea"
   },
   {
     "id": "rainbow-boa",
@@ -866,7 +944,8 @@
     "description": "Su piel iridiscente descompone la luz solar en todos los colores del espectro visible.",
     "funFact": "El efecto arcoíris no proviene de pigmentos sino de microestructuras que difractan la luz como un prisma.",
     "emoji": "🌈",
-    "collectionNumber": 79
+    "collectionNumber": 79,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Epicrates_cenchria"
   },
   {
     "id": "saltwater-crocodile",
@@ -877,7 +956,8 @@
     "description": "El reptil más grande del mundo. Puede superar los 6 metros de longitud y los 1.000 kg de peso.",
     "funFact": "Tiene la mordida más poderosa jamás medida en ningún animal: 16.000 newtons de fuerza.",
     "emoji": "🐊",
-    "collectionNumber": 80
+    "collectionNumber": 80,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Crocodylus_porosus"
   },
   {
     "id": "rattlesnake",
@@ -888,7 +968,8 @@
     "description": "Su cascabel está formado por segmentos de queratina que vibran a 50 Hz como advertencia.",
     "funFact": "Detecta el calor corporal de sus presas con una precisión de 0,003 grados mediante sus fosas termorreceptoras.",
     "emoji": "🐍",
-    "collectionNumber": 81
+    "collectionNumber": 81,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Crotalus_atrox"
   },
   {
     "id": "leopard-gecko",
@@ -899,7 +980,8 @@
     "description": "Uno de los pocos lagartos con párpados móviles. Su cola almacena grasa como reserva energética.",
     "funFact": "Puede desprenderse de su cola voluntariamente, que seguirá moviéndose sola para distraer al depredador.",
     "emoji": "🦎",
-    "collectionNumber": 82
+    "collectionNumber": 82,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Eublepharis_macularius"
   },
   {
     "id": "fire-salamander",
@@ -910,7 +992,8 @@
     "description": "Su llamativo patrón amarillo y negro advierte a los depredadores de sus glándulas tóxicas.",
     "funFact": "Puede vivir más de 20 años. Pare larvas vivas en corrientes de agua en vez de poner huevos.",
     "emoji": "🔥",
-    "collectionNumber": 83
+    "collectionNumber": 83,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Salamandra_salamandra"
   },
   {
     "id": "strawberry-dart-frog",
@@ -921,7 +1004,8 @@
     "description": "Su veneno no lo produce: lo obtiene de los artrópodos que ingiere. En cautividad se vuelve inofensiva.",
     "funFact": "Los padres transportan a cada renacuajo por separado hasta pequeñas pozas de agua en el interior de bromelias.",
     "emoji": "🍓",
-    "collectionNumber": 84
+    "collectionNumber": 84,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Oophaga_pumilio"
   },
   {
     "id": "tomato-frog",
@@ -932,7 +1016,8 @@
     "description": "Cuando se siente amenazada, infla su cuerpo hasta parecer un tomate maduro perfectamente redondo.",
     "funFact": "Segrega una sustancia pegajosa que hace que los depredadores que la muerden queden literalmente pegados.",
     "emoji": "🍅",
-    "collectionNumber": 85
+    "collectionNumber": 85,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dyscophus_antongilii"
   },
   {
     "id": "great-crested-newt",
@@ -943,7 +1028,8 @@
     "description": "En época de reproducción el macho desarrolla una vistosa cresta dorsal serrada de color naranja.",
     "funFact": "Puede regenerar extremidades, ojos y partes del corazón a lo largo de toda su vida adulta.",
     "emoji": "🦎",
-    "collectionNumber": 86
+    "collectionNumber": 86,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Triturus_cristatus"
   },
   {
     "id": "giant-caecilian",
@@ -954,7 +1040,8 @@
     "description": "Un anfibio sin patas que parece una serpiente o lombriz gigante. Vive enterrado en el barro.",
     "funFact": "Posee pequeños tentáculos sensoriales junto a los ojos para detectar presas en total oscuridad.",
     "emoji": "🪱",
-    "collectionNumber": 87
+    "collectionNumber": 87,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Caecilia_thompsoni"
   },
   {
     "id": "quagga",
@@ -965,7 +1052,8 @@
     "description": "Una cebra extinta en 1883 que solo tenía rayas en la parte delantera del cuerpo.",
     "funFact": "El Proyecto Cuaga lleva décadas criando cebras selectivamente para recuperar su patrón de rayas parciales.",
     "emoji": "🦓",
-    "collectionNumber": 88
+    "collectionNumber": 88,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Equus_quagga"
   },
   {
     "id": "giant-moa",
@@ -976,7 +1064,8 @@
     "description": "El ave más alta que jamás existió, superando los 3,6 metros. Vivió en Nueva Zelanda.",
     "funFact": "Se extinguió en apenas 100 años tras la llegada de los maoríes, cazada sin descanso hasta el último individuo.",
     "emoji": "🦕",
-    "collectionNumber": 89
+    "collectionNumber": 89,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dinornis_robustus"
   },
   {
     "id": "woolly-rhino",
@@ -987,7 +1076,8 @@
     "description": "Un rinoceronte cubierto de pelo largo que habitó Europa y Asia durante el Pleistoceno.",
     "funFact": "Especímenes hallados en el permafrost siberiano conservan la piel y el cuerno prácticamente intactos.",
     "emoji": "🦏",
-    "collectionNumber": 90
+    "collectionNumber": 90,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Coelodonta_antiquitatis"
   },
   {
     "id": "smilodon",
@@ -998,7 +1088,8 @@
     "description": "Sus colmillos de hasta 28 cm no servían para matar: desgarraban las vísceras de presas ya inmovilizadas.",
     "funFact": "Vivía en grupos sociales y cuidaba a los miembros heridos de la manada, igual que los leones modernos.",
     "emoji": "🐅",
-    "collectionNumber": 91
+    "collectionNumber": 91,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Smilodon_fatalis"
   },
   {
     "id": "glyptodon",
@@ -1009,7 +1100,8 @@
     "description": "Un armadillo del tamaño de un coche pequeño que habitó América del Sur hasta hace 10.000 años.",
     "funFact": "Los humanos prehistóricos usaban su caparazón como refugio. Tenía el tamaño de una cama individual.",
     "emoji": "🛡️",
-    "collectionNumber": 92
+    "collectionNumber": 92,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Glyptodon_clavipes"
   },
   {
     "id": "scarlet-ibis",
@@ -1020,7 +1112,8 @@
     "description": "Su plumaje rojo intenso proviene exclusivamente de los carotenoides de los crustáceos que consume.",
     "funFact": "Si cambia de dieta, su plumaje pierde el rojo paulatinamente. El color es cien por cien dietético.",
     "emoji": "🦢",
-    "collectionNumber": 93
+    "collectionNumber": 93,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Eudocimus_ruber"
   },
   {
     "id": "bowerbird",
@@ -1031,7 +1124,8 @@
     "description": "El macho construye elaboradas estructuras decoradas para atraer a la hembra: la mayor arquitectura animal.",
     "funFact": "Decora su pérgola solo con objetos azules y colecciona bayas, plumas e incluso plásticos de ese color.",
     "emoji": "🏗️",
-    "collectionNumber": 94
+    "collectionNumber": 94,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ptilonorhynchus_violaceus"
   },
   {
     "id": "cassowary",
@@ -1042,7 +1136,8 @@
     "description": "Considerada el ave más peligrosa del mundo. Sus patas tienen una garra de 12 cm capaz de matar.",
     "funFact": "Sus patadas pueden romper huesos humanos. Ha causado muertes documentadas en Australia y Nueva Guinea.",
     "emoji": "🦅",
-    "collectionNumber": 95
+    "collectionNumber": 95,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Casuarius_casuarius"
   },
   {
     "id": "toucan",
@@ -1053,7 +1148,8 @@
     "description": "Su enorme pico naranja no es una carga sino un radiador: disipa el calor corporal del ave.",
     "funFact": "Regula su temperatura irrigando el pico con más o menos sangre, como un aire acondicionado natural.",
     "emoji": "🦜",
-    "collectionNumber": 96
+    "collectionNumber": 96,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ramphastos_toco"
   },
   {
     "id": "hoopoe",
@@ -1064,7 +1160,8 @@
     "description": "Su llamativa cresta eréctil y su vuelo ondulante la hacen inconfundible en todo el Mediterráneo.",
     "funFact": "Las crías se defienden disparando chorros de excrementos fétidos y segregando aceites malolientes.",
     "emoji": "👑",
-    "collectionNumber": 97
+    "collectionNumber": 97,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Upupa_epops"
   },
   {
     "id": "flamingo",
@@ -1075,7 +1172,8 @@
     "description": "Nace de color gris. Su tono rosado proviene de los carotenos de las algas y crustáceos que filtra.",
     "funFact": "Duerme de pie sobre una sola pata para conservar el calor corporal sin perder el equilibrio.",
     "emoji": "🦩",
-    "collectionNumber": 98
+    "collectionNumber": 98,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phoenicopterus_roseus"
   },
   {
     "id": "kingfisher",
@@ -1086,7 +1184,8 @@
     "description": "Se lanza en picado a más de 40 km/h y ajusta el ángulo de entrada para compensar la refracción del agua.",
     "funFact": "El tren bala Shinkansen japonés rediseñó su morro copiando el pico del martín pescador para reducir el ruido.",
     "emoji": "🐦",
-    "collectionNumber": 99
+    "collectionNumber": 99,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Alcedo_atthis"
   },
   {
     "id": "lyrebird",
@@ -1097,7 +1196,8 @@
     "description": "El mejor imitador del reino animal, capaz de reproducir con exactitud cualquier sonido que escuche.",
     "funFact": "Puede imitar motosierras, disparos de cámara, alarmas de coche y el canto de más de 20 especies a la vez.",
     "emoji": "🎵",
-    "collectionNumber": 100
+    "collectionNumber": 100,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Menura_novaehollandiae"
   },
   {
     "id": "mimic-octopus",
@@ -1108,7 +1208,8 @@
     "description": "El único animal conocido que imita activamente a varias otras especies para evitar depredadores.",
     "funFact": "Puede imitar lenguados, peces piedra y morenas adaptando la forma según el depredador que se aproxima.",
     "emoji": "🐙",
-    "collectionNumber": 101
+    "collectionNumber": 101,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Thaumoctopus_mimicus"
   },
   {
     "id": "pistol-shrimp",
@@ -1119,7 +1220,8 @@
     "description": "Cierra su pinza tan rápido que crea una burbuja de cavitación que aturde y mata a sus presas.",
     "funFact": "La burbuja alcanza los 4.700 °C por una fracción de segundo, casi tan caliente como la superficie del Sol.",
     "emoji": "💥",
-    "collectionNumber": 102
+    "collectionNumber": 102,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Alpheus_heterochaelis"
   },
   {
     "id": "sea-cucumber",
@@ -1130,7 +1232,8 @@
     "description": "Se evapora a través de las paredes corporales y respira por el ano con branquias internas.",
     "funFact": "Cuando se siente amenazado, expulsa sus propias vísceras por el ano para distraer al depredador. Luego las regenera.",
     "emoji": "🥒",
-    "collectionNumber": 103
+    "collectionNumber": 103,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Holothuria_scabra"
   },
   {
     "id": "portuguese-man-o-war",
@@ -1141,7 +1244,8 @@
     "description": "No es una medusa sino una colonia de cuatro tipos distintos de organismos que actúan como uno solo.",
     "funFact": "Sus tentáculos pueden superar los 50 metros de longitud y siguen siendo urticantes horas después de muertos.",
     "emoji": "🪼",
-    "collectionNumber": 104
+    "collectionNumber": 104,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Physalia_physalis"
   },
   {
     "id": "sunfish",
@@ -1152,7 +1256,8 @@
     "description": "El pez óseo más pesado del mundo, pudiendo superar las dos toneladas y los tres metros de altura.",
     "funFact": "Sale a la superficie a tomar el sol para recuperar calor después de bucear en aguas frías profundas.",
     "emoji": "🌕",
-    "collectionNumber": 105
+    "collectionNumber": 105,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mola_mola"
   },
   {
     "id": "barreleye-fish",
@@ -1163,7 +1268,8 @@
     "description": "Tiene la cabeza transparente y sus ojos tubulares apuntan hacia arriba para ver sombras sobre él.",
     "funFact": "Lo que parece la nariz son en realidad sus fosas nasales. Sus ojos verdes brillantes pueden rotar 360 grados.",
     "emoji": "👁️",
-    "collectionNumber": 106
+    "collectionNumber": 106,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Macropinna_microstoma"
   },
   {
     "id": "coconut-crab",
@@ -1174,7 +1280,8 @@
     "description": "El artrópodo terrestre más grande del mundo. Trepa palmeras y rompe cocos con sus pinzas.",
     "funFact": "Sus pinzas ejercen más de 3.300 newtons de fuerza, más que la mordida de muchos tiburones.",
     "emoji": "🦀",
-    "collectionNumber": 107
+    "collectionNumber": 107,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Birgus_latro"
   },
   {
     "id": "walking-stick",
@@ -1185,7 +1292,8 @@
     "description": "Imita una hoja verde con tal detalle que reproduce venas, manchas y bordes irregulares comidos por insectos.",
     "funFact": "Se balancea suavemente al caminar imitando el movimiento de una hoja mecida por el viento.",
     "emoji": "🍃",
-    "collectionNumber": 108
+    "collectionNumber": 108,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phasmatodea"
   },
   {
     "id": "tarantula-hawk",
@@ -1196,7 +1304,8 @@
     "description": "Paraliza tarántulas con su picadura y las entierra vivas como alimento fresco para su larva.",
     "funFact": "Su picadura es considerada la segunda más dolorosa entre todos los insectos del planeta.",
     "emoji": "🐝",
-    "collectionNumber": 109
+    "collectionNumber": 109,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Pepsis_grossa"
   },
   {
     "id": "jewel-wasp",
@@ -1207,7 +1316,8 @@
     "description": "Inyecta veneno directamente en el cerebro de cucarachas para convertirlas en esclavos zombi.",
     "funFact": "El veneno bloquea solo los receptores de escape. La cucaracha sigue viva pero no puede huir.",
     "emoji": "💎",
-    "collectionNumber": 110
+    "collectionNumber": 110,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ampulex_compressa"
   },
   {
     "id": "monarch-butterfly",
@@ -1218,7 +1328,8 @@
     "description": "Realiza una migración de hasta 4.500 km desde Canadá hasta los bosques de México.",
     "funFact": "Ningún individuo completa el viaje de ida y vuelta: se necesitan cuatro generaciones para cerrar el ciclo.",
     "emoji": "🦋",
-    "collectionNumber": 111
+    "collectionNumber": 111,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Danaus_plexippus"
   },
   {
     "id": "dung-beetle",
@@ -1229,7 +1340,8 @@
     "description": "Rueda bolas de estiércol usando la Vía Láctea como guía de navegación nocturna.",
     "funFact": "Es el único insecto conocido que navega orientándose por la luz de la galaxia.",
     "emoji": "⭐",
-    "collectionNumber": 112
+    "collectionNumber": 112,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Scarabaeus_sacer"
   },
   {
     "id": "hummingbird-hawk-moth",
@@ -1240,7 +1352,8 @@
     "description": "Vuela y se alimenta como un colibrí, suspendida en el aire mientras extiende su larga probóscide.",
     "funFact": "Puede batir las alas hasta 85 veces por segundo y recordar exactamente qué flores ya visitó.",
     "emoji": "🦋",
-    "collectionNumber": 113
+    "collectionNumber": 113,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Macroglossum_stellatarum"
   },
   {
     "id": "electric-eel",
@@ -1251,7 +1364,8 @@
     "description": "Genera descargas de hasta 860 voltios para cazar y defenderse, la mayor de cualquier animal.",
     "funFact": "Respira aire y sube a la superficie cada diez minutos. Obtiene el 80 % del oxígeno del aire, no del agua.",
     "emoji": "⚡",
-    "collectionNumber": 114
+    "collectionNumber": 114,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Electrophorus_electricus"
   },
   {
     "id": "arctic-fox",
@@ -1262,7 +1376,8 @@
     "description": "Cambia su pelaje de blanco en invierno a marrón en verano para camuflarse en cualquier estación.",
     "funFact": "Puede detectar presas bajo la nieve por el sonido y lanzarse en picado rompiendo la capa helada.",
     "emoji": "🦊",
-    "collectionNumber": 115
+    "collectionNumber": 115,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Vulpes_lagopus"
   },
   {
     "id": "capybara",
@@ -1273,7 +1388,8 @@
     "description": "El roedor más grande del mundo, semiacuático y pacífico. Convive en armonía con casi cualquier animal.",
     "funFact": "Come sus propias heces por las mañanas para aprovechar los nutrientes fermentados durante la noche.",
     "emoji": "🐾",
-    "collectionNumber": 116
+    "collectionNumber": 116,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hydrochoerus_hydrochaeris"
   },
   {
     "id": "honey-badger",
@@ -1284,7 +1400,8 @@
     "description": "Considerado el animal más intrépido del mundo. Ataca leones, búfalos y cobras sin dudarlo.",
     "funFact": "Su piel es tan gruesa y suelta que puede girar dentro de ella para morder al depredador que lo sujeta.",
     "emoji": "🦡",
-    "collectionNumber": 117
+    "collectionNumber": 117,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mellivora_capensis"
   },
   {
     "id": "gerenuk",
@@ -1295,7 +1412,8 @@
     "description": "Una gacela de cuello larguísimo que se yergue sobre las patas traseras para alcanzar hojas altas.",
     "funFact": "Nunca necesita beber agua directamente. Obtiene toda la humedad que necesita de las plantas que come.",
     "emoji": "🦌",
-    "collectionNumber": 118
+    "collectionNumber": 118,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Litocranius_walleri"
   },
   {
     "id": "sun-bear",
@@ -1306,7 +1424,8 @@
     "description": "El oso más pequeño del mundo, con una lengua de 25 cm perfecta para extraer miel y larvas.",
     "funFact": "Sus garras son proporcionalmente las más largas de cualquier oso y trepa árboles en segundos.",
     "emoji": "🐻",
-    "collectionNumber": 119
+    "collectionNumber": 119,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Helarctos_malayanus"
   },
   {
     "id": "mandrill",
@@ -1317,7 +1436,8 @@
     "description": "El primate más grande y colorido del mundo, con la cara azul y roja más intensa de todo el reino animal.",
     "funFact": "El color de su cara se intensifica con la excitación y la dominancia. Es una pantalla de estado social.",
     "emoji": "🐒",
-    "collectionNumber": 120
+    "collectionNumber": 120,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mandrillus_sphinx"
   },
   {
     "id": "slow-loris",
@@ -1328,7 +1448,8 @@
     "description": "El único primate venenoso del mundo. Produce toxina en el codo que mezcla con saliva para envenenar.",
     "funFact": "Su aspecto adorable lo convierte en el animal más traficado ilegalmente como mascota, llevándolo al borde de la extinción.",
     "emoji": "🐒",
-    "collectionNumber": 121
+    "collectionNumber": 121,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nycticebus_coucang"
   },
   {
     "id": "aardvark",
@@ -1339,7 +1460,8 @@
     "description": "Un mamífero nocturno africano único en su orden con hocico de cerdo, orejas de conejo y cola de canguro.",
     "funFact": "Puede excavar un metro de tierra en tan solo cinco minutos con sus poderosas garras.",
     "emoji": "🐷",
-    "collectionNumber": 122
+    "collectionNumber": 122,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Orycteropus_afer"
   },
   {
     "id": "clouded-leopard",
@@ -1350,7 +1472,8 @@
     "description": "Tiene los colmillos más largos en proporción al cuerpo de todos los felinos vivos actuales.",
     "funFact": "Puede descender de los árboles con la cabeza por delante, como las ardillas, gracias a sus tobillos rotativos.",
     "emoji": "🐆",
-    "collectionNumber": 123
+    "collectionNumber": 123,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Neofelis_nebulosa"
   },
   {
     "id": "gharial",
@@ -1361,7 +1484,8 @@
     "description": "Un cocodrilo con un hocico larguísimo y fino, especializado exclusivamente en cazar peces.",
     "funFact": "El macho desarrolla una protuberancia bulbosa en la punta del hocico que amplifica sus llamadas.",
     "emoji": "🐊",
-    "collectionNumber": 124
+    "collectionNumber": 124,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Gavialis_gangeticus"
   },
   {
     "id": "frilled-lizard",
@@ -1372,7 +1496,8 @@
     "description": "Despliega un enorme collar de piel aterrorizante cuando se siente amenazado, y corre erguido sobre dos patas.",
     "funFact": "Su carrera bípeda a máxima velocidad puede superar los 30 km/h.",
     "emoji": "🦎",
-    "collectionNumber": 125
+    "collectionNumber": 125,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Chlamydosaurus_kingii"
   },
   {
     "id": "blue-tongued-skink",
@@ -1383,7 +1508,8 @@
     "description": "Muestra su lengua azul brillante como señal de advertencia a los depredadores que se aproximan.",
     "funFact": "Refleja la luz ultravioleta de forma que resulta llamativa para los depredadores con visión UV.",
     "emoji": "🦎",
-    "collectionNumber": 126
+    "collectionNumber": 126,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tiliqua_scincoides"
   },
   {
     "id": "basilisk-lizard",
@@ -1394,7 +1520,8 @@
     "description": "El único lagarto capaz de correr sobre la superficie del agua gracias a sus patas traseras con flecos.",
     "funFact": "Puede recorrer más de un metro por zancada sobre el agua antes de hundirse y nadar.",
     "emoji": "🐊",
-    "collectionNumber": 127
+    "collectionNumber": 127,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Basiliscus_basiliscus"
   },
   {
     "id": "mata-mata",
@@ -1405,7 +1532,8 @@
     "description": "Su aspecto rugoso imita hojas muertas. Caza abriendo la boca de golpe para aspirar peces.",
     "funFact": "No mastica: abre la boca creando un vacío que succiona al pez entero en menos de un segundo.",
     "emoji": "🐢",
-    "collectionNumber": 128
+    "collectionNumber": 128,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Chelus_fimbriata"
   },
   {
     "id": "mudskipper",
@@ -1416,7 +1544,8 @@
     "description": "Un pez que pasa la mayor parte del tiempo fuera del agua, respirando a través de la piel húmeda.",
     "funFact": "Usa sus aletas pectorales como proto-patas y trepa raíces de manglar para escapar del agua.",
     "emoji": "🐟",
-    "collectionNumber": 129
+    "collectionNumber": 129,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Periophthalmus_barbarus"
   },
   {
     "id": "olm",
@@ -1427,7 +1556,8 @@
     "description": "Un anfibio cavernícola ciego que puede sobrevivir hasta 10 años sin comer.",
     "funFact": "Puede vivir hasta 100 años, siendo el vertebrado que más vive en relación a su tamaño.",
     "emoji": "🪱",
-    "collectionNumber": 130
+    "collectionNumber": 130,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Proteus_anguinus"
   },
   {
     "id": "chinese-giant-salamander",
@@ -1438,7 +1568,8 @@
     "description": "El anfibio más grande del mundo, pudiendo superar el metro ochenta de longitud.",
     "funFact": "Prácticamente ciega, caza detectando las vibraciones del agua con receptores en todo su cuerpo.",
     "emoji": "🦎",
-    "collectionNumber": 131
+    "collectionNumber": 131,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Andrias_davidianus"
   },
   {
     "id": "darwin-frog",
@@ -1449,7 +1580,8 @@
     "description": "El macho incuba los huevos en su saco vocal y los renacuajos completan la metamorfosis dentro de su boca.",
     "funFact": "Darwin la describió en su viaje en el Beagle. Los polluelos salen saltando directamente de la boca del padre.",
     "emoji": "🐸",
-    "collectionNumber": 132
+    "collectionNumber": 132,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Rhinoderma_darwinii"
   },
   {
     "id": "hairy-frog",
@@ -1460,7 +1592,8 @@
     "description": "Cuando se siente amenazada, rompe sus propios huesos para sacarlos por la piel como garras.",
     "funFact": "Los pelos de los machos son filamentos llenos de vasos sanguíneos que aumentan la absorción de oxígeno.",
     "emoji": "🐸",
-    "collectionNumber": 133
+    "collectionNumber": 133,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Trichobatrachus_robustus"
   },
   {
     "id": "terror-bird",
@@ -1471,7 +1604,8 @@
     "description": "Aves corredoras carnívoras de hasta 3 metros de altura que dominaron América del Sur hace millones de años.",
     "funFact": "Su pico era tan poderoso que podía fracturar huesos de un solo golpe, como un hacha.",
     "emoji": "🦅",
-    "collectionNumber": 134
+    "collectionNumber": 134,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phorusrhacidae"
   },
   {
     "id": "giant-ground-sloth",
@@ -1482,7 +1616,8 @@
     "description": "Un perezoso del tamaño de un elefante que caminaba erguido sobre las patas traseras.",
     "funFact": "Podía erguirse hasta los 6 metros de altura para alcanzar la copa de los árboles.",
     "emoji": "🦥",
-    "collectionNumber": 135
+    "collectionNumber": 135,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Megatherium_americanum"
   },
   {
     "id": "haast-eagle",
@@ -1493,7 +1628,8 @@
     "description": "El águila más grande que jamás existió. Cazaba moas gigantes de hasta 15 veces su peso.",
     "funFact": "Sus garras eran del tamaño de las de un tigre. Se extinguió cuando los maoríes exterminaron a las moas.",
     "emoji": "🦅",
-    "collectionNumber": 136
+    "collectionNumber": 136,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hieraaetus_moorei"
   },
   {
     "id": "irish-elk",
@@ -1504,7 +1640,8 @@
     "description": "El cérvido más grande que existió. Su cornamenta podía alcanzar los 3,7 metros de envergadura.",
     "funFact": "Su enorme cornamenta pudo ser su perdición: quedaba atrapado en la vegetación cerrada del bosque.",
     "emoji": "🦌",
-    "collectionNumber": 137
+    "collectionNumber": 137,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Megaloceros_giganteus"
   },
   {
     "id": "sea-scorpion",
@@ -1515,7 +1652,8 @@
     "description": "El artrópodo más grande que jamás existió. Un escorpión marino de más de 2,5 metros de largo.",
     "funFact": "Habitó los mares de hace 390 millones de años y fue el depredador dominante de su época.",
     "emoji": "🦂",
-    "collectionNumber": 138
+    "collectionNumber": 138,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Jaekelopterus_rhenaniae"
   },
   {
     "id": "passenger-pigeon",
@@ -1526,7 +1664,8 @@
     "description": "El ave más abundante de Norteamérica, con bandadas de miles de millones que oscurecían el cielo.",
     "funFact": "Pasó de ser miles de millones de individuos a cero en menos de 50 años por la caza masiva.",
     "emoji": "🕊️",
-    "collectionNumber": 139
+    "collectionNumber": 139,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ectopistes_migratorius"
   },
   {
     "id": "stellers-sea-cow",
@@ -1537,7 +1676,8 @@
     "description": "Un manatí gigante de hasta 8 metros, extinto apenas 27 años después de ser descubierto por la ciencia.",
     "funFact": "Se extinguió en 1768, solo 27 años después de su descubrimiento, cazada por su carne y grasa.",
     "emoji": "🐮",
-    "collectionNumber": 140
+    "collectionNumber": 140,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hydrodamalis_gigas"
   },
   {
     "id": "resplendent-quetzal",
@@ -1548,7 +1688,8 @@
     "description": "Considerada el ave más bella del mundo, símbolo sagrado de las culturas mayas y aztecas.",
     "funFact": "Las plumas de la cola del macho pueden superar el metro de longitud y brillan en múltiples colores.",
     "emoji": "🦚",
-    "collectionNumber": 141
+    "collectionNumber": 141,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Pharomachrus_mocinno"
   },
   {
     "id": "sword-billed-hummingbird",
@@ -1559,7 +1700,8 @@
     "description": "El único pájaro del mundo cuyo pico es más largo que el resto de su cuerpo.",
     "funFact": "Coevolucionó con una flor cuya corola es igualmente larga y que solo este colibrí puede polinizar.",
     "emoji": "🌺",
-    "collectionNumber": 142
+    "collectionNumber": 142,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ensifera_ensifera"
   },
   {
     "id": "macaroni-penguin",
@@ -1570,7 +1712,8 @@
     "description": "Tiene un llamativo penacho de plumas amarillas en la cabeza que lo hace único entre los pingüinos.",
     "funFact": "Es el pingüino más abundante del mundo con más de 18 millones de individuos.",
     "emoji": "🐧",
-    "collectionNumber": 143
+    "collectionNumber": 143,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Eudyptes_chrysolophus"
   },
   {
     "id": "wandering-albatross",
@@ -1581,7 +1724,8 @@
     "description": "El ave con mayor envergadura del mundo, hasta 3,5 metros. Puede surcar el océano durante años.",
     "funFact": "Puede volar más de 1.000 km en un solo día sin batir las alas, aprovechando los vientos oceánicos.",
     "emoji": "🕊️",
-    "collectionNumber": 144
+    "collectionNumber": 144,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Diomedea_exulans"
   },
   {
     "id": "bee-hummingbird",
@@ -1592,7 +1736,8 @@
     "description": "El ave más pequeña del mundo. Mide apenas 5 cm y pesa menos que una moneda de céntimo.",
     "funFact": "Bate las alas hasta 80 veces por segundo y su corazón late 1.200 veces por minuto.",
     "emoji": "🌸",
-    "collectionNumber": 145
+    "collectionNumber": 145,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mellisuga_helenae"
   },
   {
     "id": "snowy-owl",
@@ -1603,7 +1748,8 @@
     "description": "El único búho que caza de día. Su plumaje blanco lo camufla perfectamente en el Ártico.",
     "funFact": "Puede oír a un lema bajo la nieve a 30 metros de distancia gracias a su disco facial asimétrico.",
     "emoji": "🦉",
-    "collectionNumber": 146
+    "collectionNumber": 146,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Bubo_scandiacus"
   },
   {
     "id": "kea",
@@ -1614,7 +1760,8 @@
     "description": "El único loro alpino del mundo. Extremadamente inteligente y conocido por desmontar objetos.",
     "funFact": "Resuelve puzles a la altura de los primates y ha aprendido a abrir coches y mochilas de turistas.",
     "emoji": "🦜",
-    "collectionNumber": 147
+    "collectionNumber": 147,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Nestor_notabilis"
   },
   {
     "id": "spookfish",
@@ -1625,7 +1772,8 @@
     "description": "El único vertebrado conocido que usa espejos en lugar de lentes para enfocar imágenes en sus ojos.",
     "funFact": "Sus ojos contienen millones de pequeños cristales de guanina dispuestos como espejos cóncavos perfectos.",
     "emoji": "🪞",
-    "collectionNumber": 148
+    "collectionNumber": 148,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dolichopteryx_longipes"
   },
   {
     "id": "immortal-lobster",
@@ -1636,7 +1784,8 @@
     "description": "Uno de los pocos animales que exhibe senescencia negativa: se vuelve más fértil y fuerte con la edad.",
     "funFact": "Técnicamente no envejece en el sentido biológico. Solo muere por enfermedad o depredadores, nunca de viejo.",
     "emoji": "🦞",
-    "collectionNumber": 149
+    "collectionNumber": 149,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Homarus_americanus"
   },
   {
     "id": "white-shark",
@@ -1647,7 +1796,8 @@
     "description": "El mayor pez depredador activo del océano, con hasta 300 dientes en varias filas renovables.",
     "funFact": "Puede detectar una sola gota de sangre diluida en 100 litros de agua y nunca se anestesia al dormir.",
     "emoji": "🦈",
-    "collectionNumber": 150
+    "collectionNumber": 150,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Carcharodon_carcharias"
   },
   {
     "id": "boto",
@@ -1658,7 +1808,8 @@
     "description": "El delfín de río más grande del mundo, de color rosa intenso y con el cuello completamente flexible.",
     "funFact": "Puede girar la cabeza 180 grados, algo imposible para los delfines marinos.",
     "emoji": "🐬",
-    "collectionNumber": 151
+    "collectionNumber": 151,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Inia_geoffrensis"
   },
   {
     "id": "bobbit-worm",
@@ -1669,7 +1820,8 @@
     "description": "Un gusano poliqueto depredador que puede superar los 3 metros enterrado en el fondo marino.",
     "funFact": "Se lanza desde su madriguera a velocidades tan altas que parte en dos a sus presas.",
     "emoji": "🪱",
-    "collectionNumber": 152
+    "collectionNumber": 152,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Eunice_aphroditois"
   },
   {
     "id": "blue-ringed-octopus",
@@ -1680,7 +1832,8 @@
     "description": "Uno de los animales más venenosos del planeta, del tamaño de una pelota de golf.",
     "funFact": "Su veneno no tiene antídoto y puede matar a 26 adultos en minutos. Sus anillos brillan como advertencia.",
     "emoji": "💙",
-    "collectionNumber": 153
+    "collectionNumber": 153,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Hapalochlaena_lunulata"
   },
   {
     "id": "horseshoe-crab",
@@ -1691,7 +1844,8 @@
     "description": "Un fósil viviente de 450 millones de años, casi idéntico a sus antepasados prehistóricos.",
     "funFact": "Su sangre azul coagula en contacto con bacterias y es usada para probar la esterilidad de vacunas.",
     "emoji": "🦀",
-    "collectionNumber": 154
+    "collectionNumber": 154,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Limulus_polyphemus"
   },
   {
     "id": "sea-otter",
@@ -1702,7 +1856,8 @@
     "description": "El único mamífero marino sin capa de grasa. Se mantiene caliente con el pelaje más denso del mundo.",
     "funFact": "Duerme flotando boca arriba, cogida de la mano de otros individuos para no separarse de la manada.",
     "emoji": "🦦",
-    "collectionNumber": 155
+    "collectionNumber": 155,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Enhydra_lutris"
   },
   {
     "id": "dragonet",
@@ -1713,7 +1868,8 @@
     "description": "Uno de los peces más coloridos del mundo. Sus colores brillantes no provienen de pigmentos sino de células.",
     "funFact": "Es uno de los dos únicos vertebrados que produce pigmento azul directamente en la piel, sin iridiscencia.",
     "emoji": "🐠",
-    "collectionNumber": 156
+    "collectionNumber": 156,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Synchiropus_splendidus"
   },
   {
     "id": "pufferfish",
@@ -1724,7 +1880,8 @@
     "description": "Se infla hasta triplicar su tamaño y contiene tetrodotoxina, uno de los venenos más letales conocidos.",
     "funFact": "El macho pasa días creando elaborados círculos geométricos en el fondo de arena para atraer a la hembra.",
     "emoji": "🐡",
-    "collectionNumber": 157
+    "collectionNumber": 157,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tetraodon_nigroviridis"
   },
   {
     "id": "dragonfly",
@@ -1735,7 +1892,8 @@
     "description": "La cazadora más eficiente del reino animal: captura el 95 % de las presas que persigue.",
     "funFact": "Puede mover cada una de sus cuatro alas de forma independiente y volar hacia atrás.",
     "emoji": "🦋",
-    "collectionNumber": 158
+    "collectionNumber": 158,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Anax_junius"
   },
   {
     "id": "assassin-bug",
@@ -1746,7 +1904,8 @@
     "description": "Se camufla apilando los cadáveres de sus víctimas sobre su cuerpo como armadura y disfraz.",
     "funFact": "La pila de hasta veinte hormigas muertas en su espalda la hace irreconocible para depredadores.",
     "emoji": "💀",
-    "collectionNumber": 159
+    "collectionNumber": 159,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Acanthaspis_petax"
   },
   {
     "id": "periodical-cicada",
@@ -1757,7 +1916,8 @@
     "description": "Pasa 17 años bajo tierra como larva y emerge en masa durante unas pocas semanas para reproducirse.",
     "funFact": "Elige períodos primos de 13 o 17 años para que los depredadores no puedan sincronizar sus ciclos con el suyo.",
     "emoji": "🎵",
-    "collectionNumber": 160
+    "collectionNumber": 160,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Magicicada_septendecim"
   },
   {
     "id": "velvet-ant",
@@ -1768,7 +1928,8 @@
     "description": "En realidad es una avispa hembra sin alas con una de las picaduras más dolorosas de Norteamérica.",
     "funFact": "Su caparazón es tan duro que puede sobrevivir el aplastamiento de la rueda de un coche.",
     "emoji": "🐜",
-    "collectionNumber": 161
+    "collectionNumber": 161,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dasymutilla_occidentalis"
   },
   {
     "id": "trapdoor-spider",
@@ -1779,7 +1940,8 @@
     "description": "Construye una madriguera con tapa camuflada y espera emboscada que pase su presa.",
     "funFact": "Su abdomen plano con patrones circulares actúa como tapón para bloquear la entrada de la madriguera.",
     "emoji": "🕷️",
-    "collectionNumber": 162
+    "collectionNumber": 162,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Cyclocosmia_truncata"
   },
   {
     "id": "japanese-giant-hornet",
@@ -1790,7 +1952,8 @@
     "description": "El insecto más grande del mundo con veneno que disuelve tejido humano y atrae a más avispones.",
     "funFact": "Treinta individuos pueden masacrar una colmena de treinta mil abejas en menos de cuatro horas.",
     "emoji": "🐝",
-    "collectionNumber": 163
+    "collectionNumber": 163,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Vespa_mandarinia"
   },
   {
     "id": "darwin-bark-spider",
@@ -1801,7 +1964,8 @@
     "description": "Teje la tela más grande y la seda más resistente producida por cualquier animal conocido.",
     "funFact": "Sus telas pueden cruzar ríos y medir hasta 25 metros. La seda es diez veces más fuerte que el Kevlar.",
     "emoji": "🕸️",
-    "collectionNumber": 164
+    "collectionNumber": 164,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Caerostris_darwini"
   },
   {
     "id": "golden-poison-frog",
@@ -1812,7 +1976,8 @@
     "description": "El animal más venenoso del planeta. Un solo individuo contiene suficiente toxina para matar diez hombres.",
     "funFact": "Los indígenas emberá la frotan en sus flechas para envenenarlas. Basta rozarla con la piel para intoxicarse.",
     "emoji": "✨",
-    "collectionNumber": 165
+    "collectionNumber": 165,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phyllobates_terribilis"
   },
   {
     "id": "hellbender",
@@ -1823,7 +1988,8 @@
     "description": "La salamandra más grande de Norteamérica, superando el metro de longitud.",
     "funFact": "Respira casi exclusivamente a través de su piel arrugada, que maximiza la superficie de absorción de oxígeno.",
     "emoji": "🦎",
-    "collectionNumber": 166
+    "collectionNumber": 166,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Cryptobranchus_alleganiensis"
   },
   {
     "id": "surinam-toad",
@@ -1834,7 +2000,8 @@
     "description": "Los huevos se incrusta en la piel de la espalda de la madre, donde se desarrollan hasta completar la metamorfosis.",
     "funFact": "Las crías emergen directamente como ranitas completamente formadas, atravesando la piel de la madre.",
     "emoji": "🐸",
-    "collectionNumber": 167
+    "collectionNumber": 167,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Pipa_pipa"
   },
   {
     "id": "mosasaurus",
@@ -1845,7 +2012,8 @@
     "description": "Un reptil marino del Cretácico de hasta 17 metros, el mayor depredador oceánico conocido.",
     "funFact": "Tenía doble mandíbula como las serpientes actuales para tragar presas muy grandes enteras.",
     "emoji": "🦕",
-    "collectionNumber": 168
+    "collectionNumber": 168,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Mosasaurus_hoffmannii"
   },
   {
     "id": "andrewsarchus",
@@ -1856,7 +2024,8 @@
     "description": "El mayor mamífero carnívoro terrestre que jamás existió. Solo se conoce por un único cráneo fósil.",
     "funFact": "Su cráneo mide 83 cm de longitud, pero su cuerpo entero es un misterio al no encontrarse más restos.",
     "emoji": "🐺",
-    "collectionNumber": 169
+    "collectionNumber": 169,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Andrewsarchus_mongoliensis"
   },
   {
     "id": "giant-dragonfly",
@@ -1867,7 +2036,8 @@
     "description": "La libélula más grande de la historia, con una envergadura de hasta 70 cm.",
     "funFact": "Existió cuando el oxígeno atmosférico era del 35 %, lo que permitió a los insectos crecer sin límite.",
     "emoji": "🪲",
-    "collectionNumber": 170
+    "collectionNumber": 170,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Meganeura_monyi"
   },
   {
     "id": "argentavis",
@@ -1878,7 +2048,8 @@
     "description": "El ave voladora más grande que jamás existió, con una envergadura de hasta 7 metros.",
     "funFact": "Pesaba 70 kg y para despegar necesitaba correr cuesta abajo o aprovechar corrientes de aire ascendentes.",
     "emoji": "🦅",
-    "collectionNumber": 171
+    "collectionNumber": 171,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Argentavis_magnificens"
   },
   {
     "id": "thylacoleo",
@@ -1889,7 +2060,8 @@
     "description": "El mayor carnívoro marsupial que jamás existió, con la mordida más fuerte de cualquier mamífero de su era.",
     "funFact": "Tenía garras retráctiles como los felinos, aunque no estaba emparentado con ellos en absoluto.",
     "emoji": "🦁",
-    "collectionNumber": 172
+    "collectionNumber": 172,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Thylacoleo_carnifex"
   },
   {
     "id": "atlantic-puffin",
@@ -1900,7 +2072,8 @@
     "description": "Puede transportar hasta 60 peces a la vez en su colorido pico gracias a unas espinas especiales.",
     "funFact": "Pasa la mayor parte de su vida en mar abierto y vuela batiendo las alas 400 veces por minuto.",
     "emoji": "🐦",
-    "collectionNumber": 173
+    "collectionNumber": 173,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Fratercula_arctica"
   },
   {
     "id": "superb-starling",
@@ -1911,7 +2084,8 @@
     "description": "Sus plumas metálicas brillan en azul, verde y naranja con una intensidad casi imposible en la naturaleza.",
     "funFact": "Puede aprender a imitar el canto de docenas de otras especies a lo largo de su vida.",
     "emoji": "✨",
-    "collectionNumber": 174
+    "collectionNumber": 174,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Lamprotornis_superbus"
   },
   {
     "id": "harrier",
@@ -1922,7 +2096,8 @@
     "description": "Vuela lento y bajo sobre marismas y cañaverales para sorprender a sus presas desde arriba.",
     "funFact": "El macho puede tener hasta cinco hembras y lleva comida a todos sus nidos activos.",
     "emoji": "🦅",
-    "collectionNumber": 175
+    "collectionNumber": 175,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Circus_aeruginosus"
   },
   {
     "id": "painted-bunting",
@@ -1933,7 +2108,8 @@
     "description": "El ave más colorida de Norteamérica, con cabeza azul, pecho rojo y dorso verde brillante.",
     "funFact": "Las hembras son completamente verdes para pasar desapercibidas en el nido. El macho no participa en su cuidado.",
     "emoji": "🎨",
-    "collectionNumber": 176
+    "collectionNumber": 176,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Passerina_ciris"
   },
   {
     "id": "andean-condor",
@@ -1944,7 +2120,8 @@
     "description": "El ave voladora con mayor superficie alar del mundo. Puede planear durante horas sin batir las alas.",
     "funFact": "Puede vivir hasta 75 años y no cría hasta los cinco o seis años. Solo pone un huevo cada dos años.",
     "emoji": "🦅",
-    "collectionNumber": 177
+    "collectionNumber": 177,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Vultur_gryphus"
   },
   {
     "id": "imperial-amazon",
@@ -1955,10 +2132,10 @@
     "description": "El loro más amenazado del mundo, endémico de la isla de Dominica. Quedan menos de 50 individuos.",
     "funFact": "Solo anida en los árboles más altos de los bosques nublados de Dominica, imposibles de escalar.",
     "emoji": "🦜",
-    "collectionNumber": 178
+    "collectionNumber": 178,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Amazona_imperialis"
   },
   {
-    "id": "shoebill-2",
     "id": "long-wattled-umbrellabird",
     "name": "Paragüero",
     "scientificName": "Cephalopterus penduliger",
@@ -1967,7 +2144,8 @@
     "description": "El macho tiene un penacho enorme sobre la cabeza y un colgajo de piel de hasta 35 cm del pecho.",
     "funFact": "Infla su colgajo durante el cortejo para amplificar sus llamadas de baja frecuencia en el bosque.",
     "emoji": "☂️",
-    "collectionNumber": 179
+    "collectionNumber": 179,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Cephalopterus_penduliger"
   },
   {
     "id": "horned-lizard",
@@ -1978,10 +2156,10 @@
     "description": "Puede disparar sangre de sus ojos hasta 1,5 metros de distancia como mecanismo de defensa.",
     "funFact": "La sangre que lanza contiene sustancias químicas repelentes, especialmente eficaces contra cánidos.",
     "emoji": "🦎",
-    "collectionNumber": 180
+    "collectionNumber": 180,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Phrynosoma_cornutum"
   },
   {
-    "id": "thorny-devil-2",
     "id": "caiman-lizard",
     "name": "Lagarto Caimán",
     "scientificName": "Dracaena guianensis",
@@ -1990,7 +2168,8 @@
     "description": "Semi-acuático y con escamas de aspecto prehistórico, se especializa en abrir caracoles con los dientes.",
     "funFact": "Sus dientes posteriores planos actúan como muelas para triturar las conchas de los moluscos.",
     "emoji": "🦎",
-    "collectionNumber": 181
+    "collectionNumber": 181,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Dracaena_guianensis"
   },
   {
     "id": "reticulated-python",
@@ -2001,7 +2180,8 @@
     "description": "La serpiente más larga del mundo, pudiendo superar los 7 metros de longitud.",
     "funFact": "Puede engullir un ciervo adulto entero. Tras comer, puede sobrevivir sin volver a alimentarse hasta un año.",
     "emoji": "🐍",
-    "collectionNumber": 182
+    "collectionNumber": 182,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Malayopython_reticulatus"
   },
   {
     "id": "veiled-chameleon",
@@ -2012,7 +2192,8 @@
     "description": "Tiene una cresta cefálica alta en forma de yelmo que le sirve para recolectar el rocío de la mañana.",
     "funFact": "Su lengua puede extenderse en 0,07 segundos a una velocidad de 26 cuerpos por segundo.",
     "emoji": "🦎",
-    "collectionNumber": 183
+    "collectionNumber": 183,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Chamaeleo_calyptratus"
   },
   {
     "id": "tuatara",
@@ -2023,10 +2204,10 @@
     "description": "El único superviviente de un orden de reptiles separado de los lagartos hace 240 millones de años.",
     "funFact": "Tiene un tercer ojo funcional en lo alto del cráneo sensible a la luz, aunque cubierto de piel en adultos.",
     "emoji": "🦎",
-    "collectionNumber": 184
+    "collectionNumber": 184,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Sphenodon_punctatus"
   },
   {
-    "id": "pangolin-2",
     "id": "wombat",
     "name": "Wombat",
     "scientificName": "Vombatus ursinus",
@@ -2035,7 +2216,8 @@
     "description": "Un marsupial australiano robusto que produce excrementos cúbicos, único en el reino animal.",
     "funFact": "Sus heces son cúbicas para que no rueden y sirvan como marcadores de territorio en el suelo.",
     "emoji": "🐨",
-    "collectionNumber": 185
+    "collectionNumber": 185,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Vombatus_ursinus"
   },
   {
     "id": "iberian-lynx",
@@ -2046,10 +2228,10 @@
     "description": "El felino más amenazado del mundo. A principios de siglo solo quedaban 94 individuos en España.",
     "funFact": "Gracias a los programas de cría en cautividad, la población superó los 1.000 individuos en 2022.",
     "emoji": "🐱",
-    "collectionNumber": 186
+    "collectionNumber": 186,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Lynx_pardinus"
   },
   {
-    "id": "platypus-2",
     "id": "red-panda",
     "name": "Panda Rojo",
     "scientificName": "Ailurus fulgens",
@@ -2058,7 +2240,8 @@
     "description": "Descubierto casi 50 años antes que el oso panda gigante. No está emparentado con ninguno de los dos pandas.",
     "funFact": "Para manipular el bambú tiene un falso pulgar, una extensión del hueso de la muñeca idéntica a la del oso panda.",
     "emoji": "🦊",
-    "collectionNumber": 187
+    "collectionNumber": 187,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ailurus_fulgens"
   },
   {
     "id": "numbat",
@@ -2069,7 +2252,8 @@
     "description": "El único marsupial diurno de Australia. Come exclusivamente termitas, hasta 20.000 al día.",
     "funFact": "No tiene bolsa marsupial. Las crías se aferran al vientre peludo de la madre directamente.",
     "emoji": "🐾",
-    "collectionNumber": 188
+    "collectionNumber": 188,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Myrmecobius_fasciatus"
   },
   {
     "id": "vampire-bat",
@@ -2080,10 +2264,10 @@
     "description": "El único mamífero que se alimenta exclusivamente de sangre de otros animales.",
     "funFact": "Comparte la sangre con compañeros hambrientos del refugio, incluso con individuos no emparentados.",
     "emoji": "🦇",
-    "collectionNumber": 189
+    "collectionNumber": 189,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Desmodus_rotundus"
   },
   {
-    "id": "narwhal-final",
     "id": "pygmy-marmoset",
     "name": "Tití Pigmeo",
     "scientificName": "Cebuella pygmaea",
@@ -2092,10 +2276,10 @@
     "description": "El mono más pequeño del mundo, del tamaño de un dedo pulgar adulto al nacer.",
     "funFact": "Puede girar la cabeza 180 grados y trepar tanto cabeza arriba como abajo.",
     "emoji": "🐒",
-    "collectionNumber": 190
+    "collectionNumber": 190,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Cebuella_pygmaea"
   },
   {
-    "id": "proboscis-monkey-2",
     "id": "ethiopian-wolf",
     "name": "Lobo Etíope",
     "scientificName": "Canis simensis",
@@ -2104,10 +2288,10 @@
     "description": "El cánido más amenazado del mundo. Solo quedan unos 500 individuos en las montañas de Etiopía.",
     "funFact": "Come exclusivamente ratas topo del altiplano. Es el único lobo especializado en roedores pequeños.",
     "emoji": "🐺",
-    "collectionNumber": 191
+    "collectionNumber": 191,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Canis_simensis"
   },
   {
-    "id": "mimic-octopus-2",
     "id": "red-kangaroo",
     "name": "Canguro Rojo",
     "scientificName": "Macropus rufus",
@@ -2116,10 +2300,10 @@
     "description": "El marsupial más grande del mundo y el mayor mamífero endémico de Australia.",
     "funFact": "Una hembra puede tener simultáneamente un embrión en diapausa, una cría en la bolsa y un joven externo.",
     "emoji": "🦘",
-    "collectionNumber": 192
+    "collectionNumber": 192,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Macropus_rufus"
   },
   {
-    "id": "gharial-2",
     "id": "spectacled-bear",
     "name": "Oso de Anteojos",
     "scientificName": "Tremarctos ornatus",
@@ -2128,7 +2312,8 @@
     "description": "El único oso nativo de América del Sur y el único superviviente de los osos de cara corta.",
     "funFact": "Construye plataformas en los árboles para comer tranquilamente y duerme en ellas como en una cama.",
     "emoji": "🐻",
-    "collectionNumber": 193
+    "collectionNumber": 193,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Tremarctos_ornatus"
   },
   {
     "id": "snow-leopard",
@@ -2139,11 +2324,10 @@
     "description": "El gran felino más esquivo del mundo, fantasma de las montañas del Asia Central.",
     "funFact": "Su cola, del mismo largo que su cuerpo, la enrolla alrededor del hocico como bufanda para abrigarse.",
     "emoji": "🐆",
-    "collectionNumber": 194
+    "collectionNumber": 194,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Panthera_uncia"
   },
   {
-    "id": "mimic-octopus-3",
-    "id": "gharial-3",
     "id": "olinguito",
     "name": "Olinguito",
     "scientificName": "Bassaricyon neblina",
@@ -2152,10 +2336,10 @@
     "description": "El primer nuevo mamífero carnívoro descubierto en el continente americano en 35 años, en 2013.",
     "funFact": "Llevaba décadas en colecciones de museos sin identificar, confundido con un pariente llamado olingo.",
     "emoji": "🦝",
-    "collectionNumber": 195
+    "collectionNumber": 195,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Bassaricyon_neblina"
   },
   {
-    "id": "christmas-iguana",
     "id": "spiny-bush-viper",
     "name": "Víbora Arborescente Espinosa",
     "scientificName": "Atheris hispida",
@@ -2164,7 +2348,8 @@
     "description": "Sus escamas quilladas le dan un aspecto draconiano único entre todas las serpientes del mundo.",
     "funFact": "Vive exclusivamente en las copas de los árboles y rara vez desciende al suelo.",
     "emoji": "🐍",
-    "collectionNumber": 196
+    "collectionNumber": 196,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Atheris_hispida"
   },
   {
     "id": "armadillo-girdled-lizard",
@@ -2175,7 +2360,8 @@
     "description": "Cuando se siente amenazado se enrolla y se muerde la cola formando un anillo de escamas protectoras.",
     "funFact": "Sus escamas son tan duras que incluso las águilas tienen dificultad para perforarlas.",
     "emoji": "🔄",
-    "collectionNumber": 197
+    "collectionNumber": 197,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Ouroborus_cataphractus"
   },
   {
     "id": "paradox-frog",
@@ -2186,7 +2372,8 @@
     "description": "Sus renacuajos pueden alcanzar los 25 cm de longitud, cuatro veces el tamaño del adulto.",
     "funFact": "Es el único animal conocido que se encoge drásticamente al metamorfosearse en adulto.",
     "emoji": "🐸",
-    "collectionNumber": 198
+    "collectionNumber": 198,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Pseudis_paradoxa"
   },
   {
     "id": "mountain-chicken",
@@ -2197,7 +2384,8 @@
     "description": "Una de las mayores ranas del mundo, endémica de dos pequeñas islas del Caribe. Al borde de la extinción.",
     "funFact": "Cuida a sus crías inyectando huevos sin fecundar en el nido para que los renacuajos se los coman.",
     "emoji": "🍗",
-    "collectionNumber": 199
+    "collectionNumber": 199,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Leptodactylus_fallax"
   },
   {
     "id": "gastric-brooding-frog",
@@ -2208,6 +2396,7 @@
     "description": "Se tragaba sus propios huevos y los incubaba en el estómago, del que emergían las crías completamente formadas.",
     "funFact": "Se extinguió en 1983 antes de ser estudiada en profundidad. Los científicos intentan revivirla mediante clonación.",
     "emoji": "🔬",
-    "collectionNumber": 200
+    "collectionNumber": 200,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Rheobatrachus_silus"
   }
 ]
