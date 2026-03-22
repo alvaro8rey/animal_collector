@@ -230,6 +230,7 @@ struct PackOpeningView: View {
     }
 
     private func startOpening() {
+        print("🎴 startOpening() llamado")
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         cards = vm.openPack(packType).sorted { $0.rarity < $1.rarity }
         phase = .opening
