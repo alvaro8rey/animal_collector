@@ -12,7 +12,7 @@ enum GachaEngine {
         pityCount: Int
     ) -> [Animal] {
         var result: [Animal] = []
-        let pityActive = pityCount >= 10
+        let pityActive = pityCount >= 20
 
         for index in 0..<count {
             let isLastCard = index == count - 1
