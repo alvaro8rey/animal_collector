@@ -555,10 +555,10 @@ struct PackOpeningView: View {
             let intensityCurve = CHHapticParameterCurve(
                 parameterID: .hapticIntensityControl,
                 controlPoints: [
-                    .init(relativeTime: 0.0,  value: 1.0),
-                    .init(relativeTime: 0.6,  value: 0.85),
-                    .init(relativeTime: 1.1,  value: 0.35),
-                    .init(relativeTime: 1.5,  value: 0.0)
+                    CHHapticParameterCurve.ControlPoint(relativeTime: 0.0,  value: 1.0),
+                    CHHapticParameterCurve.ControlPoint(relativeTime: 0.6,  value: 0.85),
+                    CHHapticParameterCurve.ControlPoint(relativeTime: 1.1,  value: 0.35),
+                    CHHapticParameterCurve.ControlPoint(relativeTime: 1.5,  value: 0.0)
                 ]
             )
             // Impacto fuerte al explotar el sobre
