@@ -47,9 +47,6 @@ struct PackOpeningView: View {
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
 
-    // Debug
-    @State private var debugText: String = ""
-
     // Legendary reveal
     @State private var showingLegendaryReveal = false
     @State private var legendaryFlashOpacity: Double = 0
@@ -101,19 +98,6 @@ struct PackOpeningView: View {
             case .summary:   summaryView
             }
 
-            // DEBUG LABEL - borrar después
-            if !debugText.isEmpty {
-                VStack {
-                    Text(debugText)
-                        .font(.caption)
-                        .foregroundStyle(.yellow)
-                        .padding(6)
-                        .background(Color.black.opacity(0.7))
-                        .cornerRadius(6)
-                    Spacer()
-                }
-                .padding(.top, 60)
-            }
 
             if showingLegendaryReveal {
                 legendaryRevealOverlay
@@ -243,7 +227,6 @@ struct PackOpeningView: View {
     }
 
     private func startOpening() {
-        debugText = "startOpening llamado"
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         cards = vm.openPack(packType).sorted { $0.rarity < $1.rarity }
         phase = .opening
@@ -262,8 +245,6 @@ struct PackOpeningView: View {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
             }
         }
-        playShakeHaptics()
-
         // Scale up (0.56 + 1.0 = 1.56s)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.56) {
             withAnimation(.spring(response: 0.14, dampingFraction: 0.38)) {
@@ -539,24 +520,6 @@ struct PackOpeningView: View {
 
     // MARK: - Haptics
 
-    private func playShakeHaptics() {
-        debugText = "playShakeHaptics llamado"
-        let gen = UIImpactFeedbackGenerator(style: .rigid)
-        gen.prepare()
-        var tick = 0
-        Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { timer in
-            tick += 1
-            if tick > 19 {
-                timer.invalidate()
-                self.debugText = "Timer terminado (ticks: \(tick))"
-                return
-            }
-            self.debugText = "Timer tick \(tick)"
-            let intensity = CGFloat(tick <= 10 ? 1.0 : max(0.15, 1.0 - Double(tick - 10) * 0.12))
-            gen.impactOccurred(intensity: intensity)
-            gen.prepare()
-        }
-    }
 
     // MARK: - Legendary Reveal
 

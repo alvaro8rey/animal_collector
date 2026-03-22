@@ -327,8 +327,10 @@ struct GachaView: View {
 
     private func openPackWithShake() {
         isShaking = true
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         pendingCards = vm.openPack(.basic).sorted { $0.rarity < $1.rarity }
+
+        let gen = UIImpactFeedbackGenerator(style: .rigid)
+        gen.prepare()
 
         let angles: [Double] = [
             0, -11, 10, -10, 9, -9, 8, -8, 7, -7,
@@ -338,6 +340,11 @@ struct GachaView: View {
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
+                // Haptic en cada cambio de dirección fuerte
+                if i > 0 && i < 22 && i % 2 == 1 {
+                    gen.impactOccurred(intensity: i < 12 ? 1.0 : max(0.2, 1.0 - Double(i - 12) * 0.1))
+                    gen.prepare()
+                }
             }
         }
 
