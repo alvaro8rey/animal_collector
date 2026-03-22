@@ -623,7 +623,7 @@ struct PackOpeningView: View {
         // Voltear la carta
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
             withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                flippedCards.insert(index)
+                _ = flippedCards.insert(index)
             }
         }
 
