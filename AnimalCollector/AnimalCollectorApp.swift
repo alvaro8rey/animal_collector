@@ -9,7 +9,7 @@ struct AnimalCollectorApp: App {
         MobileAds.shared.start(completionHandler: nil)
         #if DEBUG
         MobileAds.shared.requestConfiguration.testDeviceIdentifiers = [
-            "cab5d71812d48a303721fc50fc2c0f1d"
+            "5328bf3a52b8f9c9b9ce22384f467c04"
         ]
         #endif
     }
