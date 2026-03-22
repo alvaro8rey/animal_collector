@@ -11,6 +11,8 @@ struct GachaView: View {
     @State private var shakeAngle: Double = 0
     @State private var isShaking = false
     @State private var pendingCards: [Animal] = []
+    @State private var frozenProgress: Double? = nil
+    @State private var frozenObtainedCount: Int? = nil
 
     var body: some View {
         NavigationStack {
@@ -61,6 +63,9 @@ struct GachaView: View {
                     shakeAngle = 0
                     isShaking = false
                     pendingCards = []
+                    // Descongelar el progreso ahora que la animación ha terminado
+                    frozenProgress = nil
+                    frozenObtainedCount = nil
                 }
             }
             .fullScreenCover(isPresented: $showAdSimulator) {
@@ -173,7 +178,7 @@ struct GachaView: View {
                     .textCase(.uppercase)
                     .tracking(1)
                 Spacer()
-                Text("\(vm.obtainedCount) / \(vm.allAnimals.count)")
+                Text("\(frozenObtainedCount ?? vm.obtainedCount) / \(vm.allAnimals.count)")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.5))
             }
@@ -190,7 +195,7 @@ struct GachaView: View {
                                 startPoint: .leading, endPoint: .trailing
                             )
                         )
-                        .frame(width: geo.size.width * vm.collectionProgress)
+                        .frame(width: geo.size.width * (frozenProgress ?? vm.collectionProgress))
                         .animation(.spring(response: 0.8), value: vm.collectionProgress)
                 }
             }
@@ -328,6 +333,9 @@ struct GachaView: View {
     // MARK: - Shake & Open
 
     private func openPackWithShake() {
+        // Congelar el progreso actual antes de que openPack actualice la colección
+        frozenProgress = vm.collectionProgress
+        frozenObtainedCount = vm.obtainedCount
         isShaking = true
         pendingCards = vm.openPack(.basic).sorted { $0.rarity < $1.rarity }
 
