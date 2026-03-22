@@ -177,12 +177,12 @@ struct AdSimulatorView: View {
 // MARK: - Ad coordinator (UIKit bridge)
 
 @MainActor
-final class RewardedAdCoordinator: NSObject, FullScreenContentDelegate {
+final class RewardedAdCoordinator: NSObject, GADFullScreenContentDelegate {
 
     private let adUnitID: String
     private let onRewarded: () -> Void
     private let onFailed: () -> Void
-    private var rewardedAd: RewardedAd?
+    private var rewardedAd: GADRewardedAd?
 
     init(adUnitID: String, onRewarded: @escaping () -> Void, onFailed: @escaping () -> Void) {
         self.adUnitID = adUnitID
@@ -191,7 +191,7 @@ final class RewardedAdCoordinator: NSObject, FullScreenContentDelegate {
     }
 
     func loadAndPresent() {
-        RewardedAd.load(with: adUnitID, request: Request()) { [weak self] ad, error in
+        GADRewardedAd.load(withAdUnitID: adUnitID, request: GADRequest()) { [weak self] ad, error in
             guard let self else { return }
             if let error {
                 print("AdMob load error: \(error.localizedDescription)")
@@ -227,7 +227,7 @@ final class RewardedAdCoordinator: NSObject, FullScreenContentDelegate {
     }
 
     // El usuario cerró el anuncio antes de terminar → no recompensar
-    nonisolated func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+    nonisolated func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         Task { @MainActor in self.onFailed() }
     }
 }
