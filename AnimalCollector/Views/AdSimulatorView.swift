@@ -11,6 +11,17 @@ struct AdSimulatorView: View {
     @State private var phase: Phase = .loading
     @State private var hasStarted = false
 
+    // Reward animation state
+    @State private var rewardAppeared = false
+    @State private var pack1Scale: CGFloat = 0.3
+    @State private var pack2Scale: CGFloat = 0.3
+    @State private var pack1Opacity: Double = 0
+    @State private var pack2Opacity: Double = 0
+    @State private var titleScale: CGFloat = 0.5
+    @State private var titleOpacity: Double = 0
+    @State private var glowPulse = false
+    @State private var particleProgress: Double = 0
+
     private enum Phase { case loading, failed, rewarded }
 
     var body: some View {
@@ -81,54 +92,157 @@ struct AdSimulatorView: View {
     // MARK: - Rewarded
 
     private var rewardedView: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        ZStack {
+            // Gradient background
+            LinearGradient(
+                colors: [
+                    Color(red: 0.08, green: 0.05, blue: 0.18),
+                    Color(red: 0.04, green: 0.02, blue: 0.10)
+                ],
+                startPoint: .top, endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-            VStack(spacing: 24) {
-                Text("🎉")
-                    .font(.system(size: 72))
-
-                VStack(spacing: 8) {
-                    Text("¡Recompensa obtenida!")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                    Text("+2 sobres añadidos")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.6))
-                }
-
-                HStack(spacing: 12) {
-                    ForEach(0..<2, id: \.self) { _ in
-                        Text("📦")
-                            .font(.system(size: 40))
-                            .padding(16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color.white.opacity(0.08))
-                                    .overlay(RoundedRectangle(cornerRadius: 14)
-                                        .strokeBorder(.white.opacity(0.1), lineWidth: 1))
-                            )
-                    }
-                }
+            // Particles
+            ForEach(0..<12, id: \.self) { i in
+                let angle = Double(i) * 30.0 * .pi / 180.0
+                let distance: CGFloat = 200
+                Circle()
+                    .fill(i % 3 == 0 ? Color.yellow : i % 3 == 1 ? Color.purple.opacity(0.8) : Color.blue.opacity(0.7))
+                    .frame(width: CGFloat.random(in: 4...9))
+                    .offset(
+                        x: cos(angle) * distance * particleProgress,
+                        y: sin(angle) * distance * particleProgress - 40
+                    )
+                    .opacity(particleProgress < 0.6
+                        ? particleProgress / 0.6
+                        : (1 - particleProgress) / 0.4)
             }
 
-            Spacer()
+            VStack(spacing: 0) {
+                Spacer()
 
-            Button(action: { isPresented = false }) {
-                Text("¡Abrir sobres!")
-                    .fontWeight(.bold)
+                // Title
+                VStack(spacing: 6) {
+                    Text("¡RECOMPENSA!")
+                        .font(.system(size: 28, weight: .black))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color(red: 1.0, green: 0.85, blue: 0.2), .white, Color(red: 1.0, green: 0.6, blue: 0.1)],
+                                startPoint: .leading, endPoint: .trailing
+                            )
+                        )
+                        .shadow(color: Color.yellow.opacity(0.6), radius: glowPulse ? 16 : 8)
+                        .scaleEffect(titleScale)
+                        .opacity(titleOpacity)
+
+                    Text("Has ganado 2 sobres")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.55))
+                        .opacity(titleOpacity)
+                }
+
+                Spacer().frame(height: 48)
+
+                // Pack images
+                HStack(spacing: 28) {
+                    packImage
+                        .scaleEffect(pack1Scale)
+                        .opacity(pack1Opacity)
+                        .rotationEffect(.degrees(rewardAppeared ? -8 : 0))
+
+                    packImage
+                        .scaleEffect(pack2Scale)
+                        .opacity(pack2Opacity)
+                        .rotationEffect(.degrees(rewardAppeared ? 8 : 0))
+                }
+                .shadow(color: Color(red: 0.25, green: 0.5, blue: 1.0).opacity(glowPulse ? 0.7 : 0.35), radius: glowPulse ? 28 : 16)
+
+                Spacer()
+
+                // CTA button
+                Button(action: { isPresented = false }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "gift.fill")
+                            .font(.headline)
+                        Text("¡Abrir sobres!")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                    }
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(RoundedRectangle(cornerRadius: 14)
-                        .fill(LinearGradient(
-                            colors: [.white.opacity(0.95), .white.opacity(0.75)],
-                            startPoint: .leading, endPoint: .trailing
-                        )))
+                    .padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(
+                                colors: [Color(red: 1.0, green: 0.85, blue: 0.2), Color(red: 1.0, green: 0.55, blue: 0.1)],
+                                startPoint: .leading, endPoint: .trailing
+                            ))
+                    )
+                    .shadow(color: Color.yellow.opacity(0.4), radius: 12)
+                }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 52)
+                .opacity(titleOpacity)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 48)
+        }
+        .onAppear { animateReward() }
+    }
+
+    private var packImage: some View {
+        Group {
+            if UIImage(named: "pack_image") != nil {
+                Image("pack_image")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120)
+            } else {
+                PackSpriteView()
+                    .scaleEffect(0.6)
+            }
+        }
+    }
+
+    private func animateReward() {
+        guard !rewardAppeared else { return }
+        rewardAppeared = true
+
+        // Particles burst
+        withAnimation(.spring(response: 0.9, dampingFraction: 0.65)) {
+            particleProgress = 1.0
+        }
+
+        // Title drops in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
+                titleScale = 1.0
+                titleOpacity = 1.0
+            }
+        }
+
+        // Pack 1 bounces in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.55)) {
+                pack1Scale = 1.0
+                pack1Opacity = 1.0
+            }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
+
+        // Pack 2 bounces in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.52) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.55)) {
+                pack2Scale = 1.0
+                pack2Opacity = 1.0
+            }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
+
+        // Glow pulse starts
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
+                glowPulse = true
+            }
         }
     }
 
