@@ -84,7 +84,7 @@ struct PackOpeningView: View {
 
     private let largeCardWidth: CGFloat = 270
     private let largeCardHeight: CGFloat = 378
-    private let stackOffset: CGFloat = 46
+    private let stackOffset: CGFloat = 70
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -386,7 +386,7 @@ struct PackOpeningView: View {
                         removal:   .move(edge: navigatingForward ? .leading  : .trailing).combined(with: .opacity)
                     ))
             }
-            .padding(.leading, 28)
+            .padding(.leading, 10)
             .gesture(
                 DragGesture(minimumDistance: 30)
                     .onEnded { val in
