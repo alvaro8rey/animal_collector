@@ -1,14 +1,14 @@
 import SwiftUI
-import GoogleMobileAds
+import GoogleGADMobileAds
 
 @main
 struct AnimalCollectorApp: App {
     @StateObject private var gameViewModel = GameViewModel()
 
     init() {
-        MobileAds.shared.start(completionHandler: nil)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
         #if DEBUG
-        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = [
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [
             "5328bf3a52b8f9c9b9ce22384f467c04"
         ]
         #endif
