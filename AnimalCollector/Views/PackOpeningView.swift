@@ -421,17 +421,12 @@ struct PackOpeningView: View {
 
     private func navigateTo(_ index: Int) {
         navigatingForward = index > carouselIndex
+        // Pre-revelar para que la carta entre ya volteada en la transición de slide
+        flippedCards.insert(index)
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
             carouselIndex = index
         }
-        if !flippedCards.contains(index) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                    flippedCards.insert(index)
-                }
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            }
-        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 
     private var bestCardIndex: Int { cards.isEmpty ? 0 : cards.count - 1 }
