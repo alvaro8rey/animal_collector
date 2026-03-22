@@ -373,8 +373,7 @@ struct PackOpeningView: View {
                     let depth = CGFloat(idx - carouselIndex)
                     CardBackView(packType: packType)
                         .frame(width: largeCardWidth, height: largeCardHeight)
-                        .offset(x: depth * stackOffset, y: depth * 3)
-                        .scaleEffect(1.0 - depth * 0.01, anchor: .topLeading)
+                        .offset(x: depth * stackOffset, y: 0)
                         .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
 
