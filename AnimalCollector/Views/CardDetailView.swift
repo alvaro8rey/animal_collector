@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct CardDetailView: View {
     @EnvironmentObject var vm: GameViewModel

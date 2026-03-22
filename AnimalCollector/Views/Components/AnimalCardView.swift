@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 private let r2BaseURL = "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev"
 
@@ -9,19 +10,15 @@ struct AnimalRemoteImage: View {
     let glowRadius: CGFloat
 
     var body: some View {
-        AsyncImage(url: URL(string: "\(r2BaseURL)/\(animalId).webp")) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-                    .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
-            default:
+        KFImage(URL(string: "\(r2BaseURL)/\(animalId).webp"))
+            .resizable()
+            .scaledToFill()
+            .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
+            .placeholder {
                 Text(emoji)
                     .font(.system(size: 52))
                     .shadow(color: glowColor.opacity(0.6), radius: glowRadius)
             }
-        }
     }
 }
 
