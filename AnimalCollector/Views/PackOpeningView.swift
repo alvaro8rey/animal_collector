@@ -82,9 +82,9 @@ struct PackOpeningView: View {
         }
     }
 
-    private let largeCardWidth: CGFloat = 220
-    private let largeCardHeight: CGFloat = 308
-    private let stackOffset: CGFloat = 28
+    private let largeCardWidth: CGFloat = 250
+    private let largeCardHeight: CGFloat = 350
+    private let stackOffset: CGFloat = 24
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -329,7 +329,9 @@ struct PackOpeningView: View {
                         .foregroundStyle(carouselIndex > 0 ? .white.opacity(0.8) : .white.opacity(0.15))
                 }
 
-                Text("\(carouselIndex + 1) / \(totalCarouselCount)")
+                Text(adSlotIndex >= 0 && carouselIndex == adSlotIndex
+                     ? "· / \(cards.count)"
+                     : "\(animalIndex(for: carouselIndex) + 1) / \(cards.count)")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
@@ -429,7 +431,8 @@ struct PackOpeningView: View {
         } else {
             let ai = animalIndex(for: carouselIndex)
             if flippedCards.contains(carouselIndex) {
-                RevealCardView(animal: cards[ai])
+                let isNew = (vm.collection.first(where: { $0.id == cards[ai].id })?.duplicateCount ?? 0) == 0
+                RevealCardView(animal: cards[ai], isNew: isNew)
             } else {
                 CardBackView(packType: packType)
                     .frame(width: largeCardWidth, height: largeCardHeight)
@@ -715,6 +718,7 @@ struct PackOpeningView: View {
 
 struct RevealCardView: View {
     let animal: Animal
+    var isNew: Bool = false
     @State private var glowPulse = false
 
     var body: some View {
@@ -734,11 +738,19 @@ struct RevealCardView: View {
                 ))
 
             VStack(spacing: 0) {
-                // Top row: number + rarity badge
+                // Top row: number + NEW badge + rarity badge
                 HStack {
                     Text("#\(String(format: "%03d", animal.collectionNumber))")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundStyle(.white.opacity(0.35))
+                    if isNew {
+                        Text("NUEVO")
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundStyle(.black)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Capsule().fill(Color.yellow))
+                    }
                     Spacer()
                     RarityBadgeView(rarity: animal.rarity, compact: true)
                 }
@@ -754,8 +766,8 @@ struct RevealCardView: View {
                     glowColor: animal.rarity.glowColor,
                     glowRadius: glowPulse ? 20 : 10
                 )
-                .frame(width: 180, height: 180)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .frame(width: 200, height: 200)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.7 : 0.35),
                         radius: glowPulse ? 22 : 12)
 
@@ -792,7 +804,7 @@ struct RevealCardView: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
         }
-        .frame(width: 220, height: 308)
+        .frame(width: 250, height: 350)
         .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
                 radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6)
         .onAppear {
