@@ -21,6 +21,7 @@ final class GameViewModel: ObservableObject {
     @Published var gotRareToday: Bool = false
     @Published var gotEpicToday: Bool = false
     @Published var gotDuplicateToday: Bool = false
+    @Published var newAnimalsToday: Int = 0
 
     // MARK: - Dependencies
 
@@ -45,14 +46,23 @@ final class GameViewModel: ObservableObject {
         case .openPacksToday1:    return packsOpenedToday >= 1
         case .openPacksToday3:    return packsOpenedToday >= 3
         case .openPacksToday5:    return packsOpenedToday >= 5
+        case .newAnimalToday1:    return newAnimalsToday >= 1
+        case .newAnimalToday3:    return newAnimalsToday >= 3
         case .getRareToday:       return gotRareToday
         case .getEpicToday:       return gotEpicToday
         case .getDuplicateToday:  return gotDuplicateToday
         case .haveAnimals10:      return obtainedCount >= 10
         case .haveAnimals25:      return obtainedCount >= 25
         case .haveAnimals50:      return obtainedCount >= 50
-        case .haveFavorite:       return collection.contains { $0.isFavorite }
+        case .haveAnimals100:     return obtainedCount >= 100
+        case .complete10pct:      return collectionProgress >= 0.10
+        case .allCategories:
+            let obtainedCategories = Set(collection.filter(\.isObtained).map(\.category))
+            return Category.allCases.allSatisfy { obtainedCategories.contains($0) }
+        case .haveFavorites3:     return collection.filter(\.isFavorite).count >= 3
+        case .haveDuplicates10:   return collection.map(\.duplicateCount).reduce(0, +) >= 10
         case .haveStreak3:        return streak >= 3
+        case .haveStreak7:        return streak >= 7
         }
     }
 
@@ -120,9 +130,14 @@ final class GameViewModel: ObservableObject {
         for animal in drawn {
             let wasDuplicate = collection.first(where: { $0.id == animal.id })?.isObtained == true
             receiveAnimal(animal)
-            if wasDuplicate && !gotDuplicateToday {
-                gotDuplicateToday = true
-                persistence.gotDuplicateToday = true
+            if wasDuplicate {
+                if !gotDuplicateToday {
+                    gotDuplicateToday = true
+                    persistence.gotDuplicateToday = true
+                }
+            } else {
+                newAnimalsToday += 1
+                persistence.newAnimalsToday = newAnimalsToday
             }
         }
 
@@ -217,6 +232,7 @@ final class GameViewModel: ObservableObject {
         gotRareToday      = persistence.gotRareToday
         gotEpicToday      = persistence.gotEpicToday
         gotDuplicateToday = persistence.gotDuplicateToday
+        newAnimalsToday   = persistence.newAnimalsToday
     }
 
     private func save() {

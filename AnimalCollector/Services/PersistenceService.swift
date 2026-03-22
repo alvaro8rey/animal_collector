@@ -19,9 +19,11 @@ final class PersistenceService {
         static let claimedMissionDate = "ac_claimed_mission_date"
         static let packsOpenedTodayCount = "ac_packs_today_count"
         static let packsOpenedTodayDate  = "ac_packs_today_date"
-        static let gotRareDateKey    = "ac_got_rare_date"
-        static let gotEpicDateKey    = "ac_got_epic_date"
-        static let gotDupDateKey     = "ac_got_dup_date"
+        static let gotRareDateKey        = "ac_got_rare_date"
+        static let gotEpicDateKey        = "ac_got_epic_date"
+        static let gotDupDateKey         = "ac_got_dup_date"
+        static let newAnimalsTodayCount  = "ac_new_animals_today_count"
+        static let newAnimalsTodayDate   = "ac_new_animals_today_date"
     }
 
     // MARK: - Collection
@@ -136,6 +138,19 @@ final class PersistenceService {
             return Calendar.current.isDateInToday(date)
         }
         set { defaults.set(newValue ? Date() : nil, forKey: Key.gotDupDateKey) }
+    }
+
+    /// Number of brand-new (non-duplicate) animals obtained today.
+    var newAnimalsToday: Int {
+        get {
+            guard let date = defaults.object(forKey: Key.newAnimalsTodayDate) as? Date,
+                  Calendar.current.isDateInToday(date) else { return 0 }
+            return defaults.integer(forKey: Key.newAnimalsTodayCount)
+        }
+        set {
+            defaults.set(newValue, forKey: Key.newAnimalsTodayCount)
+            defaults.set(Date(), forKey: Key.newAnimalsTodayDate)
+        }
     }
 
     // MARK: - Streak logic
