@@ -526,12 +526,20 @@ struct PackOpeningView: View {
     // MARK: - Haptics
 
     private func playShakeHaptics() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        print("🔊 playShakeHaptics() llamado")
+        let supported = CHHapticEngine.capabilitiesForHardware().supportsHaptics
+        print("🔊 supportsHaptics: \(supported)")
+        guard supported else {
+            print("🔊 SALIENDO: dispositivo no soporta haptics")
+            return
+        }
         do {
-            // Crear y arrancar el motor justo antes de usarlo
+            print("🔊 Creando CHHapticEngine...")
             let engine = try CHHapticEngine()
-            hapticEngine = engine // retener referencia
+            hapticEngine = engine
+            print("🔊 Arrancando engine...")
             try engine.start()
+            print("🔊 Engine arrancado. Creando patrón...")
 
             let shakeEvent = CHHapticEvent(
                 eventType: .hapticContinuous,
@@ -551,9 +559,14 @@ struct PackOpeningView: View {
                 relativeTime: 1.65
             )
             let pattern = try CHHapticPattern(events: [shakeEvent, burstEvent], parameterCurves: [])
+            print("🔊 Patrón creado. Creando player...")
             let player = try engine.makePlayer(with: pattern)
+            print("🔊 Iniciando player...")
             try player.start(atTime: CHHapticTimeImmediate)
-        } catch {}
+            print("🔊 Player iniciado correctamente ✅")
+        } catch {
+            print("🔊 ERROR en haptics: \(error)")
+        }
     }
 
     // MARK: - Legendary Reveal
