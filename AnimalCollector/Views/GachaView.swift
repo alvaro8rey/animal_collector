@@ -721,7 +721,8 @@ private struct StatsRarityRow: View {
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(0.4))
                 .monospacedDigit()
-                .frame(width: 36, alignment: .trailing)
+                .fixedSize()
+                .frame(minWidth: 36, alignment: .trailing)
         }
     }
 }
