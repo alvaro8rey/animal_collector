@@ -1,5 +1,4 @@
 import SwiftUI
-import CoreHaptics
 
 // MARK: - Pack Image View (shared between GachaView and PackOpeningView)
 
@@ -47,9 +46,6 @@ struct PackOpeningView: View {
     @State private var carouselIndex: Int = 0
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
-
-    // Haptic engine
-    @State private var hapticEngine: CHHapticEngine?
 
     // Legendary reveal
     @State private var showingLegendaryReveal = false
@@ -230,7 +226,6 @@ struct PackOpeningView: View {
     }
 
     private func startOpening() {
-        print("🎴 startOpening() llamado")
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         cards = vm.openPack(packType).sorted { $0.rarity < $1.rarity }
         phase = .opening
@@ -527,46 +522,20 @@ struct PackOpeningView: View {
     // MARK: - Haptics
 
     private func playShakeHaptics() {
-        print("🔊 playShakeHaptics() llamado")
-        let supported = CHHapticEngine.capabilitiesForHardware().supportsHaptics
-        print("🔊 supportsHaptics: \(supported)")
-        guard supported else {
-            print("🔊 SALIENDO: dispositivo no soporta haptics")
-            return
-        }
-        do {
-            print("🔊 Creando CHHapticEngine...")
-            let engine = try CHHapticEngine()
-            hapticEngine = engine
-            print("🔊 Arrancando engine...")
-            try engine.start()
-            print("🔊 Engine arrancado. Creando patrón...")
-
-            let shakeEvent = CHHapticEvent(
-                eventType: .hapticContinuous,
-                parameters: [
-                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
-                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
-                ],
-                relativeTime: 0.05,
-                duration: 1.45
-            )
-            let burstEvent = CHHapticEvent(
-                eventType: .hapticTransient,
-                parameters: [
-                    CHHapticEventParameter(parameterID: .hapticIntensity, value: 1.0),
-                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 1.0)
-                ],
-                relativeTime: 1.65
-            )
-            let pattern = try CHHapticPattern(events: [shakeEvent, burstEvent], parameterCurves: [])
-            print("🔊 Patrón creado. Creando player...")
-            let player = try engine.makePlayer(with: pattern)
-            print("🔊 Iniciando player...")
-            try player.start(atTime: CHHapticTimeImmediate)
-            print("🔊 Player iniciado correctamente ✅")
-        } catch {
-            print("🔊 ERROR en haptics: \(error)")
+        let gen = UIImpactFeedbackGenerator(style: .rigid)
+        gen.prepare()
+        var tick = 0
+        // Timer cada 0.08s × 19 ticks = ~1.5s (cubre toda la animación de shake)
+        Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { timer in
+            tick += 1
+            if tick > 19 {
+                timer.invalidate()
+                return
+            }
+            // Intensidad máxima los primeros 10 ticks, luego decae
+            let intensity = CGFloat(tick <= 10 ? 1.0 : max(0.15, 1.0 - Double(tick - 10) * 0.12))
+            gen.impactOccurred(intensity: intensity)
+            gen.prepare()
         }
     }
 
