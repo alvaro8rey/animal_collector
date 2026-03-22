@@ -11,14 +11,14 @@ struct AnimalRemoteImage: View {
 
     var body: some View {
         KFImage(URL(string: "\(r2BaseURL)/\(animalId).webp"))
-            .resizable()
-            .scaledToFill()
-            .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
             .placeholder {
                 Text(emoji)
                     .font(.system(size: 52))
                     .shadow(color: glowColor.opacity(0.6), radius: glowRadius)
             }
+            .resizable()
+            .scaledToFill()
+            .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
     }
 }
 

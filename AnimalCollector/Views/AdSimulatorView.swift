@@ -220,7 +220,7 @@ final class RewardedAdCoordinator: NSObject, GADFullScreenContentDelegate {
             topVC = presented
         }
 
-        ad.present(from: topVC) { [weak self] in
+        ad.present(fromRootViewController: topVC) { [weak self] in
             // Este bloque solo se llama si el usuario VIO el anuncio completo
             self?.onRewarded()
         }
