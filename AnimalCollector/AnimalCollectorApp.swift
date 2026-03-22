@@ -1,5 +1,5 @@
 import SwiftUI
-import GoogleGADMobileAds
+import GoogleMobileAds
 
 @main
 struct AnimalCollectorApp: App {
