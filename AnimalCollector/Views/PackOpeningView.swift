@@ -45,6 +45,7 @@ struct PackOpeningView: View {
     // Carousel
     @State private var carouselIndex: Int = 0
     @State private var flippedCards: Set<Int> = []
+    @State private var navigatingForward: Bool = true
 
     enum Phase { case packIdle, opening, carousel, summary }
 
@@ -329,7 +330,8 @@ struct PackOpeningView: View {
                     let depth = CGFloat(idx - carouselIndex)
                     CardBackView(packType: packType)
                         .frame(width: largeCardWidth, height: largeCardHeight)
-                        .offset(x: depth * stackOffset, y: depth * 8)
+                        .offset(x: depth * stackOffset, y: depth * 3)
+                        .scaleEffect(1.0 - depth * 0.01, anchor: .topLeading)
                         .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
 
@@ -337,7 +339,10 @@ struct PackOpeningView: View {
                 deckFrontCard
                     .zIndex(Double(cards.count) + 1)
                     .id(carouselIndex)
-                    .transition(.scale(scale: 0.92).combined(with: .opacity))
+                    .transition(.asymmetric(
+                        insertion: .move(edge: navigatingForward ? .trailing : .leading).combined(with: .opacity),
+                        removal:   .move(edge: navigatingForward ? .leading  : .trailing).combined(with: .opacity)
+                    ))
             }
             .padding(.leading, 28)
             .gesture(
@@ -415,7 +420,8 @@ struct PackOpeningView: View {
     }
 
     private func navigateTo(_ index: Int) {
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.82)) {
+        navigatingForward = index > carouselIndex
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
             carouselIndex = index
         }
         if !flippedCards.contains(index) {
