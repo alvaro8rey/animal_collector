@@ -46,6 +46,16 @@ struct PackOpeningView: View {
     @State private var carouselIndex: Int = 0
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
+    @State private var adSlotIndex: Int = -1  // -1 = no ad (premium or not set yet)
+
+    // Total items in carousel (cards + optional ad slot)
+    private var totalCarouselCount: Int { adSlotIndex >= 0 ? cards.count + 1 : cards.count }
+
+    // Maps a carousel index to the cards[] index, skipping the ad slot
+    private func animalIndex(for carouselIdx: Int) -> Int {
+        guard adSlotIndex >= 0, carouselIdx > adSlotIndex else { return carouselIdx }
+        return carouselIdx - 1
+    }
 
     // Legendary reveal
     @State private var showingLegendaryReveal = false
@@ -279,6 +289,15 @@ struct PackOpeningView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.35) {
             carouselIndex = 0
             flippedCards = []
+
+            // Insert ad slot at a random middle position for non-premium users
+            if !vm.isPremium && cards.count >= 3 {
+                adSlotIndex = Int.random(in: 1..<cards.count)
+                flippedCards.insert(adSlotIndex) // ad is always visible (no flip needed)
+            } else {
+                adSlotIndex = -1
+            }
+
             withAnimation(.spring(response: 0.5)) { phase = .carousel }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
                 if !cards.isEmpty && cards[0].rarity != .legendary {
@@ -305,7 +324,7 @@ struct PackOpeningView: View {
                         .foregroundStyle(carouselIndex > 0 ? .white.opacity(0.8) : .white.opacity(0.15))
                 }
 
-                Text("\(carouselIndex + 1) / \(cards.count)")
+                Text("\(carouselIndex + 1) / \(totalCarouselCount)")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
@@ -313,12 +332,12 @@ struct PackOpeningView: View {
                     .frame(width: 60)
 
                 Button {
-                    guard carouselIndex < cards.count - 1 else { return }
+                    guard carouselIndex < totalCarouselCount - 1 else { return }
                     navigateTo(carouselIndex + 1)
                 } label: {
                     Image(systemName: "chevron.right.circle.fill")
                         .font(.title)
-                        .foregroundStyle(carouselIndex < cards.count - 1 ? .white.opacity(0.8) : .white.opacity(0.15))
+                        .foregroundStyle(carouselIndex < totalCarouselCount - 1 ? .white.opacity(0.8) : .white.opacity(0.15))
                 }
 
                 Spacer()
@@ -343,7 +362,7 @@ struct PackOpeningView: View {
             ZStack(alignment: .topLeading) {
                 // Cartas restantes apiladas detrás (de atrás hacia adelante)
                 // Todas usan el mismo frame que la carta grande para que sobresalgan
-                ForEach(Array(((carouselIndex + 1)..<min(cards.count, carouselIndex + 5)).reversed()), id: \.self) { idx in
+                ForEach(Array(((carouselIndex + 1)..<min(totalCarouselCount, carouselIndex + 5)).reversed()), id: \.self) { idx in
                     let depth = CGFloat(idx - carouselIndex)
                     CardBackView(packType: packType)
                         .frame(width: largeCardWidth, height: largeCardHeight)
@@ -366,7 +385,7 @@ struct PackOpeningView: View {
                 DragGesture(minimumDistance: 30)
                     .onEnded { val in
                         let v = val.predictedEndTranslation.width
-                        if v < -80, carouselIndex < cards.count - 1 { navigateTo(carouselIndex + 1) }
+                        if v < -80, carouselIndex < totalCarouselCount - 1 { navigateTo(carouselIndex + 1) }
                         else if v > 80, carouselIndex > 0 { navigateTo(carouselIndex - 1) }
                     }
             )
@@ -374,10 +393,11 @@ struct PackOpeningView: View {
             Spacer()
 
             Button(action: { withAnimation { phase = .summary } }) {
+                let allSeen = flippedCards.count == totalCarouselCount
                 HStack(spacing: 8) {
-                    Text(flippedCards.count == cards.count ? "Ver resumen" : "Saltar al resumen")
+                    Text(allSeen ? "Ver resumen" : "Saltar al resumen")
                         .fontWeight(.semibold)
-                    Image(systemName: flippedCards.count == cards.count ? "checkmark" : "forward.fill")
+                    Image(systemName: allSeen ? "checkmark" : "forward.fill")
                 }
                 .foregroundStyle(.black)
                 .frame(maxWidth: .infinity)
@@ -385,7 +405,7 @@ struct PackOpeningView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(LinearGradient(
-                            colors: flippedCards.count == cards.count
+                            colors: allSeen
                                 ? packType.gradientColors
                                 : [Color.white.opacity(0.45), Color.white.opacity(0.3)],
                             startPoint: .leading, endPoint: .trailing
@@ -399,39 +419,51 @@ struct PackOpeningView: View {
 
     @ViewBuilder
     private var deckFrontCard: some View {
-        if flippedCards.contains(carouselIndex) {
-            RevealCardView(animal: cards[carouselIndex])
+        if adSlotIndex >= 0 && carouselIndex == adSlotIndex {
+            AdCardView()
         } else {
-            CardBackView(packType: packType)
-                .frame(width: largeCardWidth, height: largeCardHeight)
-                .overlay(alignment: .center) {
-                    VStack(spacing: 6) {
-                        Image(systemName: "hand.tap.fill")
-                            .font(.title3)
-                            .foregroundStyle(.white.opacity(0.45))
-                        Text("Toca para revelar")
-                            .font(.system(size: 10))
-                            .foregroundStyle(.white.opacity(0.3))
-                    }
-                    .offset(y: 72)
-                }
-                .onTapGesture {
-                    if cards[carouselIndex].rarity == .legendary {
-                        revealLegendaryCard()
-                    } else {
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                            flippedCards.insert(carouselIndex)
+            let ai = animalIndex(for: carouselIndex)
+            if flippedCards.contains(carouselIndex) {
+                RevealCardView(animal: cards[ai])
+            } else {
+                CardBackView(packType: packType)
+                    .frame(width: largeCardWidth, height: largeCardHeight)
+                    .overlay(alignment: .center) {
+                        VStack(spacing: 6) {
+                            Image(systemName: "hand.tap.fill")
+                                .font(.title3)
+                                .foregroundStyle(.white.opacity(0.45))
+                            Text("Toca para revelar")
+                                .font(.system(size: 10))
+                                .foregroundStyle(.white.opacity(0.3))
                         }
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        .offset(y: 72)
                     }
-                }
+                    .onTapGesture {
+                        if cards[ai].rarity == .legendary {
+                            revealLegendaryCard()
+                        } else {
+                            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                                flippedCards.insert(carouselIndex)
+                            }
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
+                    }
+            }
         }
     }
 
     private func navigateTo(_ index: Int) {
         navigatingForward = index > carouselIndex
+        // Ad slot: just navigate, no animal logic needed
+        if adSlotIndex >= 0 && index == adSlotIndex {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) { carouselIndex = index }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            return
+        }
+        let ai = animalIndex(for: index)
         // Pre-revelar para que la carta entre ya volteada (excepto legendarias)
-        if cards[index].rarity != .legendary {
+        if cards[ai].rarity != .legendary {
             flippedCards.insert(index)
         }
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
@@ -439,7 +471,7 @@ struct PackOpeningView: View {
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         // Si es legendaria, disparar la animación automáticamente tras el slide
-        if cards[index].rarity == .legendary && !flippedCards.contains(index) {
+        if cards[ai].rarity == .legendary && !flippedCards.contains(index) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                 revealLegendaryCard()
             }
