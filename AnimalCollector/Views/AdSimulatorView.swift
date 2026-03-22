@@ -130,8 +130,15 @@ struct AdSimulatorView: View {
     // MARK: - Ad logic
 
     private func loadAndShow() {
+        // En debug/simulador usar el ID de test oficial de Google para evitar errores de vídeo
+        #if DEBUG
+        let adUnitID = "ca-app-pub-3940256099942544/1712485313"
+        #else
+        let adUnitID = "ca-app-pub-9606090335798660/1210235038"
+        #endif
+
         let c = RewardedAdCoordinator(
-            adUnitID: "ca-app-pub-9606090335798660/1210235038",
+            adUnitID: adUnitID,
             onRewarded: {
                 vm.rewardAdPacks()
                 phase = .rewarded
