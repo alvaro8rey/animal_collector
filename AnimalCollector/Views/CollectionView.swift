@@ -11,6 +11,8 @@ struct CollectionView: View {
 
     private var filteredAnimals: [Animal] {
         vm.collection.filter { animal in
+            // Hide secret animals unless already obtained
+            if animal.category == .secret && !animal.isObtained { return false }
             if let cat = selectedCategory, animal.category != cat { return false }
             if let rar = selectedRarity, animal.rarity != rar { return false }
             if showOnlyObtained && !animal.isObtained { return false }
@@ -113,7 +115,7 @@ struct CollectionView: View {
                     isSelected: selectedCategory == nil
                 ) { selectedCategory = nil }
 
-                ForEach(Category.allCases, id: \.self) { cat in
+                ForEach(Category.allCases.filter { $0.isPublic }, id: \.self) { cat in
                     let prog = vm.progress(for: cat)
                     CategoryChip(
                         label: cat.rawValue,
@@ -149,7 +151,7 @@ struct CollectionView: View {
                     .frame(height: 20)
                     .overlay(Color.white.opacity(0.12))
 
-                ForEach(Rarity.allCases, id: \.self) { rarity in
+                ForEach(Rarity.allCases.filter { $0 != .secret }, id: \.self) { rarity in
                     RarityFilterChip(
                         rarity: rarity,
                         isSelected: selectedRarity == rarity

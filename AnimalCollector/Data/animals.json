@@ -4006,5 +4006,17 @@
     "emoji": "🦞",
     "collectionNumber": 334,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Palinurus_elephas"
+  },
+  {
+    "id": "celacanto",
+    "name": "Celacanto",
+    "scientificName": "Latimeria chalumnae",
+    "category": "???",
+    "rarity": "Secret",
+    "description": "Un fósil viviente de 400 millones de años. Se creyó extinto hace 65 millones de años hasta que uno fue pescado frente a Sudáfrica en 1938, sacudiendo el mundo científico.",
+    "funFact": "Sus aletas tienen huesos internos articulados que se mueven como patas. Podría ser el eslabón entre los peces y los primeros vertebrados terrestres.",
+    "emoji": "🐟",
+    "collectionNumber": 335,
+    "wikipediaURL": "https://es.wikipedia.org/wiki/Latimeria_chalumnae"
   }
 ]

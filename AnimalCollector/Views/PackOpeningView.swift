@@ -66,6 +66,16 @@ struct PackOpeningView: View {
     @State private var legendaryTextOpacity: Double = 0
     @State private var legendaryTextScale: CGFloat = 0.5
 
+    // Secret reveal
+    @State private var showingSecretReveal = false
+    @State private var secretFlashOpacity: Double = 0
+    @State private var secretRingScale: CGFloat = 0.01
+    @State private var secretRingOpacity: Double = 0
+    @State private var secretParticleProgress: CGFloat = 0
+    @State private var secretTextOpacity: Double = 0
+    @State private var secretTextScale: CGFloat = 0.5
+    @State private var secretHueRotation: Double = 0
+
     enum Phase { case packIdle, opening, carousel, summary }
 
     // MARK: - Init
@@ -113,6 +123,11 @@ struct PackOpeningView: View {
                 legendaryRevealOverlay
                     .ignoresSafeArea()
             }
+
+            if showingSecretReveal {
+                secretRevealOverlay
+                    .ignoresSafeArea()
+            }
         }
         .navigationBarHidden(true)
         .onAppear {
@@ -123,7 +138,7 @@ struct PackOpeningView: View {
                     flippedCards.insert(adSlotIndex)
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                    if !cards.isEmpty && cards[0].rarity != .legendary {
+                    if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { _ = flippedCards.insert(0) }
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
@@ -305,7 +320,7 @@ struct PackOpeningView: View {
 
             withAnimation(.spring(response: 0.5)) { phase = .carousel }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                if !cards.isEmpty && cards[0].rarity != .legendary {
+                if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
                     withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
                         _ = flippedCards.insert(0)
                     }
@@ -461,6 +476,8 @@ struct PackOpeningView: View {
                     .onTapGesture {
                         if cards[ai].rarity == .legendary {
                             revealLegendaryCard()
+                        } else if cards[ai].rarity == .secret {
+                            revealSecretCard()
                         } else {
                             withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
                                 flippedCards.insert(carouselIndex)
@@ -481,8 +498,8 @@ struct PackOpeningView: View {
             return
         }
         let ai = animalIndex(for: index)
-        // Pre-revelar para que la carta entre ya volteada (excepto legendarias)
-        if cards[ai].rarity != .legendary {
+        // Pre-revelar para que la carta entre ya volteada (excepto legendarias y secretas)
+        if cards[ai].rarity != .legendary && cards[ai].rarity != .secret {
             flippedCards.insert(index)
         }
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
@@ -493,6 +510,12 @@ struct PackOpeningView: View {
         if cards[ai].rarity == .legendary && !flippedCards.contains(index) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                 revealLegendaryCard()
+            }
+        }
+        // Si es secreta, disparar la animación automáticamente tras el slide
+        if cards[ai].rarity == .secret && !flippedCards.contains(index) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                revealSecretCard()
             }
         }
     }
@@ -707,6 +730,147 @@ struct PackOpeningView: View {
         }
     }
 
+    // MARK: - Secret Reveal
+
+    private let secretRainbow: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
+
+    private var secretRevealOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.82)
+                .ignoresSafeArea()
+
+            // Prismatic flash
+            TimelineView(.animation) { ctx in
+                let t = ctx.date.timeIntervalSinceReferenceDate
+                AngularGradient(
+                    colors: secretRainbow,
+                    center: .center,
+                    startAngle: .degrees(t * 90),
+                    endAngle: .degrees(t * 90 + 360)
+                )
+                .opacity(secretFlashOpacity * 0.55)
+                .ignoresSafeArea()
+            }
+
+            // Expanding rings (rainbow)
+            ForEach(0..<3, id: \.self) { i in
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    Circle()
+                        .stroke(
+                            AngularGradient(
+                                colors: secretRainbow,
+                                center: .center,
+                                startAngle: .degrees(t * 60),
+                                endAngle: .degrees(t * 60 + 360)
+                            ),
+                            lineWidth: 2.5
+                        )
+                        .frame(width: 280, height: 280)
+                        .scaleEffect(secretRingScale + CGFloat(i) * 0.32)
+                        .opacity(secretRingOpacity * max(0.0, 1.0 - Double(i) * 0.3))
+                }
+            }
+
+            // Particles: ✦ ★ ✧ sparkles
+            ForEach(0..<8, id: \.self) { i in
+                let angle = Double(i) * 45.0 * Double.pi / 180.0
+                let distance: CGFloat = 145
+                Text(["✦", "★", "✧", "✦", "★", "✧", "✦", "★"][i])
+                    .font(.title2)
+                    .foregroundStyle(Color(hue: Double(i) / 8.0, saturation: 0.9, brightness: 1.0))
+                    .offset(
+                        x: CGFloat(cos(angle)) * distance * secretParticleProgress,
+                        y: CGFloat(sin(angle)) * distance * secretParticleProgress
+                    )
+                    .scaleEffect(0.4 + secretParticleProgress * 0.9)
+                    .opacity(secretParticleProgress < 0.7
+                             ? Double(secretParticleProgress) / 0.7
+                             : max(0, (1.0 - Double(secretParticleProgress)) / 0.3))
+            }
+
+            // Text "✦ MÍTICO ✦"
+            TimelineView(.animation) { ctx in
+                let t = ctx.date.timeIntervalSinceReferenceDate
+                Text("✦  MÍTICO  ✦")
+                    .font(.system(size: 30, weight: .black))
+                    .foregroundStyle(
+                        AngularGradient(
+                            colors: secretRainbow,
+                            center: .center,
+                            startAngle: .degrees(t * 60),
+                            endAngle: .degrees(t * 60 + 360)
+                        )
+                    )
+                    .tracking(4)
+                    .shadow(color: Color(red: 0.9, green: 0.3, blue: 1.0).opacity(0.9), radius: 14)
+                    .shadow(color: Color.cyan.opacity(0.5), radius: 24)
+                    .scaleEffect(secretTextScale)
+                    .opacity(secretTextOpacity)
+            }
+        }
+        .contentShape(Rectangle())
+    }
+
+    private func revealSecretCard() {
+        let index = carouselIndex
+        showingSecretReveal = true
+        secretFlashOpacity = 0
+        secretRingScale = 0.01
+        secretRingOpacity = 0
+        secretParticleProgress = 0
+        secretTextOpacity = 0
+        secretTextScale = 0.5
+
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+
+        // Prismatic flash
+        withAnimation(.easeIn(duration: 0.1)) { secretFlashOpacity = 0.8 }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            withAnimation(.easeOut(duration: 0.4)) { secretFlashOpacity = 0 }
+            withAnimation(.easeIn(duration: 0.14)) { secretRingOpacity = 0.88 }
+            withAnimation(.easeOut(duration: 1.1)) { secretRingScale = 2.8 }
+            withAnimation(.spring(response: 0.65, dampingFraction: 0.60)) {
+                secretParticleProgress = 1.0
+            }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.38) {
+            withAnimation(.easeOut(duration: 0.6)) { secretRingOpacity = 0 }
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.50)) {
+                secretTextScale = 1.0
+                secretTextOpacity = 1.0
+            }
+        }
+
+        // Flip card
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.95) {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                _ = flippedCards.insert(index)
+            }
+        }
+
+        // Text fade out
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            withAnimation(.easeOut(duration: 0.38)) {
+                secretTextOpacity = 0
+                secretTextScale = 1.3
+            }
+        }
+
+        // Hide overlay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.45) {
+            showingSecretReveal = false
+            secretParticleProgress = 0
+        }
+    }
+
     // MARK: - Starfield Background
 
     private var starfieldBackground: some View {
@@ -732,26 +896,60 @@ struct RevealCardView: View {
     var isNew: Bool = false
     @State private var glowPulse = false
 
+    private let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
+
     var body: some View {
         ZStack {
             // Background
-            RoundedRectangle(cornerRadius: 16)
-                .fill(LinearGradient(
-                    colors: [Color(white: 0.13), Color(white: 0.07)],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
+            if animal.rarity == .secret {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(LinearGradient(
+                        colors: [Color(red: 0.05, green: 0.02, blue: 0.14), Color(red: 0.02, green: 0.01, blue: 0.10)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+            } else {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(LinearGradient(
+                        colors: [Color(white: 0.13), Color(white: 0.07)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+            }
 
             // Rarity shimmer
-            RoundedRectangle(cornerRadius: 16)
-                .fill(LinearGradient(
-                    colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
+            if animal.rarity == .secret {
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(AngularGradient(
+                            colors: rainbowColors.map { $0.opacity(0.09) },
+                            center: .center,
+                            startAngle: .degrees(t * 28),
+                            endAngle: .degrees(t * 28 + 360)
+                        ))
+                }
+                // Shimmer sweep
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    let x = (t * 0.35).truncatingRemainder(dividingBy: 1.8) - 0.4
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(LinearGradient(
+                            colors: [.clear, .white.opacity(0.16), .clear],
+                            startPoint: UnitPoint(x: x, y: 0),
+                            endPoint: UnitPoint(x: x + 0.6, y: 1)
+                        ))
+                }
+            } else {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(LinearGradient(
+                        colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+            }
 
             VStack(spacing: 0) {
                 // Top row: number + NEW badge + rarity badge
                 HStack {
-                    Text("#\(String(format: "%03d", animal.collectionNumber))")
+                    Text(animal.rarity == .secret ? "✦ ✦ ✦" : "#\(String(format: "%03d", animal.collectionNumber))")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundStyle(.white.opacity(0.35))
                     if isNew {
@@ -779,8 +977,8 @@ struct RevealCardView: View {
                 )
                 .frame(width: 215, height: 215)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-                .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.7 : 0.35),
-                        radius: glowPulse ? 22 : 12)
+                .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.8 : 0.4),
+                        radius: glowPulse ? 26 : 14)
 
                 Spacer()
 
@@ -811,13 +1009,54 @@ struct RevealCardView: View {
                     .padding(.bottom, 14)
             }
 
+            // Orbiting sparkles for secret (large reveal card)
+            if animal.rarity == .secret {
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    ZStack {
+                        ForEach(0..<8, id: \.self) { i in
+                            let fi = Double(i)
+                            let angle = (t * 0.45 + fi / 8.0) * .pi * 2
+                            let r: CGFloat = 72 + 18 * CGFloat(sin(t * 0.9 + fi))
+                            Text(["✦", "★", "✧", "·", "✦", "★", "✧", "·"][i])
+                                .font(.system(size: CGFloat(7 + 5 * abs(sin(t * 0.6 + fi)))))
+                                .foregroundStyle(
+                                    Color(hue: (t * 0.06 + fi * 0.13).truncatingRemainder(dividingBy: 1),
+                                          saturation: 0.9, brightness: 1.0).opacity(0.85)
+                                )
+                                .offset(x: r * CGFloat(cos(angle)), y: r * CGFloat(sin(angle)))
+                        }
+                    }
+                }
+            }
+
             // Border
-            RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
+            if animal.rarity == .secret {
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(
+                            AngularGradient(
+                                colors: rainbowColors,
+                                center: .center,
+                                startAngle: .degrees(t * 45),
+                                endAngle: .degrees(t * 45 + 360)
+                            ),
+                            lineWidth: 3
+                        )
+                }
+            } else {
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
+            }
         }
         .frame(width: 270, height: 378)
-        .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
-                radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6)
+        .shadow(
+            color: animal.rarity == .secret
+                ? Color(red: 0.8, green: 0.2, blue: 1.0).opacity(glowPulse ? 0.8 : 0.5)
+                : animal.rarity.glowColor.opacity(glowPulse ? 0.55 : 0.3),
+            radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6
+        )
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {

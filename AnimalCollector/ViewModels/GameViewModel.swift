@@ -36,7 +36,8 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Computed
 
-    var obtainedCount: Int { collection.filter(\.isObtained).count }
+    // Secret animals are hidden from all public-facing counts.
+    var obtainedCount: Int { collection.filter { $0.isObtained && $0.category != .secret }.count }
 
     // MARK: - Mission helpers
 
@@ -79,7 +80,8 @@ final class GameViewModel: ObservableObject {
     }
 
     var collectionProgress: Double {
-        allAnimals.isEmpty ? 0 : Double(obtainedCount) / Double(allAnimals.count)
+        let total = allAnimals.filter { $0.category != .secret }.count
+        return total == 0 ? 0 : Double(obtainedCount) / Double(total)
     }
 
     func progress(for category: Category) -> (obtained: Int, total: Int) {

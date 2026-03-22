@@ -49,23 +49,38 @@ struct AnimalCardView: View {
         }
     }
 
+    private let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .cyan, .blue, .purple, .pink, .red]
+
     var body: some View {
         ZStack {
             // Card background
             RoundedRectangle(cornerRadius: 12)
                 .fill(
                     LinearGradient(
-                        colors: [
-                            Color(white: 0.12),
-                            Color(white: 0.08)
-                        ],
+                        colors: animal.rarity == .secret
+                            ? [Color(red: 0.05, green: 0.02, blue: 0.12), Color(red: 0.02, green: 0.01, blue: 0.08)]
+                            : [Color(white: 0.12), Color(white: 0.08)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
 
             // Rarity shimmer overlay
-            if animal.rarity >= .rare {
+            if animal.rarity == .secret {
+                // Animated prismatic shimmer for secret
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(
+                            AngularGradient(
+                                colors: rainbowColors.map { $0.opacity(0.07) },
+                                center: .center,
+                                startAngle: .degrees(t * 30),
+                                endAngle: .degrees(t * 30 + 360)
+                            )
+                        )
+                }
+            } else if animal.rarity >= .rare {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(
                         LinearGradient(
@@ -80,7 +95,7 @@ struct AnimalCardView: View {
             VStack(spacing: 6) {
                 // Collection number
                 HStack {
-                    Text("#\(String(format: "%03d", animal.collectionNumber))")
+                    Text(animal.rarity == .secret ? "✦ ✦ ✦" : "#\(String(format: "%03d", animal.collectionNumber))")
                         .font(.system(size: 9, weight: .medium, design: .monospaced))
                         .foregroundStyle(.white.opacity(0.35))
                     Spacer()
@@ -116,9 +131,63 @@ struct AnimalCardView: View {
             }
             .padding(10)
 
+            // Shimmer sweep (secret only)
+            if animal.rarity == .secret {
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    let x = (t * 0.35).truncatingRemainder(dividingBy: 1.8) - 0.4
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(
+                            LinearGradient(
+                                colors: [.clear, .white.opacity(0.14), .clear],
+                                startPoint: UnitPoint(x: x, y: 0),
+                                endPoint: UnitPoint(x: x + 0.6, y: 1)
+                            )
+                        )
+                }
+            }
+
             // Border
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth)
+            if animal.rarity == .secret {
+                // Animated rainbow border
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(
+                            AngularGradient(
+                                colors: rainbowColors,
+                                center: .center,
+                                startAngle: .degrees(t * 45),
+                                endAngle: .degrees(t * 45 + 360)
+                            ),
+                            lineWidth: 2.5
+                        )
+                }
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth)
+            }
+
+            // Sparkle particles (secret, non-small cards)
+            if animal.rarity == .secret && size != .small {
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    ZStack {
+                        ForEach(0..<6, id: \.self) { i in
+                            let fi = Double(i)
+                            let angle = (t * 0.55 + fi / 6.0) * .pi * 2
+                            let r: CGFloat = 42 + 14 * CGFloat(sin(t * 1.1 + fi))
+                            Text(["✦", "★", "✧", "·", "✦", "★"][i])
+                                .font(.system(size: CGFloat(6 + 4 * abs(sin(t * 0.7 + fi)))))
+                                .foregroundStyle(
+                                    Color(hue: (t * 0.07 + fi * 0.17).truncatingRemainder(dividingBy: 1),
+                                          saturation: 0.9, brightness: 1.0).opacity(0.8)
+                                )
+                                .offset(x: r * CGFloat(cos(angle)), y: r * CGFloat(sin(angle)))
+                        }
+                    }
+                }
+            }
 
             // Not obtained overlay
             if !animal.isObtained && !isRevealed {
@@ -130,7 +199,12 @@ struct AnimalCardView: View {
             }
         }
         .frame(width: size.width, height: size.height)
-        .shadow(color: animal.rarity.glowColor.opacity(0.4), radius: animal.rarity.glowRadius)
+        .shadow(
+            color: animal.rarity == .secret
+                ? Color(red: 0.8, green: 0.2, blue: 1.0).opacity(0.7)
+                : animal.rarity.glowColor.opacity(0.4),
+            radius: animal.rarity.glowRadius
+        )
     }
 }
 

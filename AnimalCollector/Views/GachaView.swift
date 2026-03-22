@@ -421,7 +421,7 @@ struct GachaView: View {
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.4))
 
-                    ForEach(Rarity.allCases.reversed(), id: \.self) { rarity in
+                    ForEach(Rarity.allCases.filter { $0 != .secret }.reversed(), id: \.self) { rarity in
                         let total    = vm.allAnimals.filter { $0.rarity == rarity }.count
                         let obtained = vm.collection.filter { $0.rarity == rarity && $0.isObtained }.count
                         let pct      = total > 0 ? Double(obtained) / Double(total) : 0
@@ -462,7 +462,7 @@ struct GachaView: View {
 
                     let columns = [GridItem(.flexible()), GridItem(.flexible())]
                     LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(Category.allCases, id: \.self) { cat in
+                        ForEach(Category.allCases.filter { $0.isPublic }, id: \.self) { cat in
                             let (obtained, total) = vm.progress(for: cat)
                             let pct = total > 0 ? Double(obtained) / Double(total) : 0
 
