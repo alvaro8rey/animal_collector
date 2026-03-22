@@ -33,6 +33,7 @@ struct GachaView: View {
                         } else {
                             refillSection
                             dailyMissions
+                            recentCaptures
                         }
                     }
                     .padding(.horizontal, 20)
