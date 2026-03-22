@@ -329,27 +329,31 @@ struct GachaView: View {
         isShaking = true
         pendingCards = vm.openPack(.basic).sorted { $0.rarity < $1.rarity }
 
-        let gen = UIImpactFeedbackGenerator(style: .rigid)
+        let gen = UIImpactFeedbackGenerator(style: .heavy)
         gen.prepare()
 
         let angles: [Double] = [
+            // Fase fuerte (~1.5s)
             0, -11, 10, -10, 9, -9, 8, -8, 7, -7,
             6, -6, 5, -5, 5, -5, 4, -4, 4, -4,
-            3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0
+            3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0,
+            // Fase extendida (+1s)
+            -3, 3, -3, 3, -2, 2, -2, 2, -2, 2,
+            -1, 1, -1, 1, -1, 1, -1, 0, -1, 0
         ]
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
-                // Haptic en cada cambio de dirección fuerte
-                if i > 0 && i < 22 && i % 2 == 1 {
-                    gen.impactOccurred(intensity: i < 12 ? 1.0 : max(0.2, 1.0 - Double(i - 12) * 0.1))
+                if i > 0 && i % 2 == 1 {
+                    let intensity: CGFloat = i < 14 ? 1.0 : max(0.4, 1.0 - Double(i - 14) * 0.05)
+                    gen.impactOccurred(intensity: intensity)
                     gen.prepare()
                 }
             }
         }
 
-        // Al terminar el shake, abrir el carrusel
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.65) {
+        // Al terminar el shake, abrir el carrusel (+1s respecto al original)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.65) {
             isOpeningPack = true
         }
     }
