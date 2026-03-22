@@ -901,19 +901,54 @@ struct RevealCardView: View {
     var body: some View {
         ZStack {
             if animal.rarity == .secret {
-                secretRevealBackground
-            } else {
-                normalRevealBackground
-            }
+                // 1. Dark base
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(red: 0.04, green: 0.01, blue: 0.12))
 
-            revealContent
+                // 2. Iridescent color wash (below content)
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(LinearGradient(
+                            colors: [
+                                Color(hue: (t * 0.04).truncatingRemainder(dividingBy: 1),
+                                      saturation: 0.9, brightness: 0.6).opacity(0.55),
+                                Color(hue: ((t * 0.04) + 0.33).truncatingRemainder(dividingBy: 1),
+                                      saturation: 0.9, brightness: 0.5).opacity(0.45),
+                                Color(hue: ((t * 0.04) + 0.66).truncatingRemainder(dividingBy: 1),
+                                      saturation: 0.9, brightness: 0.4).opacity(0.50),
+                            ],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ))
+                }
 
-            if animal.rarity == .secret {
-                // Holographic sweeps
-                secretRevealSweeps
-                // Glint flashes (reusing shared GlintView)
+                // 3. Content ON TOP of color wash but BELOW sweeps
+                revealContent
+
+                // 4. Sweeps and glints on top — reduced opacity so they don't wash out the photo
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    let pos = CGFloat((t * 0.4).truncatingRemainder(dividingBy: 2.5)) - 0.5
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(LinearGradient(
+                            colors: [.clear, .white.opacity(0.04), .white.opacity(0.18), .white.opacity(0.04), .clear],
+                            startPoint: UnitPoint(x: pos, y: 0),
+                            endPoint: UnitPoint(x: pos + 0.55, y: 1)
+                        ))
+                }
+                TimelineView(.animation) { ctx in
+                    let t = ctx.date.timeIntervalSinceReferenceDate
+                    let pos = CGFloat((t * 0.25 + 1.2).truncatingRemainder(dividingBy: 2.5)) - 0.5
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(LinearGradient(
+                            colors: [.clear, .white.opacity(0.09), .clear],
+                            startPoint: UnitPoint(x: pos + 0.4, y: 0),
+                            endPoint: UnitPoint(x: pos, y: 1)
+                        ))
+                }
                 GlintView()
-                // Rainbow border
+
+                // 5. Rainbow border on top of everything
                 TimelineView(.animation) { ctx in
                     let t = ctx.date.timeIntervalSinceReferenceDate
                     RoundedRectangle(cornerRadius: 16)
@@ -925,6 +960,8 @@ struct RevealCardView: View {
                         )
                 }
             } else {
+                normalRevealBackground
+                revealContent
                 RoundedRectangle(cornerRadius: 16)
                     .strokeBorder(animal.rarity.borderGradient, lineWidth: animal.rarity.borderWidth + 0.5)
             }
@@ -945,7 +982,6 @@ struct RevealCardView: View {
         }
     }
 
-    // Normal background + shimmer
     @ViewBuilder private var normalRevealBackground: some View {
         RoundedRectangle(cornerRadius: 16)
             .fill(LinearGradient(
@@ -957,52 +993,6 @@ struct RevealCardView: View {
                 colors: animal.rarity.gradientColors.map { $0.opacity(0.10) } + [.clear],
                 startPoint: .topLeading, endPoint: .bottomTrailing
             ))
-    }
-
-    // Secret: dark base + iridescent color wash
-    @ViewBuilder private var secretRevealBackground: some View {
-        RoundedRectangle(cornerRadius: 16)
-            .fill(Color(red: 0.04, green: 0.01, blue: 0.12))
-
-        TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            RoundedRectangle(cornerRadius: 16)
-                .fill(LinearGradient(
-                    colors: [
-                        Color(hue: (t * 0.04).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.6).opacity(0.55),
-                        Color(hue: ((t * 0.04) + 0.33).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.5).opacity(0.45),
-                        Color(hue: ((t * 0.04) + 0.66).truncatingRemainder(dividingBy: 1),
-                              saturation: 0.9, brightness: 0.4).opacity(0.50),
-                    ],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
-        }
-    }
-
-    // Two diagonal bright sweeps
-    @ViewBuilder private var secretRevealSweeps: some View {
-        TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            let pos = CGFloat((t * 0.4).truncatingRemainder(dividingBy: 2.5)) - 0.5
-            RoundedRectangle(cornerRadius: 16)
-                .fill(LinearGradient(
-                    colors: [.clear, .white.opacity(0.08), .white.opacity(0.40), .white.opacity(0.08), .clear],
-                    startPoint: UnitPoint(x: pos, y: 0),
-                    endPoint: UnitPoint(x: pos + 0.55, y: 1)
-                ))
-        }
-        TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            let pos = CGFloat((t * 0.25 + 1.2).truncatingRemainder(dividingBy: 2.5)) - 0.5
-            RoundedRectangle(cornerRadius: 16)
-                .fill(LinearGradient(
-                    colors: [.clear, .white.opacity(0.18), .clear],
-                    startPoint: UnitPoint(x: pos + 0.4, y: 0),
-                    endPoint: UnitPoint(x: pos, y: 1)
-                ))
-        }
     }
 
     private var revealContent: some View {
