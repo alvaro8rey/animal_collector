@@ -84,7 +84,7 @@ struct PackOpeningView: View {
 
     private let largeCardWidth: CGFloat = 270
     private let largeCardHeight: CGFloat = 378
-    private let stackOffset: CGFloat = 70
+    private let stackOffset: CGFloat = 46
 
     private let burstConfigs: [(dx: CGFloat, dy: CGFloat, rot: Double)] = [
         (-130, -90, -28),
@@ -381,8 +381,10 @@ struct PackOpeningView: View {
                             }
                         }
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.black.opacity(0.68))
+                            .fill(Color.black.opacity(0.72))
                     }
+                    .frame(width: largeCardWidth, height: largeCardHeight)
+                    .clipped()
                     .offset(x: depth * stackOffset, y: 0)
                     .zIndex(Double(cards.count) - Double(idx - carouselIndex))
                 }
@@ -396,7 +398,7 @@ struct PackOpeningView: View {
                         removal:   .move(edge: navigatingForward ? .leading  : .trailing).combined(with: .opacity)
                     ))
             }
-            .padding(.leading, 10)
+            .padding(.leading, 28)
             .gesture(
                 DragGesture(minimumDistance: 30)
                     .onEnded { val in
