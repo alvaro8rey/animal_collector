@@ -1,5 +1,30 @@
 import SwiftUI
 
+private let r2BaseURL = "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev"
+
+struct AnimalRemoteImage: View {
+    let animalId: String
+    let emoji: String
+    let glowColor: Color
+    let glowRadius: CGFloat
+
+    var body: some View {
+        AsyncImage(url: URL(string: "\(r2BaseURL)/\(animalId).webp")) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
+            default:
+                Text(emoji)
+                    .font(.system(size: 52))
+                    .shadow(color: glowColor.opacity(0.6), radius: glowRadius)
+            }
+        }
+    }
+}
+
 struct AnimalCardView: View {
     let animal: Animal
     var isRevealed: Bool = true
@@ -67,19 +92,10 @@ struct AnimalCardView: View {
 
                 Spacer()
 
-                // Image (if available in Assets) or emoji fallback
-                if UIImage(named: animal.id) != nil {
-                    Image(animal.id)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: size.imageSize, height: size.imageSize)
-                        .clipShape(RoundedRectangle(cornerRadius: size.imageCornerRadius))
-                        .shadow(color: animal.rarity.glowColor.opacity(0.5), radius: animal.rarity.glowRadius / 2)
-                } else {
-                    Text(animal.emoji)
-                        .font(.system(size: size.emojiSize))
-                        .shadow(color: animal.rarity.glowColor.opacity(0.6), radius: animal.rarity.glowRadius / 2)
-                }
+                // Image from Cloudflare R2 or emoji fallback
+                AnimalRemoteImage(animalId: animal.id, emoji: animal.emoji, glowColor: animal.rarity.glowColor, glowRadius: animal.rarity.glowRadius / 2)
+                    .frame(width: size.imageSize, height: size.imageSize)
+                    .clipShape(RoundedRectangle(cornerRadius: size.imageCornerRadius))
 
                 Spacer()
 
