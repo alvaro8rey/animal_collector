@@ -43,7 +43,9 @@ struct CardDetailView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity)
 
             // Close button
             VStack {
@@ -160,7 +162,8 @@ struct CardDetailView: View {
             .shadow(color: animal.rarity.glowColor.opacity(glowPulse ? 0.5 : 0.3),
                     radius: glowPulse ? animal.rarity.glowRadius : animal.rarity.glowRadius * 0.6)
         }
-        .frame(height: 340)
+        .frame(maxWidth: .infinity, minHeight: 340)
+        .clipped()
     }
 
     // MARK: - Info Block
