@@ -238,23 +238,19 @@ private struct CollectionCardCell: View {
                 }
             }
         } else {
-            // Completamente oculta — sin datos, sin interacción
+            // Silueta fantasma — casi invisible, sin revelar identidad
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(white: 0.09))
+                    .fill(Color(white: 0.08))
 
                 RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(Color.white.opacity(0.07), lineWidth: 1)
+                    .strokeBorder(animal.rarity.glowColor.opacity(0.07), lineWidth: 1)
 
-                VStack(spacing: 6) {
-                    Image(systemName: "lock.fill")
-                        .font(.title2)
-                        .foregroundStyle(.white.opacity(0.18))
-                    Text("???")
-                        .font(.caption2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white.opacity(0.15))
-                }
+                Text(animal.emoji)
+                    .font(.system(size: 68))
+                    .blur(radius: 9)
+                    .opacity(0.07)
+                    .saturation(0)
             }
             .frame(width: 100, height: 160)
             .allowsHitTesting(false)

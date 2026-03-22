@@ -76,6 +76,9 @@ struct PackOpeningView: View {
     @State private var secretTextScale: CGFloat = 0.5
     @State private var secretHueRotation: Double = 0
 
+    // Summary
+    @State private var summaryRevealed = false
+
     enum Phase { case packIdle, opening, carousel, summary }
 
     // MARK: - Init
@@ -137,11 +140,9 @@ struct PackOpeningView: View {
                     adSlotIndex = Int.random(in: 1..<cards.count)
                     flippedCards.insert(adSlotIndex)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                    if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { _ = flippedCards.insert(0) }
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                    }
+                // Pre-reveal primera carta para que no se vea el dorso "Toca para revelar"
+                if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
+                    flippedCards.insert(0)
                 }
             }
         }
@@ -318,15 +319,12 @@ struct PackOpeningView: View {
                 adSlotIndex = -1
             }
 
-            withAnimation(.spring(response: 0.5)) { phase = .carousel }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
-                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                        _ = flippedCards.insert(0)
-                    }
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                }
+            // Pre-reveal primera carta: no mostrar dorso al transicionar desde la animación
+            if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
+                flippedCards.insert(0)
             }
+
+            withAnimation(.spring(response: 0.5)) { phase = .carousel }
         }
     }
 
@@ -525,49 +523,82 @@ struct PackOpeningView: View {
 
     private var summaryView: some View {
         VStack(spacing: 0) {
-            Text("¡Sobre Abierto!")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-                .padding(.top, 24)
+            let dupCount = cards.filter { card in
+                (vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0) > 0
+            }.count
+            let newCount = cards.count - dupCount
+            let bestCard = cards.max(by: { $0.rarity < $1.rarity })
+            let otherCards = cards.filter { $0.id != bestCard?.id }
 
-            ScrollView {
-                VStack(spacing: 14) {
-                    HStack(spacing: 12) {
-                        ForEach(0..<min(3, cards.count), id: \.self) { idx in
-                            summaryCardCell(idx: idx)
+            // Título dinámico según rareza conseguida
+            summaryTitleView(best: bestCard?.rarity, newCount: newCount)
+                .padding(.top, 28)
+
+            // Contador nuevas / duplicadas
+            HStack(spacing: 14) {
+                if newCount > 0 {
+                    Label("\(newCount) nueva\(newCount == 1 ? "" : "s")", systemImage: "sparkles")
+                        .foregroundStyle(.yellow)
+                }
+                if dupCount > 0 {
+                    Label("\(dupCount) duplicada\(dupCount == 1 ? "" : "s")", systemImage: "arrow.2.squarepath")
+                        .foregroundStyle(.white.opacity(0.4))
+                }
+            }
+            .font(.caption)
+            .padding(.top, 6)
+
+            // Mejor carta — protagonista
+            if let best = bestCard {
+                let isBestNew = (vm.collection.first(where: { $0.id == best.id })?.duplicateCount ?? 0) == 0
+                ZStack(alignment: .topLeading) {
+                    AnimalCardView(animal: best, isRevealed: true, size: .medium)
+                    if isBestNew {
+                        Text("NUEVO")
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundStyle(.black)
+                            .padding(.horizontal, 6).padding(.vertical, 2)
+                            .background(Capsule().fill(Color.yellow))
+                            .padding(8)
+                    }
+                }
+                .shadow(color: best.rarity.glowColor.opacity(summaryRevealed ? 0.75 : 0),
+                        radius: summaryRevealed ? 30 : 0)
+                .scaleEffect(summaryRevealed ? 1.0 : 0.55)
+                .opacity(summaryRevealed ? 1.0 : 0)
+                .animation(.spring(response: 0.5, dampingFraction: 0.65), value: summaryRevealed)
+                .padding(.top, 14)
+            }
+
+            // Resto de cartas en scroll horizontal
+            if !otherCards.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(Array(otherCards.enumerated()), id: \.element.id) { idx, card in
+                            let isCardNew = (vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0) == 0
+                            ZStack(alignment: .topLeading) {
+                                AnimalCardView(animal: card, isRevealed: true, size: .small)
+                                if isCardNew {
+                                    Text("NUEVO")
+                                        .font(.system(size: 8, weight: .black))
+                                        .foregroundStyle(.black)
+                                        .padding(.horizontal, 5).padding(.vertical, 2)
+                                        .background(Capsule().fill(Color.yellow))
+                                        .padding(6)
+                                }
+                            }
+                            .scaleEffect(summaryRevealed ? 1.0 : 0.4)
+                            .opacity(summaryRevealed ? 1.0 : 0)
+                            .animation(.spring(response: 0.45).delay(0.18 + Double(idx) * 0.07), value: summaryRevealed)
                         }
                     }
                     .padding(.horizontal, 20)
-
-                    if cards.count > 3 {
-                        HStack(spacing: 12) {
-                            Spacer(minLength: 0)
-                            ForEach(3..<cards.count, id: \.self) { idx in
-                                summaryCardCell(idx: idx)
-                            }
-                            Spacer(minLength: 0)
-                        }
-                        .padding(.horizontal, 20)
-                    }
-
-                    let dupCount = cards.filter { card in
-                        vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0 > 0
-                    }.count
-                    if dupCount > 0 {
-                        HStack(spacing: 6) {
-                            Image(systemName: "arrow.2.squarepath")
-                                .foregroundStyle(.white.opacity(0.5))
-                            Text("\(dupCount) duplicado\(dupCount > 1 ? "s" : "")")
-                                .font(.caption)
-                                .foregroundStyle(.white.opacity(0.5))
-                        }
-                        .padding(.top, 4)
-                    }
+                    .padding(.vertical, 4)
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 8)
+                .padding(.top, 10)
             }
+
+            Spacer(minLength: 12)
 
             Button(action: { isPresented = false }) {
                 Text("Cerrar")
@@ -577,19 +608,52 @@ struct PackOpeningView: View {
                     .padding(.vertical, 14)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(LinearGradient(colors: [.white.opacity(0.9), .white.opacity(0.7)],
-                                                 startPoint: .leading, endPoint: .trailing))
+                            .fill(LinearGradient(colors: packType.gradientColors,
+                                                startPoint: .leading, endPoint: .trailing))
                     )
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
         }
+        .onAppear {
+            summaryRevealed = false
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.65)) {
+                summaryRevealed = true
+            }
+        }
     }
 
     @ViewBuilder
-    private func summaryCardCell(idx: Int) -> some View {
-        AnimalCardView(animal: cards[idx], size: .small)
-            .animation(.spring(response: 0.3).delay(Double(idx) * 0.08), value: true)
+    private func summaryTitleView(best: Rarity?, newCount: Int) -> some View {
+        let title = summaryHeadline(best: best, newCount: newCount)
+        Group {
+            if best == .legendary {
+                Text(title)
+                    .foregroundStyle(LinearGradient(
+                        colors: [Color(red: 1.0, green: 0.84, blue: 0.0), .white, Color(red: 1.0, green: 0.5, blue: 0.0)],
+                        startPoint: .leading, endPoint: .trailing))
+            } else if best == .secret {
+                Text(title)
+                    .foregroundStyle(LinearGradient(
+                        colors: [.red, .orange, .yellow, .green, .cyan, .purple],
+                        startPoint: .leading, endPoint: .trailing))
+            } else {
+                Text(title).foregroundStyle(.white)
+            }
+        }
+        .font(.system(size: 22, weight: .black))
+        .multilineTextAlignment(.center)
+        .padding(.horizontal, 20)
+    }
+
+    private func summaryHeadline(best: Rarity?, newCount: Int) -> String {
+        guard let rarity = best else { return "¡Sobre Abierto!" }
+        switch rarity {
+        case .secret:    return "✦ MÍTICO OBTENIDO ✦"
+        case .legendary: return "⭐ ¡LEGENDARIA! ⭐"
+        case .epic:      return "¡Épica conseguida!"
+        default:         return newCount > 0 ? "¡Nuevas capturas!" : "¡Sobre Abierto!"
+        }
     }
 
     // MARK: - Haptics
