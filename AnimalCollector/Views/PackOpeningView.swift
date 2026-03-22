@@ -239,13 +239,15 @@ struct PackOpeningView: View {
             6, -6, 5, -5, 5, -5, 4, -4, 4, -4,
             3, -3, 2, -2, 1, -1, 0, -1, 1, -1, 0
         ]
+        // Un solo generador preparado antes del loop para que el motor táctil esté listo
+        let shakeGen = UIImpactFeedbackGenerator(style: .rigid)
+        shakeGen.prepare()
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
-                // Haptic en cada cambio de dirección para simular el shake físico
                 if i > 0 && i < 20 && i % 2 == 1 {
-                    let style: UIImpactFeedbackGenerator.FeedbackStyle = i < 12 ? .rigid : .light
-                    UIImpactFeedbackGenerator(style: style).impactOccurred()
+                    shakeGen.impactOccurred(intensity: i < 12 ? 1.0 : 0.4)
+                    shakeGen.prepare() // mantiene el motor caliente para el siguiente pulso
                 }
             }
         }
@@ -435,7 +437,7 @@ struct PackOpeningView: View {
 
     private func navigateTo(_ index: Int) {
         navigatingForward = index > carouselIndex
-        // Pre-revelar para que la carta entre ya volteada (excepto legendarias: requieren tap)
+        // Pre-revelar para que la carta entre ya volteada (excepto legendarias)
         if cards[index].rarity != .legendary {
             flippedCards.insert(index)
         }
@@ -443,6 +445,12 @@ struct PackOpeningView: View {
             carouselIndex = index
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        // Si es legendaria, disparar la animación automáticamente tras el slide
+        if cards[index].rarity == .legendary && !flippedCards.contains(index) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                revealLegendaryCard()
+            }
+        }
     }
 
 
