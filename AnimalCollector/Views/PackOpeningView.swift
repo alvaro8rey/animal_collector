@@ -106,10 +106,11 @@ struct PackOpeningView: View {
         .navigationBarHidden(true)
         .onAppear {
             if phase == .carousel {
-                // Empezamos directamente en el carrusel: auto-revelar primera carta
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { flippedCards.insert(0) }
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    if !cards.isEmpty && cards[0].rarity != .legendary {
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) { _ = flippedCards.insert(0) }
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    }
                 }
             }
         }
@@ -241,6 +242,11 @@ struct PackOpeningView: View {
         for (i, angle) in angles.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.05) {
                 withAnimation(.easeInOut(duration: 0.04)) { shakeAngle = angle }
+                // Haptic en cada cambio de dirección para simular el shake físico
+                if i > 0 && i < 20 && i % 2 == 1 {
+                    let style: UIImpactFeedbackGenerator.FeedbackStyle = i < 12 ? .rigid : .light
+                    UIImpactFeedbackGenerator(style: style).impactOccurred()
+                }
             }
         }
 
@@ -280,10 +286,12 @@ struct PackOpeningView: View {
             flippedCards = []
             withAnimation(.spring(response: 0.5)) { phase = .carousel }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                    flippedCards.insert(0)
+                if !cards.isEmpty && cards[0].rarity != .legendary {
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                        _ = flippedCards.insert(0)
+                    }
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 }
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             }
         }
     }
@@ -427,8 +435,10 @@ struct PackOpeningView: View {
 
     private func navigateTo(_ index: Int) {
         navigatingForward = index > carouselIndex
-        // Pre-revelar para que la carta entre ya volteada en la transición de slide
-        flippedCards.insert(index)
+        // Pre-revelar para que la carta entre ya volteada (excepto legendarias: requieren tap)
+        if cards[index].rarity != .legendary {
+            flippedCards.insert(index)
+        }
         withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
             carouselIndex = index
         }
