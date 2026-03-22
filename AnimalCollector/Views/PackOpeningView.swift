@@ -47,6 +47,15 @@ struct PackOpeningView: View {
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
 
+    // Legendary reveal
+    @State private var showingLegendaryReveal = false
+    @State private var legendaryFlashOpacity: Double = 0
+    @State private var legendaryRingScale: CGFloat = 0.01
+    @State private var legendaryRingOpacity: Double = 0
+    @State private var legendaryParticleProgress: CGFloat = 0
+    @State private var legendaryTextOpacity: Double = 0
+    @State private var legendaryTextScale: CGFloat = 0.5
+
     enum Phase { case packIdle, opening, carousel, summary }
 
     // MARK: - Init
@@ -87,6 +96,11 @@ struct PackOpeningView: View {
             case .opening:   openingView
             case .carousel:  carouselPhaseView
             case .summary:   summaryView
+            }
+
+            if showingLegendaryReveal {
+                legendaryRevealOverlay
+                    .ignoresSafeArea()
             }
         }
         .navigationBarHidden(true)
@@ -382,20 +396,8 @@ struct PackOpeningView: View {
 
     @ViewBuilder
     private var deckFrontCard: some View {
-        let isBest = carouselIndex == bestCardIndex
         if flippedCards.contains(carouselIndex) {
             AnimalCardView(animal: cards[carouselIndex], size: .large)
-                .overlay {
-                    if isBest {
-                        RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(
-                                LinearGradient(colors: [.yellow, .orange, .yellow],
-                                               startPoint: .topLeading, endPoint: .bottomTrailing),
-                                lineWidth: 2.5
-                            )
-                    }
-                }
-                .shadow(color: isBest ? .yellow.opacity(0.7) : .clear, radius: isBest ? 20 : 0)
         } else {
             CardBackView(packType: packType)
                 .frame(width: largeCardWidth, height: largeCardHeight)
@@ -411,10 +413,14 @@ struct PackOpeningView: View {
                     .offset(y: 72)
                 }
                 .onTapGesture {
-                    withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                        flippedCards.insert(carouselIndex)
+                    if cards[carouselIndex].rarity == .legendary {
+                        revealLegendaryCard()
+                    } else {
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                            flippedCards.insert(carouselIndex)
+                        }
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 }
         }
     }
@@ -429,7 +435,6 @@ struct PackOpeningView: View {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 
-    private var bestCardIndex: Int { cards.isEmpty ? 0 : cards.count - 1 }
 
     // MARK: - Summary
 
@@ -498,20 +503,143 @@ struct PackOpeningView: View {
 
     @ViewBuilder
     private func summaryCardCell(idx: Int) -> some View {
-        let isBest = idx == bestCardIndex
         AnimalCardView(animal: cards[idx], size: .small)
-            .overlay {
-                if isBest {
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(
-                            LinearGradient(colors: [.yellow, .orange, .yellow],
-                                           startPoint: .topLeading, endPoint: .bottomTrailing),
-                            lineWidth: 2
-                        )
-                }
-            }
-            .shadow(color: isBest ? .yellow.opacity(0.55) : .clear, radius: isBest ? 14 : 0)
             .animation(.spring(response: 0.3).delay(Double(idx) * 0.08), value: true)
+    }
+
+    // MARK: - Legendary Reveal
+
+    private var legendaryRevealOverlay: some View {
+        ZStack {
+            // Base oscuro
+            Color.black.opacity(0.78)
+                .ignoresSafeArea()
+
+            // Flash dorado
+            Color(red: 1.0, green: 0.82, blue: 0.0)
+                .ignoresSafeArea()
+                .opacity(legendaryFlashOpacity)
+
+            // Anillos expansivos dorados
+            ForEach(0..<3, id: \.self) { i in
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 1.0, green: 0.84, blue: 0.0),
+                                Color(red: 1.0, green: 0.5, blue: 0.0),
+                                Color(red: 1.0, green: 0.84, blue: 0.0)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2.5
+                    )
+                    .frame(width: 280, height: 280)
+                    .scaleEffect(legendaryRingScale + CGFloat(i) * 0.32)
+                    .opacity(legendaryRingOpacity * max(0.0, 1.0 - Double(i) * 0.3))
+            }
+
+            // Partículas en 8 direcciones
+            ForEach(0..<8, id: \.self) { i in
+                let angle = Double(i) * 45.0 * Double.pi / 180.0
+                let distance: CGFloat = 145
+                Text(i % 2 == 0 ? "✨" : "⭐️")
+                    .font(.title2)
+                    .offset(
+                        x: CGFloat(cos(angle)) * distance * legendaryParticleProgress,
+                        y: CGFloat(sin(angle)) * distance * legendaryParticleProgress
+                    )
+                    .scaleEffect(0.4 + legendaryParticleProgress * 0.9)
+                    .opacity(legendaryParticleProgress < 0.7
+                             ? Double(legendaryParticleProgress) / 0.7
+                             : max(0, (1.0 - Double(legendaryParticleProgress)) / 0.3))
+            }
+
+            // Texto LEGENDARIA
+            Text("✦  LEGENDARIA  ✦")
+                .font(.system(size: 30, weight: .black))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 1.0, green: 0.84, blue: 0.0),
+                            .white,
+                            Color(red: 1.0, green: 0.5, blue: 0.0),
+                            .white,
+                            Color(red: 1.0, green: 0.84, blue: 0.0)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .tracking(4)
+                .shadow(color: Color(red: 1.0, green: 0.5, blue: 0.0).opacity(0.9), radius: 14)
+                .shadow(color: Color(red: 1.0, green: 0.84, blue: 0.0).opacity(0.5), radius: 24)
+                .scaleEffect(legendaryTextScale)
+                .opacity(legendaryTextOpacity)
+        }
+        .contentShape(Rectangle())
+    }
+
+    private func revealLegendaryCard() {
+        let index = carouselIndex
+        showingLegendaryReveal = true
+        legendaryFlashOpacity = 0
+        legendaryRingScale = 0.01
+        legendaryRingOpacity = 0
+        legendaryParticleProgress = 0
+        legendaryTextOpacity = 0
+        legendaryTextScale = 0.5
+
+        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+
+        // Flash dorado
+        withAnimation(.easeIn(duration: 0.1)) { legendaryFlashOpacity = 0.65 }
+
+        // Flash sale, anillos aparecen, partículas salen
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            withAnimation(.easeOut(duration: 0.35)) { legendaryFlashOpacity = 0 }
+            withAnimation(.easeIn(duration: 0.14)) { legendaryRingOpacity = 0.88 }
+            withAnimation(.easeOut(duration: 1.05)) { legendaryRingScale = 2.6 }
+            withAnimation(.spring(response: 0.65, dampingFraction: 0.62)) {
+                legendaryParticleProgress = 1.0
+            }
+        }
+
+        // Anillos se desvanecen
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.38) {
+            withAnimation(.easeOut(duration: 0.55)) { legendaryRingOpacity = 0 }
+        }
+
+        // Texto aparece con rebote
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.52)) {
+                legendaryTextScale = 1.0
+                legendaryTextOpacity = 1.0
+            }
+        }
+
+        // Voltear la carta
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                flippedCards.insert(index)
+            }
+        }
+
+        // Texto se desvanece
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.08) {
+            withAnimation(.easeOut(duration: 0.38)) {
+                legendaryTextOpacity = 0
+                legendaryTextScale = 1.3
+            }
+        }
+
+        // Ocultar overlay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.42) {
+            showingLegendaryReveal = false
+            legendaryParticleProgress = 0
+        }
     }
 
     // MARK: - Starfield Background
