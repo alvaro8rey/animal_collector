@@ -116,8 +116,8 @@ struct CollectionView: View {
                             .font(.subheadline)
                             .foregroundStyle(.white)
                     }
-                    .menuStyle(.button)
-                    .buttonStyle(.plain)
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.white)
                 }
             }
             .sheet(item: $selectedAnimal) { animal in
