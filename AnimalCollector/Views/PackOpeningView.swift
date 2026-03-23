@@ -579,32 +579,32 @@ struct PackOpeningView: View {
                 .padding(.top, 14)
             }
 
-            // Resto de cartas en scroll horizontal
+            // Resto de cartas en grid 2 columnas
             if !otherCards.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(Array(otherCards.enumerated()), id: \.element.id) { idx, card in
-                            let isCardNew = (vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0) == 0
-                            ZStack(alignment: .topLeading) {
-                                AnimalCardView(animal: card, isRevealed: true, size: .small)
-                                if isCardNew {
-                                    Text("NUEVO")
-                                        .font(.system(size: 8, weight: .black))
-                                        .foregroundStyle(.black)
-                                        .padding(.horizontal, 5).padding(.vertical, 2)
-                                        .background(Capsule().fill(Color.yellow))
-                                        .padding(6)
-                                }
+                LazyVGrid(
+                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                    spacing: 12
+                ) {
+                    ForEach(Array(otherCards.enumerated()), id: \.element.id) { idx, card in
+                        let isCardNew = (vm.collection.first(where: { $0.id == card.id })?.duplicateCount ?? 0) == 0
+                        ZStack(alignment: .topLeading) {
+                            AnimalCardView(animal: card, isRevealed: true, size: .small)
+                            if isCardNew {
+                                Text("NUEVO")
+                                    .font(.system(size: 8, weight: .black))
+                                    .foregroundStyle(.black)
+                                    .padding(.horizontal, 5).padding(.vertical, 2)
+                                    .background(Capsule().fill(Color.yellow))
+                                    .padding(6)
                             }
-                            .scaleEffect(summaryRevealed ? 1.0 : 0.4)
-                            .opacity(summaryRevealed ? 1.0 : 0)
-                            .animation(.spring(response: 0.45).delay(0.18 + Double(idx) * 0.07), value: summaryRevealed)
-                            .onTapGesture { selectedAnimal = card }
                         }
+                        .scaleEffect(summaryRevealed ? 1.0 : 0.4)
+                        .opacity(summaryRevealed ? 1.0 : 0)
+                        .animation(.spring(response: 0.45).delay(0.18 + Double(idx) * 0.07), value: summaryRevealed)
+                        .onTapGesture { selectedAnimal = card }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 4)
                 }
+                .padding(.horizontal, 20)
                 .padding(.top, 10)
             }
 
