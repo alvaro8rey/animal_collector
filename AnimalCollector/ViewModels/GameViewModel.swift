@@ -41,7 +41,7 @@ final class GameViewModel: ObservableObject {
         // La persistencia es solo un caché para el arranque rápido.
         store.$isPremium
             .receive(on: RunLoop.main)
-            .sink { [weak self] newValue in
+            .sink { [weak self] (newValue: Bool) in
                 self?.isPremium = newValue
                 self?.persistence.isPremium = newValue
             }
