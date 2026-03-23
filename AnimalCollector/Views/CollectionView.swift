@@ -112,10 +112,11 @@ struct CollectionView: View {
                             }
                         }
                     } label: {
-                        Image(systemName: "arrow.up.arrow.down")
-                            .font(.caption)
+                        Image(systemName: "line.3.decreasing")
+                            .font(.subheadline)
                             .foregroundStyle(.white)
                     }
+                    .menuStyle(.button)
                     .buttonStyle(.plain)
                 }
             }
