@@ -110,7 +110,7 @@ final class GameViewModel: ObservableObject {
 
     /// Checks if the daily reward is available and, if so, adds +1 pack to the pool.
     func claimDailyIfAvailable() {
-        guard isDailyAvailable else { return }
+        guard isDailyAvailable, !isPremium else { return }
         isDailyAvailable = false
         availablePacks += 1
         persistence.claimDailyAndUpdateStreak()

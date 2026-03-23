@@ -45,7 +45,7 @@ struct GachaView: View {
             .navigationTitle("")
             .navigationBarHidden(true)
             .onAppear {
-                let wasDailyAvailable = vm.isDailyAvailable
+                let wasDailyAvailable = vm.isDailyAvailable && !vm.isPremium
                 vm.claimDailyIfAvailable()
                 if wasDailyAvailable {
                     withAnimation(.spring(response: 0.4)) { dailyBanner = true }
