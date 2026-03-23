@@ -50,72 +50,150 @@ struct PremiumView: View {
     // MARK: - Active (already premium)
 
     private var activeView: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 24) {
 
-            VStack(spacing: 20) {
+                // Header
                 ZStack {
-                    Circle()
-                        .fill(LinearGradient(
-                            colors: [Color.yellow.opacity(0.3), Color.orange.opacity(0.2)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        ))
-                        .frame(width: 88, height: 88)
-                    Image(systemName: "crown.fill")
-                        .font(.system(size: 38))
-                        .foregroundStyle(LinearGradient(
-                            colors: [.yellow, .orange],
-                            startPoint: .topLeading, endPoint: .bottomTrailing
-                        ))
-                }
+                    // Glow rings
+                    ForEach(0..<3, id: \.self) { i in
+                        Circle()
+                            .fill(
+                                RadialGradient(
+                                    colors: [Color.yellow.opacity(0.12 - Double(i) * 0.03), .clear],
+                                    center: .center, startRadius: 0, endRadius: 80
+                                )
+                            )
+                            .frame(width: CGFloat(160 + i * 50))
+                    }
 
-                VStack(spacing: 6) {
-                    Text("Eres miembro Premium")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                    Text("Gracias por tu apoyo 🎉")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.5))
-                }
+                    VStack(spacing: 14) {
+                        ZStack {
+                            Circle()
+                                .fill(LinearGradient(
+                                    colors: [Color.yellow.opacity(0.35), Color.orange.opacity(0.25)],
+                                    startPoint: .topLeading, endPoint: .bottomTrailing
+                                ))
+                                .frame(width: 96, height: 96)
+                                .shadow(color: .yellow.opacity(0.4), radius: 20)
+                            Image(systemName: "crown.fill")
+                                .font(.system(size: 42))
+                                .foregroundStyle(LinearGradient(
+                                    colors: [.yellow, .orange],
+                                    startPoint: .topLeading, endPoint: .bottomTrailing
+                                ))
+                        }
 
-                VStack(spacing: 10) {
-                    ForEach(benefits, id: \.title) { b in
-                        HStack(spacing: 12) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
-                                .font(.subheadline)
-                            Text(b.title)
-                                .font(.subheadline)
-                                .foregroundStyle(.white.opacity(0.8))
-                            Spacer()
+                        VStack(spacing: 6) {
+                            Text("Animal Collector Premium")
+                                .font(.title2).fontWeight(.black)
+                                .foregroundStyle(.white)
+                            Text("Miembro activo")
+                                .font(.caption).fontWeight(.semibold)
+                                .foregroundStyle(.black)
+                                .padding(.horizontal, 10).padding(.vertical, 4)
+                                .background(Capsule().fill(LinearGradient(
+                                    colors: [.yellow, .orange],
+                                    startPoint: .leading, endPoint: .trailing
+                                )))
                         }
                     }
                 }
-                .padding(16)
+                .padding(.top, 16)
+
+                // Stats
+                HStack(spacing: 12) {
+                    premiumStat(
+                        value: "\(vm.totalPacksOpened)",
+                        label: "Sobres abiertos",
+                        icon: "shippingbox.fill"
+                    )
+                    premiumStat(
+                        value: "\(vm.obtainedCount)",
+                        label: "Animales\ncapturados",
+                        icon: "pawprint.fill"
+                    )
+                    premiumStat(
+                        value: "\(vm.collection.filter(\.isFavorite).count)",
+                        label: "Favoritos",
+                        icon: "star.fill"
+                    )
+                }
+                .padding(.horizontal, 24)
+
+                // Benefits
+                VStack(spacing: 0) {
+                    ForEach(Array(benefits.enumerated()), id: \.element.title) { idx, b in
+                        HStack(spacing: 14) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(LinearGradient(
+                                        colors: [Color.yellow.opacity(0.25), Color.orange.opacity(0.15)],
+                                        startPoint: .topLeading, endPoint: .bottomTrailing
+                                    ))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: b.icon)
+                                    .font(.system(size: 15))
+                                    .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .top, endPoint: .bottom))
+                            }
+                            Text(b.title)
+                                .font(.subheadline).fontWeight(.medium)
+                                .foregroundStyle(.white)
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                                .font(.subheadline)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        if idx < benefits.count - 1 {
+                            Divider().background(Color.white.opacity(0.06)).padding(.leading, 66)
+                        }
+                    }
+                }
                 .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(Color.white.opacity(0.04))
-                        .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.06), lineWidth: 1))
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white.opacity(0.05))
+                        .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.08), lineWidth: 1))
                 )
                 .padding(.horizontal, 24)
-                .padding(.top, 8)
-            }
 
-            Spacer()
-
-            // Apple gestiona la cancelación desde Ajustes → tu ID de Apple → Suscripciones
-            Button(action: {
-                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
-                    UIApplication.shared.open(url)
+                // Manage subscription
+                Button(action: {
+                    if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    Text("Gestionar suscripción")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.3))
                 }
-            }) {
-                Text("Gestionar suscripción")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.35))
+                .padding(.bottom, 32)
             }
-            .padding(.bottom, 48)
         }
+    }
+
+    private func premiumStat(value: String, label: String, icon: String) -> some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 16))
+                .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .top, endPoint: .bottom))
+            Text(value)
+                .font(.title2).fontWeight(.black)
+                .foregroundStyle(.white)
+            Text(label)
+                .font(.system(size: 10))
+                .fontWeight(.medium)
+                .foregroundStyle(.white.opacity(0.45))
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.white.opacity(0.05))
+                .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.08), lineWidth: 1))
+        )
     }
 
     // MARK: - Paywall (not yet premium)
