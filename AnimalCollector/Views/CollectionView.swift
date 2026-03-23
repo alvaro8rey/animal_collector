@@ -18,7 +18,7 @@ struct CollectionView: View {
             if showOnlyObtained && !animal.isObtained { return false }
             if showOnlyFavorites && !animal.isFavorite { return false }
             if !searchText.isEmpty {
-                return animal.name.localizedCaseInsensitiveContains(searchText)
+                return animal.isObtained && animal.name.localizedCaseInsensitiveContains(searchText)
             }
             return true
         }
