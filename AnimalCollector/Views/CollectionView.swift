@@ -1,5 +1,21 @@
 import SwiftUI
 
+enum CollectionSort: String, CaseIterable {
+    case rarity    = "Rareza"
+    case obtained  = "Obtenido"
+    case id        = "ID"
+    case copies    = "Nº de copias"
+
+    var icon: String {
+        switch self {
+        case .rarity:   return "star.fill"
+        case .obtained: return "checkmark.circle.fill"
+        case .id:       return "number"
+        case .copies:   return "square.stack.fill"
+        }
+    }
+}
+
 struct CollectionView: View {
     @EnvironmentObject var vm: GameViewModel
     @State private var selectedCategory: Category? = nil
@@ -8,6 +24,7 @@ struct CollectionView: View {
     @State private var showOnlyFavorites = false
     @State private var selectedAnimal: Animal? = nil
     @State private var searchText = ""
+    @State private var sortOption: CollectionSort = .rarity
 
     private var filteredAnimals: [Animal] {
         vm.collection.filter { animal in
@@ -23,9 +40,22 @@ struct CollectionView: View {
             return true
         }
         .sorted {
-            if $0.isObtained != $1.isObtained { return $0.isObtained }
-            if $0.rarity != $1.rarity { return $0.rarity > $1.rarity }
-            return $0.collectionNumber < $1.collectionNumber
+            switch sortOption {
+            case .rarity:
+                if $0.isObtained != $1.isObtained { return $0.isObtained }
+                if $0.rarity != $1.rarity { return $0.rarity > $1.rarity }
+                return $0.collectionNumber < $1.collectionNumber
+            case .obtained:
+                if $0.isObtained != $1.isObtained { return $0.isObtained }
+                let d0 = $0.obtainedDate ?? .distantPast
+                let d1 = $1.obtainedDate ?? .distantPast
+                return d0 > d1
+            case .id:
+                return $0.collectionNumber < $1.collectionNumber
+            case .copies:
+                if $0.duplicateCount != $1.duplicateCount { return $0.duplicateCount > $1.duplicateCount }
+                return $0.collectionNumber < $1.collectionNumber
+            }
         }
     }
 
@@ -67,6 +97,25 @@ struct CollectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(white: 0.04), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        ForEach(CollectionSort.allCases, id: \.self) { option in
+                            Button {
+                                sortOption = option
+                            } label: {
+                                Label(option.rawValue, systemImage: option.icon)
+                                if sortOption == option {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                            .foregroundStyle(.white)
+                    }
+                }
+            }
             .sheet(item: $selectedAnimal) { animal in
                 CardDetailView(animal: animal)
                     .environmentObject(vm)
