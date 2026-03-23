@@ -154,8 +154,9 @@ struct GachaView: View {
             }
         } else {
             HStack(spacing: 5) {
-                Text("📦")
-                    .font(.subheadline)
+                PackImageView()
+                    .frame(width: 22, height: 22)
+                    .clipped()
                 Text("\(vm.availablePacks)")
                     .font(.subheadline)
                     .fontWeight(.semibold)
