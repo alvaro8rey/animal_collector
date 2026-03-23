@@ -79,6 +79,9 @@ struct PackOpeningView: View {
     // Summary
     @State private var summaryRevealed = false
 
+    // Detail sheet
+    @State private var selectedAnimal: Animal? = nil
+
     enum Phase { case packIdle, opening, carousel, summary }
 
     // MARK: - Init
@@ -133,6 +136,10 @@ struct PackOpeningView: View {
             }
         }
         .navigationBarHidden(true)
+        .sheet(item: $selectedAnimal) { animal in
+            CardDetailView(animal: animal)
+                .environmentObject(vm)
+        }
         .onAppear {
             if phase == .carousel {
                 // Set ad slot here for the preDrawnCards path (startOpening() is not called)
@@ -457,6 +464,7 @@ struct PackOpeningView: View {
             if flippedCards.contains(carouselIndex) {
                 let isNew = (vm.collection.first(where: { $0.id == cards[ai].id })?.duplicateCount ?? 0) == 0
                 RevealCardView(animal: cards[ai], isNew: isNew)
+                    .onTapGesture { selectedAnimal = cards[ai] }
             } else {
                 CardBackView(packType: packType)
                     .frame(width: largeCardWidth, height: largeCardHeight)
@@ -567,6 +575,7 @@ struct PackOpeningView: View {
                 .scaleEffect(summaryRevealed ? 1.0 : 0.55)
                 .opacity(summaryRevealed ? 1.0 : 0)
                 .animation(.spring(response: 0.5, dampingFraction: 0.65), value: summaryRevealed)
+                .onTapGesture { selectedAnimal = best }
                 .padding(.top, 14)
             }
 
@@ -590,6 +599,7 @@ struct PackOpeningView: View {
                             .scaleEffect(summaryRevealed ? 1.0 : 0.4)
                             .opacity(summaryRevealed ? 1.0 : 0)
                             .animation(.spring(response: 0.45).delay(0.18 + Double(idx) * 0.07), value: summaryRevealed)
+                            .onTapGesture { selectedAnimal = card }
                         }
                     }
                     .padding(.horizontal, 20)
