@@ -113,8 +113,10 @@ struct CollectionView: View {
                         }
                     } label: {
                         Image(systemName: "arrow.up.arrow.down")
+                            .font(.caption)
                             .foregroundStyle(.white)
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .sheet(item: $selectedAnimal) { animal in
