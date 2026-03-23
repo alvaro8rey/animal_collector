@@ -62,6 +62,7 @@ struct CollectionView: View {
                     }
                 }
             }
+            .onTapGesture { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) }
             .navigationTitle("Colección")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color(white: 0.04), for: .navigationBar)
