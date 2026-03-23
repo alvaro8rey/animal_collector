@@ -9,6 +9,11 @@ final class GameViewModel: ObservableObject {
     @Published var collection: [Animal] = []
     @Published var availablePacks: Int = 5
     @Published var isPremium: Bool = false
+
+    // MARK: - StoreKit
+
+    let store = StoreKitManager()
+    private var cancellables = Set<AnyCancellable>()
     @Published var streak: Int = 0
     @Published var pityCount: Int = 0
     @Published var totalPacksOpened: Int = 0
@@ -32,6 +37,15 @@ final class GameViewModel: ObservableObject {
 
     init() {
         load()
+        // StoreKit es la fuente de verdad para isPremium.
+        // La persistencia es solo un caché para el arranque rápido.
+        store.$isPremium
+            .receive(on: RunLoop.main)
+            .sink { [weak self] newValue in
+                self?.isPremium = newValue
+                self?.persistence.isPremium = newValue
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Computed
@@ -184,16 +198,14 @@ final class GameViewModel: ObservableObject {
         save()
     }
 
-    /// Activates premium subscription (stub).
-    func activatePremium() {
-        isPremium = true
-        save()
+    /// Lanza el flujo de compra de StoreKit. Lanza error si falla.
+    func purchase() async throws {
+        try await store.purchase()
     }
 
-    /// Cancels premium subscription (stub).
-    func cancelPremium() {
-        isPremium = false
-        save()
+    /// Restaura compras previas consultando el servidor de Apple.
+    func restorePurchases() async {
+        await store.restorePurchases()
     }
 
     // MARK: - Persistence

@@ -1,11 +1,11 @@
 import SwiftUI
 
-/// Premium paywall stub. Replace the purchase action with a real StoreKit call when ready.
 struct PremiumView: View {
     @EnvironmentObject var vm: GameViewModel
     @Binding var isPresented: Bool
 
     @State private var isPurchasing = false
+    @State private var errorMessage: String?
 
     private let benefits: [(icon: String, title: String, detail: String)] = [
         ("infinity",            "Sobres ilimitados",    "Abre todos los sobres que quieras, sin límite"),
@@ -36,6 +36,14 @@ struct PremiumView: View {
                     .foregroundStyle(.white.opacity(0.4))
             }
             .padding(20)
+        }
+        .alert("Error en la compra", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK") { errorMessage = nil }
+        } message: {
+            Text(errorMessage ?? "")
         }
     }
 
@@ -96,14 +104,15 @@ struct PremiumView: View {
 
             Spacer()
 
-            // Cancel subscription (stub)
+            // Apple gestiona la cancelación desde Ajustes → tu ID de Apple → Suscripciones
             Button(action: {
-                vm.cancelPremium()
-                isPresented = false
+                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                    UIApplication.shared.open(url)
+                }
             }) {
-                Text("Cancelar suscripción")
+                Text("Gestionar suscripción")
                     .font(.caption)
-                    .foregroundStyle(.red.opacity(0.5))
+                    .foregroundStyle(.white.opacity(0.35))
             }
             .padding(.bottom, 48)
         }
@@ -176,19 +185,26 @@ struct PremiumView: View {
 
     private var purchaseSection: some View {
         VStack(spacing: 14) {
-            // Price tag
+            // Precio real desde App Store (o fallback mientras carga)
             VStack(spacing: 4) {
-                Text("1,99 € / mes")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
+                if let product = vm.store.product {
+                    Text("\(product.displayPrice) / mes")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+                } else {
+                    Text("Cargando precio...")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white.opacity(0.5))
+                }
                 Text("Cancela cuando quieras · Sin compromiso")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.4))
             }
 
             // Subscribe button
-            Button(action: purchase) {
+            Button(action: { Task { await purchase() } }) {
                 HStack(spacing: 10) {
                     if isPurchasing {
                         ProgressView()
@@ -214,27 +230,36 @@ struct PremiumView: View {
                         )
                 )
             }
-            .disabled(isPurchasing)
+            .disabled(isPurchasing || vm.store.product == nil)
 
-            // Restore purchases (stub)
-            Button(action: {}) {
+            // Restore purchases
+            Button(action: { Task { await restore() } }) {
                 Text("Restaurar compras")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.3))
             }
+            .disabled(isPurchasing)
         }
     }
 
-    // MARK: - Action
+    // MARK: - Actions
 
-    private func purchase() {
+    private func purchase() async {
         isPurchasing = true
-        // Stub: simulate a 1.5s network/StoreKit delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            vm.activatePremium()
-            isPurchasing = false
+        do {
+            try await vm.purchase()
             isPresented = false
+        } catch {
+            errorMessage = error.localizedDescription
         }
+        isPurchasing = false
+    }
+
+    private func restore() async {
+        isPurchasing = true
+        await vm.restorePurchases()
+        isPurchasing = false
+        if vm.isPremium { isPresented = false }
     }
 }
 
