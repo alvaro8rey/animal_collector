@@ -9,7 +9,7 @@ final class StoreKitManager: ObservableObject {
     // MARK: - Product ID
     // ⚠️ Cambia este valor para que coincida exactamente con el Product ID
     // que crees en App Store Connect (debe incluir tu Bundle ID real).
-    static let monthlyProductID = "com.animalcollector.premium.monthly"
+    static let monthlyProductID = "com.animalcollector.app.premium.monthly"
 
     // MARK: - Published state
 
