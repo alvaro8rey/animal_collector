@@ -112,7 +112,7 @@ struct CollectionView: View {
                             }
                         }
                     } label: {
-                        Image(systemName: "line.3.decreasing")
+                        Image(systemName: "line.horizontal.3.decrease")
                             .font(.subheadline)
                             .foregroundStyle(.white)
                     }
