@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct GachaView: View {
     @EnvironmentObject var vm: GameViewModel
@@ -226,18 +227,17 @@ struct GachaView: View {
         Group {
             if let animal = vm.animalOfTheDay {
                 HStack(spacing: 14) {
-                    // Emoji
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.white.opacity(0.07))
-                            .frame(width: 64, height: 64)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
-                            )
-                        Text(animal.emoji)
-                            .font(.system(size: 34))
-                    }
+                    // Imagen
+                    KFImage(URL(string: "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev/\(animal.id).webp"))
+                        .placeholder { Text(animal.emoji).font(.system(size: 34)) }
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 64, height: 64)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+                        )
 
                     // Texto
                     VStack(alignment: .leading, spacing: 4) {
