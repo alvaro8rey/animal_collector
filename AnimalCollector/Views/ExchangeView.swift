@@ -19,7 +19,7 @@ struct ExchangeView: View {
                     }
                 }
             }
-            .navigationTitle("Intercambio")
+            .navigationTitle("Trade")
             .navigationBarTitleDisplayMode(.large)
         }
         .sheet(isPresented: $showResult) {
@@ -221,35 +221,90 @@ private struct ExchangeRow: View {
 
 // MARK: - Result Sheet
 
+private struct ParticleItem: Identifiable {
+    let id = UUID()
+    var offset: CGSize = .zero
+    var opacity: Double = 1
+    let angle: Double
+    let distance: CGFloat
+    let scale: CGFloat
+}
+
 private struct ExchangeResultSheet: View {
     let animal: Animal
     @Binding var isPresented: Bool
-    @State private var appeared = false
+
+    @State private var showFlash = false
+    @State private var glowPulse = false
+    @State private var titleVisible = false
+    @State private var cardVisible = false
+    @State private var infoVisible = false
+    @State private var buttonVisible = false
+    @State private var cardScale: CGFloat = 0.3
+    @State private var cardRotation: Double = -15
+    @State private var particles: [ParticleItem] = []
+
+    private var particleSymbol: String {
+        let e = animal.rarity.particleEmoji
+        return e.isEmpty ? "✦" : e
+    }
 
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            VStack(spacing: 28) {
+            // Pulsing radial glow
+            RadialGradient(
+                colors: [animal.rarity.glowColor.opacity(0.45), .clear],
+                center: .center,
+                startRadius: 0,
+                endRadius: 320
+            )
+            .scaleEffect(glowPulse ? 1.35 : 1.0)
+            .ignoresSafeArea()
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.7).repeatForever(autoreverses: true)) {
+                    glowPulse = true
+                }
+            }
+
+            // Burst particles
+            ForEach(particles) { p in
+                Text(particleSymbol)
+                    .font(.title2)
+                    .scaleEffect(p.scale)
+                    .offset(p.offset)
+                    .opacity(p.opacity)
+            }
+
+            // White flash overlay
+            Color.white
+                .opacity(showFlash ? 0.45 : 0)
+                .ignoresSafeArea()
+
+            VStack(spacing: 24) {
                 Spacer()
 
                 // Title
                 VStack(spacing: 6) {
                     Text("¡Nuevo animal!")
-                        .font(.title2.weight(.bold))
+                        .font(.title.weight(.heavy))
                         .foregroundColor(.white)
+                        .shadow(color: animal.rarity.glowColor, radius: 8)
+                        .scaleEffect(titleVisible ? 1 : 0.4)
+                        .opacity(titleVisible ? 1 : 0)
                     Text("Has canjeado tus duplicados")
                         .font(.subheadline)
                         .foregroundColor(.gray)
+                        .opacity(infoVisible ? 1 : 0)
                 }
-                .opacity(appeared ? 1 : 0)
-                .offset(y: appeared ? 0 : -12)
 
                 // Card
                 AnimalCardView(animal: animal, isRevealed: true, size: .large)
-                    .shadow(color: animal.rarity.glowColor.opacity(0.6), radius: 30)
-                    .scaleEffect(appeared ? 1 : 0.7)
-                    .opacity(appeared ? 1 : 0)
+                    .shadow(color: animal.rarity.glowColor.opacity(0.9), radius: 45)
+                    .scaleEffect(cardScale)
+                    .rotationEffect(.degrees(cardRotation))
+                    .opacity(cardVisible ? 1 : 0)
 
                 // Animal info
                 VStack(spacing: 4) {
@@ -257,14 +312,13 @@ private struct ExchangeResultSheet: View {
                         .font(.title3.weight(.bold))
                         .foregroundColor(.white)
                     Text(animal.scientificName)
-                        .font(.caption)
-                        .italic()
+                        .font(.caption).italic()
                         .foregroundColor(.gray)
                     RarityBadgeView(rarity: animal.rarity)
                         .padding(.top, 4)
                 }
-                .opacity(appeared ? 1 : 0)
-                .offset(y: appeared ? 0 : 12)
+                .opacity(infoVisible ? 1 : 0)
+                .offset(y: infoVisible ? 0 : 18)
 
                 Spacer()
 
@@ -285,12 +339,65 @@ private struct ExchangeResultSheet: View {
                 }
                 .padding(.horizontal, 32)
                 .padding(.bottom, 32)
-                .opacity(appeared ? 1 : 0)
+                .opacity(buttonVisible ? 1 : 0)
+                .offset(y: buttonVisible ? 0 : 22)
             }
         }
-        .onAppear {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.1)) {
-                appeared = true
+        .onAppear { runSequence() }
+    }
+
+    private func runSequence() {
+        // Flash
+        withAnimation(.easeOut(duration: 0.12)) { showFlash = true }
+        withAnimation(.easeOut(duration: 0.35).delay(0.12)) { showFlash = false }
+
+        // Title bounces in
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.48).delay(0.15)) {
+            titleVisible = true
+        }
+
+        // Card flips + overshoots
+        withAnimation(.spring(response: 0.55, dampingFraction: 0.58).delay(0.3)) {
+            cardVisible = true
+            cardScale = 1.0
+            cardRotation = 0
+        }
+
+        // Particles burst at card moment
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) { burstParticles() }
+
+        // Info
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.7).delay(0.7)) {
+            infoVisible = true
+        }
+
+        // Button
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.7).delay(0.9)) {
+            buttonVisible = true
+        }
+    }
+
+    private func burstParticles() {
+        let count = 10
+        particles = (0..<count).map { i in
+            ParticleItem(
+                angle: Double(i) * (360.0 / Double(count)) + Double.random(in: -12...12),
+                distance: CGFloat.random(in: 90...175),
+                scale: CGFloat.random(in: 0.7...1.6)
+            )
+        }
+
+        for i in particles.indices {
+            let rad = particles[i].angle * .pi / 180
+            let target = CGSize(
+                width: cos(rad) * particles[i].distance,
+                height: sin(rad) * particles[i].distance
+            )
+            withAnimation(.easeOut(duration: 0.65)) {
+                particles[i].offset = target
+            }
+            withAnimation(.easeIn(duration: 0.35).delay(0.35)) {
+                particles[i].opacity = 0
             }
         }
     }
