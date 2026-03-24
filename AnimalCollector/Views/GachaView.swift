@@ -581,57 +581,43 @@ private struct MarqueeText: View {
     let font: Font
     let color: Color
 
-    @State private var xOffset: CGFloat = 0
+    @State private var offset: CGFloat = 0
     @State private var textWidth: CGFloat = 0
-    @State private var containerWidth: CGFloat = 0
     @State private var started = false
 
     var body: some View {
-        ZStack(alignment: .leading) {
-            Color.clear
-                .frame(maxWidth: .infinity, maxHeight: 1)
-                .background(
-                    GeometryReader { geo in
-                        Color.clear.onAppear {
-                            containerWidth = geo.size.width
-                            kickOff()
-                        }
-                    }
-                )
-
+        GeometryReader { proxy in
             Text(text)
                 .font(font)
                 .foregroundStyle(color)
                 .lineLimit(1)
                 .fixedSize()
                 .background(
-                    GeometryReader { geo in
+                    GeometryReader { textGeo in
                         Color.clear.onAppear {
-                            textWidth = geo.size.width
-                            kickOff()
+                            let tw = textGeo.size.width
+                            let cw = proxy.size.width
+                            guard !started, tw > cw else { return }
+                            textWidth = tw
+                            started = true
+                            animate(textWidth: tw)
                         }
                     }
                 )
-                .offset(x: xOffset)
+                .offset(x: offset)
         }
+        .frame(height: 16)
         .clipped()
     }
 
-    private func kickOff() {
-        guard !started, textWidth > 0, containerWidth > 0 else { return }
-        guard textWidth > containerWidth else { return }
-        started = true
-        scroll()
-    }
-
-    private func scroll() {
-        xOffset = 0
-        let duration = Double(textWidth + 24) / 45.0
-        withAnimation(.linear(duration: duration).delay(1.2)) {
-            xOffset = -(textWidth + 24)
+    private func animate(textWidth: CGFloat) {
+        offset = 0
+        let duration = Double(textWidth + 20) / 45.0
+        withAnimation(.linear(duration: duration).delay(1.5)) {
+            offset = -(textWidth + 20)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration + 1.2 + 0.15) {
-            scroll()
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration + 1.5 + 0.1) {
+            animate(textWidth: textWidth)
         }
     }
 }
