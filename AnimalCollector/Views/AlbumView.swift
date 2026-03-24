@@ -91,13 +91,15 @@ struct AlbumView: View {
     private func flipForward() {
         guard currentPage < totalPages - 1, !isAnimating else { return }
         flipAnchor = .leading
-        animateFlip(exitAngle: 90, enterAngle: -90) { currentPage += 1 }
+        // Right edge swings away from viewer → negative angle with leading anchor
+        animateFlip(exitAngle: -90, enterAngle: 90) { currentPage += 1 }
     }
 
     private func flipBackward() {
         guard currentPage > 0, !isAnimating else { return }
         flipAnchor = .trailing
-        animateFlip(exitAngle: -90, enterAngle: 90) { currentPage -= 1 }
+        // Left edge swings away from viewer → positive angle with trailing anchor
+        animateFlip(exitAngle: 90, enterAngle: -90) { currentPage -= 1 }
     }
 
     private func animateFlip(exitAngle: Double, enterAngle: Double, change: @escaping () -> Void) {
