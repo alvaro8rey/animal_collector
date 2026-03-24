@@ -25,7 +25,6 @@ struct CollectionView: View {
     @State private var selectedAnimal: Animal? = nil
     @State private var searchText = ""
     @State private var sortOption: CollectionSort = .rarity
-    @State private var albumMode = false
 
     private var filteredAnimals: [Animal] {
         vm.collection.filter { animal in
@@ -64,92 +63,54 @@ struct CollectionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background — wood in album mode, dark otherwise
-                if albumMode {
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.16, green: 0.10, blue: 0.05),
-                            Color(red: 0.10, green: 0.06, blue: 0.02)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                    .ignoresSafeArea()
-                } else {
-                    Color(white: 0.04).ignoresSafeArea()
-                }
+                Color(white: 0.04).ignoresSafeArea()
 
-                if albumMode {
-                    AlbumView(selectedAnimal: $selectedAnimal)
-                        .environmentObject(vm)
-                        .transition(.opacity)
-                } else {
-                    VStack(spacing: 0) {
-                        searchBar
-                            .padding(.horizontal, 16)
-                            .padding(.top, 8)
-                        categoryStrip
-                            .padding(.top, 12)
-                        filterRow
-                            .padding(.horizontal, 16)
-                            .padding(.top, 10)
-                        statsBar
-                            .padding(.horizontal, 16)
-                            .padding(.top, 8)
-                        if filteredAnimals.isEmpty {
-                            emptyState
-                        } else {
-                            animalGrid
-                        }
+                VStack(spacing: 0) {
+                    searchBar
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                    categoryStrip
+                        .padding(.top, 12)
+                    filterRow
+                        .padding(.horizontal, 16)
+                        .padding(.top, 10)
+                    statsBar
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                    if filteredAnimals.isEmpty {
+                        emptyState
+                    } else {
+                        animalGrid
                     }
-                    .transition(.opacity)
                 }
             }
             .onTapGesture {
-                guard !albumMode else { return }
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
-            .navigationTitle(albumMode ? "Álbum" : "Colección")
+            .navigationTitle("Colección")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(
-                albumMode
-                    ? Color(red: 0.14, green: 0.09, blue: 0.04)
-                    : Color(white: 0.04),
-                for: .navigationBar
-            )
+            .toolbarBackground(Color(white: 0.04), for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.25)) { albumMode.toggle() }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        ForEach(CollectionSort.allCases, id: \.self) { option in
+                            Button {
+                                sortOption = option
+                            } label: {
+                                Label(option.rawValue, systemImage: option.icon)
+                                if sortOption == option {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
                     } label: {
-                        Image(systemName: albumMode ? "square.grid.3x3.fill" : "book.fill")
+                        Image(systemName: "line.horizontal.3.decrease")
                             .font(.subheadline)
                             .foregroundStyle(.white)
                     }
-                }
-
-                if !albumMode {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            ForEach(CollectionSort.allCases, id: \.self) { option in
-                                Button {
-                                    sortOption = option
-                                } label: {
-                                    Label(option.rawValue, systemImage: option.icon)
-                                    if sortOption == option {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "line.horizontal.3.decrease")
-                                .font(.subheadline)
-                                .foregroundStyle(.white)
-                        }
-                        .buttonStyle(.borderless)
-                        .foregroundStyle(.white)
-                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.white)
                 }
             }
             .sheet(item: $selectedAnimal) { animal in
