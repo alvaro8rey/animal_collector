@@ -248,7 +248,7 @@ struct PremiumView: View {
                     )
             }
 
-            Text("AnimalCards Premium")
+            Text("Animal Collector Premium")
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundStyle(.white)

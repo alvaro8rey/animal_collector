@@ -94,7 +94,7 @@ struct GachaView: View {
     private var headerBar: some View {
         HStack(alignment: .center, spacing: 0) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("AnimalCards")
+                Text("Animal Collector")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
