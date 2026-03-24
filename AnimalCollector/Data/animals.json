@@ -3204,18 +3204,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Pavo_cristatus"
   },
   {
-    "id": "flamenco-comun",
-    "name": "Flamenco Común",
-    "scientificName": "Phoenicopterus roseus",
-    "category": "Aves",
-    "rarity": "Uncommon",
-    "description": "El más grande de los flamencos. Su color rosado proviene de los carotenoides de las algas y crustáceos que come.",
-    "funFact": "Nacen blancos y grises. Si se les priva de alimentos ricos en carotenoides, se vuelven completamente blancos.",
-    "emoji": "🦩",
-    "collectionNumber": 268,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Phoenicopterus_roseus"
-  },
-  {
     "id": "garza-real",
     "name": "Garza Real",
     "scientificName": "Ardea cinerea",
@@ -3288,18 +3276,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Iguana_iguana"
   },
   {
-    "id": "salamandra-comun",
-    "name": "Salamandra Común",
-    "scientificName": "Salamandra salamandra",
-    "category": "Anfibios",
-    "rarity": "Common",
-    "description": "El anfibio más reconocible de Europa, con su llamativo patrón negro y amarillo que avisa de su toxicidad.",
-    "funFact": "Puede vivir más de 20 años. Las hembras incuban los huevos dentro del cuerpo y dan a luz larvas ya desarrolladas.",
-    "emoji": "🦎",
-    "collectionNumber": 275,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Salamandra_salamandra"
-  },
-  {
     "id": "triton-jaspeado",
     "name": "Tritón Jaspeado",
     "scientificName": "Triturus marmoratus",
@@ -3334,18 +3310,6 @@
     "emoji": "🪲",
     "collectionNumber": 278,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Oryctes_nasicornis"
-  },
-  {
-    "id": "luciernaga",
-    "name": "Luciérnaga Común",
-    "scientificName": "Lampyris noctiluca",
-    "category": "Insectos",
-    "rarity": "Common",
-    "description": "Coleóptero famoso por su luz verde-amarilla. Solo las hembras adultas emiten luz para atraer a los machos voladores.",
-    "funFact": "Su luz es 100% eficiente: no produce nada de calor. Ninguna tecnología humana ha igualado esa eficiencia lumínica.",
-    "emoji": "✨",
-    "collectionNumber": 279,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Lampyris_noctiluca"
   },
   {
     "id": "escarabajo-ciervo",
@@ -5232,18 +5196,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Mungos_mungo"
   },
   {
-    "id": "aye-aye",
-    "name": "Aye-Aye",
-    "scientificName": "Daubentonia madagascariensis",
-    "category": "Mamíferos",
-    "rarity": "Rare",
-    "description": "El primate más raro del mundo, endémico de Madagascar. Con su dedo medio larguísimo y sus ojos inmensos, parece sacado de una pesadilla.",
-    "funFact": "Usa su dedo medio esquelético para golpear la madera y detectar larvas por el eco. Es la única especie de primate que usa la ecolocalización táctil, como los pájaros carpinteros pero con el oído.",
-    "emoji": "🐒",
-    "collectionNumber": 437,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Daubentonia_madagascariensis"
-  },
-  {
     "id": "lemur-raton",
     "name": "Lémur Ratón",
     "scientificName": "Microcebus murinus",
@@ -5292,30 +5244,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Leptoptilos_crumenifer"
   },
   {
-    "id": "quetzal-espléndido",
-    "name": "Quetzal Espléndido",
-    "scientificName": "Pharomachrus mocinno",
-    "category": "Aves",
-    "rarity": "Epic",
-    "description": "El ave más sagrada de Mesoamérica. Sus plumas cola verdes brillantes pueden superar el metro de longitud. Era símbolo de dioses y reyes mayas.",
-    "funFact": "Los aztecas consideraban sus plumas más valiosas que el oro. El dios Quetzalcóatl lleva su nombre. Hoy es el ave nacional de Guatemala y aparece en su bandera y moneda.",
-    "emoji": "🦜",
-    "collectionNumber": 442,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Pharomachrus_mocinno"
-  },
-  {
-    "id": "ave-lira-mayor",
-    "name": "Ave Lira Mayor",
-    "scientificName": "Menura novaehollandiae",
-    "category": "Aves",
-    "rarity": "Rare",
-    "description": "Ave australiana cuyo macho luce una cola en forma de lira durante el cortejo. Es el mejor imitador del reino animal.",
-    "funFact": "Puede imitar con perfecta fidelidad el canto de más de 20 especies de aves, además de motosierras, disparos de cámara, alarmas de coche y música. Sus imitaciones han engañado a ornitólogos expertos.",
-    "emoji": "🐦",
-    "collectionNumber": 443,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Menura_novaehollandiae"
-  },
-  {
     "id": "ave-del-paraiso-wilson",
     "name": "Ave del Paraíso de Wilson",
     "scientificName": "Cicinnurus respublica",
@@ -5362,18 +5290,6 @@
     "emoji": "🐢",
     "collectionNumber": 447,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Eretmochelys_imbricata"
-  },
-  {
-    "id": "gecko-leopardo",
-    "name": "Gecko Leopardo",
-    "scientificName": "Eublepharis macularius",
-    "category": "Reptiles",
-    "rarity": "Common",
-    "description": "Gecko terrestre del sur de Asia con manchas oscuras como un leopardo. Uno de los reptiles más populares como mascota del mundo.",
-    "funFact": "Almacena grasa en su cola, que puede recuperar completamente si se la pierde. A diferencia de casi todos los geckos, tiene párpados móviles y puede parpadear y limpiar sus ojos con la lengua.",
-    "emoji": "🦎",
-    "collectionNumber": 448,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Eublepharis_macularius"
   },
   {
     "id": "iguana-tierra",
@@ -5484,18 +5400,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Sepioteuthis_sepioidea"
   },
   {
-    "id": "pulpo-mimetico",
-    "name": "Pulpo Mimético",
-    "scientificName": "Thaumoctopus mimicus",
-    "category": "Océano",
-    "rarity": "Rare",
-    "description": "El maestro del disfraz del océano. Imita con precisión la forma y el comportamiento de animales venenosos para evitar a sus depredadores.",
-    "funFact": "Puede imitar más de 15 especies diferentes: aplana sus brazos para parecer un pez piedra, los junta para imitar un lenguado, o los extiende como la cola de un pez león. Elige el disfraz según el depredador.",
-    "emoji": "🐙",
-    "collectionNumber": 458,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Thaumoctopus_mimicus"
-  },
-  {
     "id": "estrella-fragil",
     "name": "Estrella Frágil",
     "scientificName": "Ophiothrix fragilis",
@@ -5520,18 +5424,6 @@
     "wikipediaURL": "https://es.wikipedia.org/wiki/Chromodoris_lochi"
   },
   {
-    "id": "narvalo",
-    "name": "Narvalo",
-    "scientificName": "Monodon monoceros",
-    "category": "Mamíferos",
-    "rarity": "Rare",
-    "description": "Cetáceo ártico conocido por el largo colmillo en espiral que puede superar los 3 metros de longitud.",
-    "funFact": "Su colmillo es en realidad un diente canino izquierdo hipertrofiado con millones de terminaciones nerviosas que usa para detectar cambios en la salinidad del agua.",
-    "emoji": "🦄",
-    "collectionNumber": 461,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Monodon_monoceros"
-  },
-  {
     "id": "beluga",
     "name": "Beluga",
     "scientificName": "Delphinapterus leucas",
@@ -5542,30 +5434,6 @@
     "emoji": "🐳",
     "collectionNumber": 462,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Delphinapterus_leucas"
-  },
-  {
-    "id": "nutria-de-mar",
-    "name": "Nutria de Mar",
-    "scientificName": "Enhydra lutris",
-    "category": "Mamíferos",
-    "rarity": "Uncommon",
-    "description": "Mamífero marino del Pacífico norte que pasa casi toda su vida en el agua, flotando boca arriba.",
-    "funFact": "Tienen la piel más densa de todos los mamíferos con hasta un millón de pelos por centímetro cuadrado. Se cogen de las manos mientras duermen para no separarse flotando.",
-    "emoji": "🦦",
-    "collectionNumber": 463,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Enhydra_lutris"
-  },
-  {
-    "id": "tapir-del-amazonas",
-    "name": "Tapir del Amazonas",
-    "scientificName": "Tapirus terrestris",
-    "category": "Mamíferos",
-    "rarity": "Common",
-    "description": "El mayor mamífero terrestre de Sudamérica, con una probóscide prensil y patas con pezuñas.",
-    "funFact": "A pesar de su aspecto primitivo, su pariente más cercano son los caballos y rinocerontes. Sus heces son tan grandes que sirven de semillero a nuevos árboles.",
-    "emoji": "🦏",
-    "collectionNumber": 464,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Tapirus_terrestris"
   },
   {
     "id": "onagro",
@@ -5614,18 +5482,6 @@
     "emoji": "🐱",
     "collectionNumber": 468,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Herpailurus_yagouaroundi"
-  },
-  {
-    "id": "lince-boreal",
-    "name": "Lince Boreal",
-    "scientificName": "Lynx lynx",
-    "category": "Mamíferos",
-    "rarity": "Uncommon",
-    "description": "El mayor de los cuatro linces del mundo, habitante de los bosques boreales de Europa y Asia.",
-    "funFact": "Sus enormes patas actúan como raquetas de nieve naturales. Puede detectar una liebre a 75 metros de distancia y saltar hasta 3 metros de un golpe para cazar.",
-    "emoji": "🐆",
-    "collectionNumber": 469,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Lynx_lynx"
   },
   {
     "id": "margay",
@@ -5758,18 +5614,6 @@
     "emoji": "🪿",
     "collectionNumber": 480,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Alopochen_aegyptiaca"
-  },
-  {
-    "id": "gecko-cola-hoja",
-    "name": "Gecko de Cola de Hoja",
-    "scientificName": "Uroplatus phantasticus",
-    "category": "Reptiles",
-    "rarity": "Rare",
-    "description": "Gecko de Madagascar con una cola que imita perfectamente una hoja seca, incluyendo nervios y mordiscos.",
-    "funFact": "Su camuflaje es tan perfecto que si lo colocas sobre hojas reales es prácticamente imposible distinguirlo. Cuando se siente amenazado abre la boca mostrando un rojo intenso para asustar al depredador.",
-    "emoji": "🦎",
-    "collectionNumber": 481,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Uroplatus_phantasticus"
   },
   {
     "id": "tortuga-estrellada",
@@ -5974,18 +5818,6 @@
     "emoji": "🐠",
     "collectionNumber": 498,
     "wikipediaURL": "https://es.wikipedia.org/wiki/Scarus_vetula"
-  },
-  {
-    "id": "bogavante",
-    "name": "Bogavante",
-    "scientificName": "Homarus gammarus",
-    "category": "Océano",
-    "rarity": "Uncommon",
-    "description": "El mayor crustáceo de las costas europeas con dos grandes pinzas desiguales: una para romper y otra para cortar.",
-    "funFact": "Puede vivir más de 70 años y, a diferencia de los mamíferos, no envejece biológicamente: cuanto más viejo, más fértil y activo se vuelve. El color azul intenso que tienen vivo se vuelve rojo solo al cocinarlos.",
-    "emoji": "🦞",
-    "collectionNumber": 499,
-    "wikipediaURL": "https://es.wikipedia.org/wiki/Homarus_gammarus"
   },
   {
     "id": "pez-roca",
