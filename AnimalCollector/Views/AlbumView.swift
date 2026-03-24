@@ -33,32 +33,48 @@ struct AlbumView: View {
         }
     }
 
+    // How many unread pages are still stacked to the right
+    private var pagesAhead: Int { min(14, totalPages - currentPage - 1) }
+
     var body: some View {
         VStack(spacing: 12) {
-            // Album page with 3-D flip
-            AlbumPageView(slots: pageSlots(for: currentPage), selectedAnimal: $selectedAnimal)
-                .rotation3DEffect(
-                    .degrees(flipAngle),
-                    axis: (x: 0, y: 1, z: 0),
-                    anchor: flipAnchor,
-                    perspective: 0.45
-                )
-                // Slight Y-compression: paper "bends" as it rotates
-                .scaleEffect(y: 1.0 - flipShadow * 0.03, anchor: .center)
-                // Darkness overlay: simulates the page shadowing as it folds
-                .overlay(
+
+            // ── Book: stacked pages + flipping page ────────────────
+            ZStack {
+                // Pages peeking out on the right (the unread stack)
+                ForEach((0..<pagesAhead).reversed(), id: \.self) { i in
                     RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.black.opacity(flipShadow * 0.28))
-                        .allowsHitTesting(false)
-                )
-                .shadow(color: .black.opacity(0.60), radius: shadowRadius, x: 4, y: 10)
-                .gesture(
-                    DragGesture(minimumDistance: 40)
-                        .onEnded { value in
-                            if value.translation.width < 0 { flipForward() }
-                            else { flipBackward() }
-                        }
-                )
+                        .fill(stackPageColor(depth: pagesAhead - 1 - i))
+                        .offset(x: CGFloat(pagesAhead - i) * 2.8)
+                        .shadow(color: .black.opacity(0.08), radius: 1, x: 1, y: 1)
+                }
+
+                // Current page (this one flips)
+                AlbumPageView(slots: pageSlots(for: currentPage), selectedAnimal: $selectedAnimal)
+                    .rotation3DEffect(
+                        .degrees(flipAngle),
+                        axis: (x: 0, y: 1, z: 0),
+                        anchor: flipAnchor,
+                        perspective: 0.5
+                    )
+                    // Slight vertical compression → simulates paper bending mid-arc
+                    .scaleEffect(y: 1.0 - flipShadow * 0.035, anchor: .center)
+                    // Darkening overlay → page face dims as it turns away from light
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.black.opacity(flipShadow * 0.30))
+                            .allowsHitTesting(false)
+                    )
+                    .shadow(color: .black.opacity(0.58), radius: shadowRadius, x: 4, y: 10)
+            }
+            .gesture(
+                DragGesture(minimumDistance: 40)
+                    .onEnded { v in
+                        if v.translation.width < 0 { flipForward() }
+                        else { flipBackward() }
+                    }
+            )
+            .padding(.horizontal, 16)
 
             // Navigation bar
             HStack(spacing: 0) {
@@ -94,6 +110,14 @@ struct AlbumView: View {
             .padding(.horizontal, 16)
         }
         .padding(.top, 8)
+    }
+
+    // Cream tones that get slightly warmer/darker toward the back of the stack
+    private func stackPageColor(depth: Int) -> Color {
+        let t = Double(depth) / 14.0
+        return Color(red: 0.96 - t * 0.07,
+                     green: 0.92 - t * 0.07,
+                     blue: 0.83 - t * 0.05)
     }
 
     // MARK: - Flip helpers
