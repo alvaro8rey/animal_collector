@@ -5,6 +5,7 @@ struct ExchangeView: View {
     @State private var obtainedAnimal: Animal? = nil
     @State private var showResult = false
     @State private var animateResult = false
+    @State private var showExchangeError = false
 
     var body: some View {
         NavigationView {
@@ -26,6 +27,11 @@ struct ExchangeView: View {
             if let animal = obtainedAnimal {
                 ExchangeResultSheet(animal: animal, isPresented: $showResult)
             }
+        }
+        .alert("No se pudo canjear", isPresented: $showExchangeError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("No hay animales disponibles para canjear en esta rareza.")
         }
     }
 
@@ -59,6 +65,8 @@ struct ExchangeView: View {
                     if let animal = vm.exchangeDuplicates(from: rate.from) {
                         obtainedAnimal = animal
                         showResult = true
+                    } else {
+                        showExchangeError = true
                     }
                 }
             }

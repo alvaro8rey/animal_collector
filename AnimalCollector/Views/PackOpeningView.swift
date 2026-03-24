@@ -46,14 +46,14 @@ struct PackOpeningView: View {
     @State private var carouselIndex: Int = 0
     @State private var flippedCards: Set<Int> = []
     @State private var navigatingForward: Bool = true
-    @State private var adSlotIndex: Int = -1  // -1 = no ad (premium or not set yet)
+    @State private var adSlotIndex: Int? = nil  // nil = no ad (premium or not set yet)
 
     // Total items in carousel (cards + optional ad slot)
-    private var totalCarouselCount: Int { adSlotIndex >= 0 ? cards.count + 1 : cards.count }
+    private var totalCarouselCount: Int { adSlotIndex != nil ? cards.count + 1 : cards.count }
 
     // Maps a carousel index to the cards[] index, skipping the ad slot
     private func animalIndex(for carouselIdx: Int) -> Int {
-        guard adSlotIndex >= 0, carouselIdx > adSlotIndex else { return carouselIdx }
+        guard let slot = adSlotIndex, carouselIdx > slot else { return carouselIdx }
         return carouselIdx - 1
     }
 
@@ -144,8 +144,9 @@ struct PackOpeningView: View {
             if phase == .carousel {
                 // Set ad slot here for the preDrawnCards path (startOpening() is not called)
                 if !vm.isPremium && cards.count >= 3 {
-                    adSlotIndex = Int.random(in: 1..<cards.count)
-                    flippedCards.insert(adSlotIndex)
+                    let slot = Int.random(in: 1..<cards.count)
+                    adSlotIndex = slot
+                    flippedCards.insert(slot)
                 }
                 // Pre-reveal primera carta para que no se vea el dorso "Toca para revelar"
                 if !cards.isEmpty && cards[0].rarity != .legendary && cards[0].rarity != .secret {
@@ -320,10 +321,11 @@ struct PackOpeningView: View {
 
             // Insert ad slot at a random middle position for non-premium users
             if !vm.isPremium && cards.count >= 3 {
-                adSlotIndex = Int.random(in: 1..<cards.count)
-                flippedCards.insert(adSlotIndex) // ad is always visible (no flip needed)
+                let slot = Int.random(in: 1..<cards.count)
+                adSlotIndex = slot
+                flippedCards.insert(slot) // ad is always visible (no flip needed)
             } else {
-                adSlotIndex = -1
+                adSlotIndex = nil
             }
 
             // Pre-reveal primera carta: no mostrar dorso al transicionar desde la animación
@@ -349,8 +351,8 @@ struct PackOpeningView: View {
                         .foregroundStyle(carouselIndex > 0 ? .white.opacity(0.8) : .white.opacity(0.15))
                 }
 
-                Text(adSlotIndex >= 0 && carouselIndex == adSlotIndex
-                     ? "· / \(cards.count)"
+                Text(adSlotIndex == carouselIndex
+                     ? "AD / \(cards.count)"
                      : "\(animalIndex(for: carouselIndex) + 1) / \(cards.count)")
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -392,7 +394,7 @@ struct PackOpeningView: View {
                 ForEach(Array(((carouselIndex + 1)..<min(totalCarouselCount, carouselIndex + 6)).reversed()), id: \.self) { idx in
                     let depth = CGFloat(idx - carouselIndex)
                     ZStack {
-                        if adSlotIndex >= 0 && idx == adSlotIndex {
+                        if adSlotIndex == idx {
                             AdCardView()
                         } else {
                             let ai = animalIndex(for: idx)
@@ -457,40 +459,42 @@ struct PackOpeningView: View {
 
     @ViewBuilder
     private var deckFrontCard: some View {
-        if adSlotIndex >= 0 && carouselIndex == adSlotIndex {
+        if adSlotIndex == carouselIndex {
             AdCardView()
         } else {
             let ai = animalIndex(for: carouselIndex)
-            if flippedCards.contains(carouselIndex) {
-                let isNew = (vm.collection.first(where: { $0.id == cards[ai].id })?.duplicateCount ?? 0) == 0
-                RevealCardView(animal: cards[ai], isNew: isNew)
-                    .onTapGesture { selectedAnimal = cards[ai] }
-            } else {
-                CardBackView(packType: packType)
-                    .frame(width: largeCardWidth, height: largeCardHeight)
-                    .overlay(alignment: .center) {
-                        VStack(spacing: 6) {
-                            Image(systemName: "hand.tap.fill")
-                                .font(.title3)
-                                .foregroundStyle(.white.opacity(0.45))
-                            Text("Toca para revelar")
-                                .font(.system(size: 10))
-                                .foregroundStyle(.white.opacity(0.3))
-                        }
-                        .offset(y: 72)
-                    }
-                    .onTapGesture {
-                        if cards[ai].rarity == .legendary {
-                            revealLegendaryCard()
-                        } else if cards[ai].rarity == .secret {
-                            revealSecretCard()
-                        } else {
-                            withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
-                                flippedCards.insert(carouselIndex)
+            if ai < cards.count {
+                if flippedCards.contains(carouselIndex) {
+                    let isNew = (vm.collection.first(where: { $0.id == cards[ai].id })?.duplicateCount ?? 0) == 0
+                    RevealCardView(animal: cards[ai], isNew: isNew)
+                        .onTapGesture { selectedAnimal = cards[ai] }
+                } else {
+                    CardBackView(packType: packType)
+                        .frame(width: largeCardWidth, height: largeCardHeight)
+                        .overlay(alignment: .center) {
+                            VStack(spacing: 6) {
+                                Image(systemName: "hand.tap.fill")
+                                    .font(.title3)
+                                    .foregroundStyle(.white.opacity(0.45))
+                                Text("Toca para revelar")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white.opacity(0.3))
                             }
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            .offset(y: 72)
                         }
-                    }
+                        .onTapGesture {
+                            if cards[ai].rarity == .legendary {
+                                revealLegendaryCard()
+                            } else if cards[ai].rarity == .secret {
+                                revealSecretCard()
+                            } else {
+                                withAnimation(.spring(response: 0.45, dampingFraction: 0.7)) {
+                                    flippedCards.insert(carouselIndex)
+                                }
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            }
+                        }
+                }
             }
         }
     }
@@ -498,12 +502,13 @@ struct PackOpeningView: View {
     private func navigateTo(_ index: Int) {
         navigatingForward = index > carouselIndex
         // Ad slot: just navigate, no animal logic needed
-        if adSlotIndex >= 0 && index == adSlotIndex {
+        if adSlotIndex == index {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) { carouselIndex = index }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             return
         }
         let ai = animalIndex(for: index)
+        guard ai < cards.count else { return }
         // Pre-revelar para que la carta entre ya volteada (excepto legendarias y secretas)
         if cards[ai].rarity != .legendary && cards[ai].rarity != .secret {
             flippedCards.insert(index)
