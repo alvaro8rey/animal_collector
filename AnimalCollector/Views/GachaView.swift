@@ -251,16 +251,14 @@ struct GachaView: View {
                         Text(animal.name)
                             .font(.subheadline.weight(.bold))
                             .foregroundStyle(.white)
-                            .lineLimit(1)
 
                         Text(animal.funFact)
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.6))
-                            .lineLimit(2)
+                            .multilineTextAlignment(.justified)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-
-                    Spacer(minLength: 0)
                 }
                 .padding(14)
                 .background(
