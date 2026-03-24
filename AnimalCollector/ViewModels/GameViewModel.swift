@@ -192,6 +192,58 @@ final class GameViewModel: ObservableObject {
         save()
     }
 
+    // MARK: - Duplicate exchange
+
+    /// Tasas de canje: rareza origen → (coste en duplicados, rareza destino)
+    static let exchangeRates: [(from: Rarity, cost: Int, to: Rarity)] = [
+        (.common,   50, .uncommon),
+        (.uncommon, 40, .rare),
+        (.rare,     30, .epic),
+        (.epic,     15, .legendary),
+    ]
+
+    func totalDuplicates(for rarity: Rarity) -> Int {
+        collection
+            .filter { $0.rarity == rarity && $0.isObtained }
+            .map(\.duplicateCount)
+            .reduce(0, +)
+    }
+
+    func unownedAnimals(of rarity: Rarity) -> [Animal] {
+        collection.filter { $0.rarity == rarity && !$0.isObtained }
+    }
+
+    func canExchange(from rarity: Rarity) -> Bool {
+        guard let rate = GameViewModel.exchangeRates.first(where: { $0.from == rarity }) else { return false }
+        return totalDuplicates(for: rarity) >= rate.cost && !unownedAnimals(of: rate.to).isEmpty
+    }
+
+    /// Consume duplicados de `rarity` y devuelve un animal aleatorio no poseído de la rareza superior.
+    @discardableResult
+    func exchangeDuplicates(from rarity: Rarity) -> Animal? {
+        guard let rate = GameViewModel.exchangeRates.first(where: { $0.from == rarity }),
+              canExchange(from: rarity) else { return nil }
+
+        // Consumir duplicados empezando por los animales con más copias
+        var remaining = rate.cost
+        let sorted = collection.indices
+            .filter { collection[$0].rarity == rarity && collection[$0].isObtained && collection[$0].duplicateCount > 0 }
+            .sorted { collection[$0].duplicateCount > collection[$1].duplicateCount }
+
+        for idx in sorted {
+            guard remaining > 0 else { break }
+            let take = min(collection[idx].duplicateCount, remaining)
+            collection[idx].duplicateCount -= take
+            remaining -= take
+        }
+
+        // Dar un animal aleatorio no poseído de la rareza objetivo
+        guard let chosen = unownedAnimals(of: rate.to).randomElement() else { return nil }
+        receiveAnimal(chosen)
+        save()
+        return collection.first { $0.id == chosen.id }
+    }
+
     /// Called after the user watches an ad. Rewards +2 packs.
     func rewardAdPacks() {
         availablePacks += 2

@@ -17,6 +17,12 @@ struct ContentView: View {
                     Label("Colección", systemImage: "square.grid.3x3.fill")
                 }
                 .tag(1)
+
+            ExchangeView()
+                .tabItem {
+                    Label("Intercambio", systemImage: "arrow.2.circlepath")
+                }
+                .tag(2)
         }
         .tint(.yellow)
         .preferredColorScheme(.dark)
