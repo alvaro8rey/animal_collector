@@ -225,78 +225,52 @@ struct GachaView: View {
     private var dailyAnimalSection: some View {
         Group {
             if let animal = vm.animalOfTheDay {
-                Button(action: { selectedAnimal = animal }) {
-                    HStack(spacing: 14) {
-                        // Emoji / imagen pequeña
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(
-                                    LinearGradient(
-                                        colors: animal.rarity.gradientColors,
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ).opacity(0.25)
-                                )
-                                .frame(width: 64, height: 64)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .strokeBorder(animal.rarity.color.opacity(0.4), lineWidth: 1)
-                                )
-
-                            Text(animal.emoji)
-                                .font(.system(size: 34))
-                        }
-                        .shadow(color: animal.rarity.glowColor.opacity(0.5), radius: 8)
-
-                        // Texto
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(spacing: 6) {
-                                Text("Animal del día")
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(.white.opacity(0.4))
-                                    .textCase(.uppercase)
-                                    .tracking(0.8)
-                                RarityBadgeView(rarity: animal.rarity)
-                                    .scaleEffect(0.8, anchor: .leading)
-                            }
-
-                            Text(animal.name)
-                                .font(.subheadline.weight(.bold))
-                                .foregroundStyle(.white)
-                                .lineLimit(1)
-
-                            Text(animal.funFact)
-                                .font(.caption)
-                                .foregroundStyle(.white.opacity(0.6))
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-
-                        Spacer(minLength: 0)
-
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.25))
-                    }
-                    .padding(14)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.white.opacity(0.05))
+                HStack(spacing: 14) {
+                    // Emoji
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white.opacity(0.07))
+                            .frame(width: 64, height: 64)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .strokeBorder(
-                                        LinearGradient(
-                                            colors: animal.rarity.gradientColors.map { $0.opacity(0.35) },
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 1
-                                    )
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
                             )
-                    )
+                        Text(animal.emoji)
+                            .font(.system(size: 34))
+                    }
+
+                    // Texto
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Animal del día")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white.opacity(0.4))
+                            .textCase(.uppercase)
+                            .tracking(0.8)
+
+                        Text(animal.name)
+                            .font(.subheadline.weight(.bold))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+
+                        Text(animal.funFact)
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.6))
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 0)
                 }
-                .buttonStyle(.plain)
+                .padding(14)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white.opacity(0.05))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(Color.white.opacity(0.08), lineWidth: 1)
+                        )
+                )
             }
         }
     }
