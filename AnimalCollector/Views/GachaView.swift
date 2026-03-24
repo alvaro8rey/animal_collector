@@ -607,7 +607,7 @@ private struct DailyAnimalCard: View {
                 Text(animal.funFact)
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.6))
-                    .multilineTextAlignment(.justified)
+                    .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
