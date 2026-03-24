@@ -10,6 +10,8 @@ struct AlbumView: View {
     @State private var flipAngle: Double = 0
     @State private var flipAnchor: UnitPoint = .leading
     @State private var isAnimating: Bool = false
+    @State private var flipShadow: Double = 0   // darkness overlay while bending
+    @State private var shadowRadius: CGFloat = 18 // grows as page lifts off
 
     private let cardsPerPage = 9  // 3 cols × 3 rows
 
@@ -39,9 +41,17 @@ struct AlbumView: View {
                     .degrees(flipAngle),
                     axis: (x: 0, y: 1, z: 0),
                     anchor: flipAnchor,
-                    perspective: 0.35
+                    perspective: 0.45
                 )
-                .shadow(color: .black.opacity(0.60), radius: 20, x: 4, y: 10)
+                // Slight Y-compression: paper "bends" as it rotates
+                .scaleEffect(y: 1.0 - flipShadow * 0.03, anchor: .center)
+                // Darkness overlay: simulates the page shadowing as it folds
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.black.opacity(flipShadow * 0.28))
+                        .allowsHitTesting(false)
+                )
+                .shadow(color: .black.opacity(0.60), radius: shadowRadius, x: 4, y: 10)
                 .gesture(
                     DragGesture(minimumDistance: 40)
                         .onEnded { value in
@@ -104,12 +114,22 @@ struct AlbumView: View {
 
     private func animateFlip(exitAngle: Double, enterAngle: Double, change: @escaping () -> Void) {
         isAnimating = true
-        withAnimation(.easeIn(duration: 0.18)) { flipAngle = exitAngle }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.19) {
-            change()
-            flipAngle = enterAngle
-            withAnimation(.easeOut(duration: 0.18)) { flipAngle = 0 }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { isAnimating = false }
+        // Phase 1 — page lifts and rotates to 90° (edge-on, invisible)
+        withAnimation(.easeIn(duration: 0.30)) {
+            flipAngle    = exitAngle
+            flipShadow   = 1.0   // page darkens as it bends away
+            shadowRadius = 34    // shadow grows — page is lifting
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.31) {
+            change()                          // swap content while edge-on
+            flipAngle = enterAngle            // jump to mirror angle (no animation)
+            // Phase 2 — new page swings into place
+            withAnimation(.easeOut(duration: 0.30)) {
+                flipAngle    = 0
+                flipShadow   = 0    // page brightens as it flattens
+                shadowRadius = 18   // shadow shrinks — page is landing
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) { isAnimating = false }
         }
     }
 }
