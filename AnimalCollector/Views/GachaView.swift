@@ -192,6 +192,16 @@ struct GachaView: View {
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.35))
                 }
+            } else if vm.remoteLoadError {
+                HStack(spacing: 6) {
+                    Image(systemName: "wifi.exclamationmark")
+                        .font(.caption2)
+                        .foregroundStyle(.orange.opacity(0.7))
+                    Text("Sin conexión — usando datos locales")
+                        .font(.caption2)
+                        .foregroundStyle(.orange.opacity(0.7))
+                }
+                .transition(.opacity)
             }
 
             HStack {

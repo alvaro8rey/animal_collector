@@ -17,15 +17,16 @@ struct AnimalData {
 
     /// Fetches the remote JSON in the background, updates the disk cache,
     /// and calls `completion` on the main thread only if the animal list changed.
-    /// `onComplete` is always called on the main thread when the request finishes (success or failure),
-    /// after `completion` (if invoked).
+    /// `onComplete` is always called on the main thread when the request finishes;
+    /// its Bool argument is `true` if a network or parse error occurred.
     static func fetchRemote(
         current: [Animal],
         completion: @escaping ([Animal]) -> Void,
-        onComplete: (() -> Void)? = nil
+        onComplete: ((Bool) -> Void)? = nil
     ) {
         URLSession.shared.dataTask(with: remoteURL) { data, response, _ in
             var updated: [Animal]? = nil
+            var failed = false
             if let data,
                (response as? HTTPURLResponse)?.statusCode == 200,
                let animals = try? JSONDecoder().decode([Animal].self, from: data) {
@@ -33,10 +34,12 @@ struct AnimalData {
                 if animals.map(\.id) != current.map(\.id) {
                     updated = animals
                 }
+            } else {
+                failed = true
             }
             DispatchQueue.main.async {
                 if let updated { completion(updated) }
-                onComplete?()
+                onComplete?(failed)
             }
         }.resume()
     }

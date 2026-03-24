@@ -17,6 +17,7 @@ final class GameViewModel: ObservableObject {
     @Published var streak: Int = 0
     @Published var pityCount: Int = 0
     @Published var isLoadingRemote: Bool = false
+    @Published var remoteLoadError: Bool = false
     @Published var totalPacksOpened: Int = 0
     @Published var isDailyAvailable: Bool = true
 
@@ -33,6 +34,7 @@ final class GameViewModel: ObservableObject {
 
     private let persistence = PersistenceService.shared
     var allAnimals: [Animal] = AnimalData.initial
+    private var pendingSave: DispatchWorkItem?
 
     // MARK: - Init
 
@@ -292,12 +294,20 @@ final class GameViewModel: ObservableObject {
     /// collection if the list has changed (new animals added, etc.).
     func refreshFromRemote() {
         isLoadingRemote = true
+        remoteLoadError = false
         AnimalData.fetchRemote(current: allAnimals) { [weak self] newAnimals in
             guard let self else { return }
             self.allAnimals = newAnimals
             self.rebuildCollection()
-        } onComplete: { [weak self] in
-            self?.isLoadingRemote = false
+        } onComplete: { [weak self] didFail in
+            guard let self else { return }
+            self.isLoadingRemote = false
+            if didFail {
+                self.remoteLoadError = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                    self?.remoteLoadError = false
+                }
+            }
         }
     }
 
@@ -349,6 +359,13 @@ final class GameViewModel: ObservableObject {
     }
 
     private func save() {
+        pendingSave?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.flush() }
+        pendingSave = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: work)
+    }
+
+    private func flush() {
         persistence.saveCollection(collection)
         persistence.availablePacks = availablePacks
         persistence.isPremium = isPremium
