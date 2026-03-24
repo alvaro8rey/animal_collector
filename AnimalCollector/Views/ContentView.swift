@@ -20,7 +20,7 @@ struct ContentView: View {
 
             ExchangeView()
                 .tabItem {
-                    Label("Intercambio", systemImage: "arrow.2.circlepath")
+                    Label("Trade", systemImage: "arrow.2.circlepath")
                 }
                 .tag(2)
         }
