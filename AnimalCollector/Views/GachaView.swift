@@ -226,49 +226,7 @@ struct GachaView: View {
     private var dailyAnimalSection: some View {
         Group {
             if let animal = vm.animalOfTheDay {
-                HStack(spacing: 14) {
-                    // Imagen
-                    KFImage(URL(string: "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev/\(animal.id).webp"))
-                        .placeholder { Text(animal.emoji).font(.system(size: 34)) }
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 64, height: 64)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
-                        )
-
-                    // Texto
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Animal del día")
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white.opacity(0.4))
-                            .textCase(.uppercase)
-                            .tracking(0.8)
-
-                        Text(animal.name)
-                            .font(.subheadline.weight(.bold))
-                            .foregroundStyle(.white)
-
-                        Text(animal.funFact)
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.6))
-                            .multilineTextAlignment(.justified)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.white.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .strokeBorder(Color.white.opacity(0.08), lineWidth: 1)
-                        )
-                )
+                DailyAnimalCard(animal: animal)
             }
         }
     }
@@ -613,6 +571,56 @@ struct GachaView: View {
                     .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.06), lineWidth: 1))
             )
         }
+    }
+}
+
+// MARK: - Daily Animal Card
+
+private struct DailyAnimalCard: View {
+    let animal: Animal
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            KFImage(URL(string: "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev/\(animal.id).webp"))
+                .placeholder { Text(animal.emoji).font(.system(size: 34)) }
+                .resizable()
+                .scaledToFill()
+                .frame(width: 64, height: 64)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+                )
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Animal del día")
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white.opacity(0.4))
+                    .textCase(.uppercase)
+                    .tracking(0.8)
+
+                Text(animal.name)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.white)
+
+                Text(animal.funFact)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.6))
+                    .multilineTextAlignment(.justified)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color.white.opacity(0.08), lineWidth: 1)
+                )
+        )
     }
 }
 
