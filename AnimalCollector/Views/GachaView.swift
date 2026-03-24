@@ -14,6 +14,7 @@ struct GachaView: View {
     @State private var pendingCards: [Animal] = []
     @State private var frozenProgress: Double? = nil
     @State private var frozenObtainedCount: Int? = nil
+    @State private var frozenRecentCards: [Animal]? = nil
     @State private var selectedAnimal: Animal? = nil
 
     var body: some View {
@@ -70,9 +71,10 @@ struct GachaView: View {
                     shakeAngle = 0
                     isShaking = false
                     pendingCards = []
-                    // Descongelar el progreso ahora que la animación ha terminado
+                    // Descongelar cuando el usuario sale del resumen
                     frozenProgress = nil
                     frozenObtainedCount = nil
+                    frozenRecentCards = nil
                 }
             }
             .fullScreenCover(isPresented: $showAdSimulator) {
@@ -357,6 +359,11 @@ struct GachaView: View {
         // Congelar el progreso actual antes de que openPack actualice la colección
         frozenProgress = vm.collectionProgress
         frozenObtainedCount = vm.obtainedCount
+        frozenRecentCards = vm.collection
+            .filter(\.isObtained)
+            .sorted { ($0.obtainedDate ?? .distantPast) > ($1.obtainedDate ?? .distantPast) }
+            .prefix(10)
+            .map { $0 }
         isShaking = true
         pendingCards = vm.openPack(.basic).sorted { $0.rarity < $1.rarity }
 
@@ -489,10 +496,11 @@ struct GachaView: View {
     // MARK: - Recent Captures
 
     private var recentCaptures: some View {
-        let recent = vm.collection
+        let recent = (frozenRecentCards ?? vm.collection
             .filter(\.isObtained)
             .sorted { ($0.obtainedDate ?? .distantPast) > ($1.obtainedDate ?? .distantPast) }
             .prefix(10)
+            .map { $0 })
 
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
