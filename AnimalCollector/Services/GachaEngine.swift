@@ -16,7 +16,7 @@ enum GachaEngine {
     ) -> [Animal] {
         var result: [Animal] = []
         var drawnIds: Set<String> = []   // avoid same card twice in one pack
-        let pityActive = pityCount >= 20
+        let pityActive = pityCount >= 10
 
         for index in 0..<count {
             let isLastCard  = index == count - 1
@@ -47,9 +47,10 @@ enum GachaEngine {
         }
         // Secret injection: 0.3 % chance per pack to replace one card
         let secretPool = allAnimals.filter { $0.rarity == .secret }
-        if !secretPool.isEmpty, Double.random(in: 0..<1) < 0.003 {
+        if !secretPool.isEmpty, Double.random(in: 0..<1) < 0.003,
+           let secret = secretPool.randomElement() {
             let replaceIdx = Int.random(in: 0..<result.count)
-            result[replaceIdx] = secretPool.randomElement()!
+            result[replaceIdx] = secret
         }
 
         return result

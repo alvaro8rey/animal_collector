@@ -183,6 +183,17 @@ struct GachaView: View {
 
     private var progressSection: some View {
         VStack(alignment: .leading, spacing: 10) {
+            if vm.isLoadingRemote {
+                HStack(spacing: 6) {
+                    ProgressView()
+                        .scaleEffect(0.65)
+                        .tint(.white.opacity(0.4))
+                    Text("Actualizando catálogo...")
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.35))
+                }
+            }
+
             HStack {
                 Text("Colección")
                     .font(.caption)
@@ -214,6 +225,10 @@ struct GachaView: View {
             }
             .frame(height: 6)
             .clipShape(RoundedRectangle(cornerRadius: 4))
+
+            if !vm.isPremium {
+                pityBar
+            }
         }
         .padding(16)
         .background(
@@ -221,6 +236,56 @@ struct GachaView: View {
                 .fill(Color.white.opacity(0.04))
                 .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.06), lineWidth: 1))
         )
+    }
+
+    private static let pityThreshold = 10
+
+    private var pityBar: some View {
+        let count = vm.pityCount
+        let threshold = Self.pityThreshold
+        let progress = Double(count) / Double(threshold)
+        let isClose = count >= threshold - 2
+
+        return VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text("Pity Epic+")
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(isClose ? Color.orange.opacity(0.9) : .white.opacity(0.4))
+                    .textCase(.uppercase)
+                    .tracking(0.8)
+                Spacer()
+                if count >= threshold {
+                    Text("¡Garantizado!")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.orange)
+                } else {
+                    Text("\(threshold - count) sobre\(threshold - count != 1 ? "s" : "")")
+                        .font(.caption2)
+                        .foregroundStyle(isClose ? Color.orange.opacity(0.8) : .white.opacity(0.35))
+                }
+            }
+
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.white.opacity(0.06))
+
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(
+                            LinearGradient(
+                                colors: isClose ? [.orange, .yellow] : [.orange.opacity(0.6), .yellow.opacity(0.5)],
+                                startPoint: .leading, endPoint: .trailing
+                            )
+                        )
+                        .frame(width: geo.size.width * min(progress, 1.0))
+                        .animation(.spring(response: 0.6), value: count)
+                }
+            }
+            .frame(height: 4)
+            .clipShape(RoundedRectangle(cornerRadius: 3))
+        }
     }
 
     // MARK: - Animal del día

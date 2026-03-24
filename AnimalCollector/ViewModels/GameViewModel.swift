@@ -16,6 +16,7 @@ final class GameViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     @Published var streak: Int = 0
     @Published var pityCount: Int = 0
+    @Published var isLoadingRemote: Bool = false
     @Published var totalPacksOpened: Int = 0
     @Published var isDailyAvailable: Bool = true
 
@@ -290,10 +291,13 @@ final class GameViewModel: ObservableObject {
     /// Downloads the remote animal catalogue in the background and updates the
     /// collection if the list has changed (new animals added, etc.).
     func refreshFromRemote() {
+        isLoadingRemote = true
         AnimalData.fetchRemote(current: allAnimals) { [weak self] newAnimals in
             guard let self else { return }
             self.allAnimals = newAnimals
             self.rebuildCollection()
+        } onComplete: { [weak self] in
+            self?.isLoadingRemote = false
         }
     }
 

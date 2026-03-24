@@ -34,9 +34,8 @@ struct CollectionView: View {
             if let rar = selectedRarity, animal.rarity != rar { return false }
             if showOnlyObtained && !animal.isObtained { return false }
             if showOnlyFavorites && !animal.isFavorite { return false }
-            if sortOption != .rarity && !animal.isObtained { return false }
             if !searchText.isEmpty {
-                return animal.isObtained && animal.name.localizedCaseInsensitiveContains(searchText)
+                return animal.name.localizedCaseInsensitiveContains(searchText)
             }
             return true
         }
