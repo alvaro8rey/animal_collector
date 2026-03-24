@@ -574,25 +574,87 @@ struct GachaView: View {
     }
 }
 
+// MARK: - Marquee Text
+
+private struct MarqueeText: View {
+    let text: String
+    let font: Font
+    let color: Color
+
+    @State private var xOffset: CGFloat = 0
+    @State private var textWidth: CGFloat = 0
+    @State private var containerWidth: CGFloat = 0
+    @State private var started = false
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            Color.clear
+                .frame(maxWidth: .infinity, maxHeight: 1)
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.onAppear {
+                            containerWidth = geo.size.width
+                            kickOff()
+                        }
+                    }
+                )
+
+            Text(text)
+                .font(font)
+                .foregroundStyle(color)
+                .lineLimit(1)
+                .fixedSize()
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.onAppear {
+                            textWidth = geo.size.width
+                            kickOff()
+                        }
+                    }
+                )
+                .offset(x: xOffset)
+        }
+        .clipped()
+    }
+
+    private func kickOff() {
+        guard !started, textWidth > 0, containerWidth > 0 else { return }
+        guard textWidth > containerWidth else { return }
+        started = true
+        scroll()
+    }
+
+    private func scroll() {
+        xOffset = 0
+        let duration = Double(textWidth + 24) / 45.0
+        withAnimation(.linear(duration: duration).delay(1.2)) {
+            xOffset = -(textWidth + 24)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration + 1.2 + 0.15) {
+            scroll()
+        }
+    }
+}
+
 // MARK: - Daily Animal Card
 
 private struct DailyAnimalCard: View {
     let animal: Animal
 
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
+        HStack(alignment: .center, spacing: 14) {
             KFImage(URL(string: "https://pub-7042a31e227d46569e518a96fcc9951a.r2.dev/\(animal.id).webp"))
                 .placeholder { Text(animal.emoji).font(.system(size: 34)) }
                 .resizable()
                 .scaledToFill()
-                .frame(width: 64, height: 64)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 10)
                         .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
                 )
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text("Animal del día")
                     .font(.caption2)
                     .fontWeight(.semibold)
@@ -604,15 +666,11 @@ private struct DailyAnimalCard: View {
                     .font(.subheadline.weight(.bold))
                     .foregroundStyle(.white)
 
-                Text(animal.funFact)
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.6))
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                MarqueeText(text: animal.funFact, font: .caption, color: .white.opacity(0.6))
+                    .frame(maxWidth: .infinity)
             }
         }
-        .padding(14)
+        .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.white.opacity(0.05))
