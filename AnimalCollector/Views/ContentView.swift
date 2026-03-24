@@ -26,5 +26,6 @@ struct ContentView: View {
         }
         .tint(.yellow)
         .preferredColorScheme(.dark)
+        .onAppear { vm.refreshFromRemote() }
     }
 }

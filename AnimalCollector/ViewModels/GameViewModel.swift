@@ -31,7 +31,7 @@ final class GameViewModel: ObservableObject {
     // MARK: - Dependencies
 
     private let persistence = PersistenceService.shared
-    let allAnimals = AnimalData.all
+    var allAnimals: [Animal] = AnimalData.initial
 
     // MARK: - Init
 
@@ -287,7 +287,23 @@ final class GameViewModel: ObservableObject {
 
     // MARK: - Persistence
 
+    /// Downloads the remote animal catalogue in the background and updates the
+    /// collection if the list has changed (new animals added, etc.).
+    func refreshFromRemote() {
+        AnimalData.fetchRemote(current: allAnimals) { [weak self] newAnimals in
+            guard let self else { return }
+            self.allAnimals = newAnimals
+            self.rebuildCollection()
+        }
+    }
+
     private func load() {
+        rebuildCollection()
+        loadPersistedState()
+    }
+
+    /// Merges allAnimals with the user's saved progress. Safe to call at any time.
+    private func rebuildCollection() {
         if let saved = persistence.loadCollection() {
             // Start from fresh JSON data so static fields (e.g. wikipediaURL) are always current,
             // then overlay mutable state (obtainedDate, duplicateCount, isFavorite) from saved data.
@@ -302,7 +318,9 @@ final class GameViewModel: ObservableObject {
         } else {
             collection = allAnimals
         }
+    }
 
+    private func loadPersistedState() {
         if persistence.isFirstLaunch {
             availablePacks = 5
             persistence.availablePacks = 5
