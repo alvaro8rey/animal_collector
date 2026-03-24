@@ -302,7 +302,7 @@ struct CardBackView: View {
 
             VStack {
                 Text(packType.emoji).font(.system(size: 48))
-                Text("AnimalCards")
+                Text("Animal Collector")
                     .font(.caption)
                     .fontWeight(.bold)
                     .foregroundStyle(.white.opacity(0.5))
