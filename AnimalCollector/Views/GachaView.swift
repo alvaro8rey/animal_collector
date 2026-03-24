@@ -189,7 +189,7 @@ struct GachaView: View {
                     .textCase(.uppercase)
                     .tracking(1)
                 Spacer()
-                Text("\(frozenObtainedCount ?? vm.obtainedCount) / \(vm.allAnimals.count)")
+                Text("\(frozenObtainedCount ?? vm.obtainedCount) / \(vm.totalPublicAnimals)")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.5))
             }
@@ -425,7 +425,7 @@ struct GachaView: View {
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.75))
                 Spacer()
-                Text("\(Int(vm.collectionProgress * 100))%  ·  \(vm.obtainedCount)/\(vm.allAnimals.filter { $0.category != .secret }.count)")
+                Text("\(Int(vm.collectionProgress * 100))%  ·  \(vm.obtainedCount)/\(vm.totalPublicAnimals)")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)

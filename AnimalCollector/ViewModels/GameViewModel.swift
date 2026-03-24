@@ -52,6 +52,7 @@ final class GameViewModel: ObservableObject {
 
     // Secret animals are hidden from all public-facing counts.
     var obtainedCount: Int { collection.filter { $0.isObtained && $0.category != .secret }.count }
+    var totalPublicAnimals: Int { allAnimals.filter { $0.category != .secret }.count }
 
     /// Animal que se muestra hoy. Rota cada día sin repetir hasta agotar todos los animales (excluye secretos).
     var animalOfTheDay: Animal? {
@@ -119,8 +120,7 @@ final class GameViewModel: ObservableObject {
     }
 
     var collectionProgress: Double {
-        let total = allAnimals.filter { $0.category != .secret }.count
-        return total == 0 ? 0 : Double(obtainedCount) / Double(total)
+        totalPublicAnimals == 0 ? 0 : Double(obtainedCount) / Double(totalPublicAnimals)
     }
 
     func progress(for category: Category) -> (obtained: Int, total: Int) {
