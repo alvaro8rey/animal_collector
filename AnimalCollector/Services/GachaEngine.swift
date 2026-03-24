@@ -78,10 +78,15 @@ enum GachaEngine {
         let obtained = candidates.filter {  obtainedIds.contains($0.id) }
         let newOnes  = candidates.filter { !obtainedIds.contains($0.id) }
 
-        // Both pools non-empty → bias scales with how much of this rarity the player already owns.
-        // E.g. owns 2/10 of a rarity → 20 % duplicate; owns 8/10 → 80 % duplicate.
+        // Bias toward duplicates based on:
+        //   - Per-rarity ownership (how much of this rarity the player owns)
+        //   - Global collection completion (the more cards overall, the harder to get new ones)
+        // Formula: rarityBias + globalCompletion × (1 - rarityBias)
+        // E.g. 55% global + 50% rarity → 77.5% duplicate chance.
         if !obtained.isEmpty && !newOnes.isEmpty {
-            let duplicateBias = Double(obtained.count) / Double(obtained.count + newOnes.count)
+            let rarityBias = Double(obtained.count) / Double(obtained.count + newOnes.count)
+            let globalCompletion = Double(obtainedIds.count) / Double(max(animals.count, 1))
+            let duplicateBias = rarityBias + globalCompletion * (1.0 - rarityBias)
             return Double.random(in: 0..<1) < duplicateBias
                 ? obtained.randomElement()!
                 : newOnes.randomElement()!
