@@ -53,6 +53,31 @@ final class GameViewModel: ObservableObject {
     // Secret animals are hidden from all public-facing counts.
     var obtainedCount: Int { collection.filter { $0.isObtained && $0.category != .secret }.count }
 
+    /// Animal que se muestra hoy. Rota cada día sin repetir hasta agotar todos los animales (excluye secretos).
+    var animalOfTheDay: Animal? {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+
+        var deck = persistence.dailyAnimalDeck
+        var startDate = persistence.dailyAnimalDeckStartDate.map { cal.startOfDay(for: $0) } ?? today
+
+        let dayIndex = cal.dateComponents([.day], from: startDate, to: today).day ?? 0
+
+        // Baraja agotada o primera vez: crear nuevo deck
+        if deck.isEmpty || dayIndex >= deck.count {
+            deck = allAnimals
+                .filter { $0.category != .secret }
+                .map(\.id)
+                .shuffled()
+            startDate = today
+            persistence.dailyAnimalDeck = deck
+            persistence.dailyAnimalDeckStartDate = today
+        }
+
+        let index = min(dayIndex, deck.count - 1)
+        return allAnimals.first { $0.id == deck[index] }
+    }
+
     // MARK: - Mission helpers
 
     func isMissionCompleted(_ mission: DailyMission) -> Bool {

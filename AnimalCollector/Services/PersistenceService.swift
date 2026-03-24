@@ -24,6 +24,9 @@ final class PersistenceService {
         static let gotDupDateKey         = "ac_got_dup_date"
         static let newAnimalsTodayCount  = "ac_new_animals_today_count"
         static let newAnimalsTodayDate   = "ac_new_animals_today_date"
+        // Animal del día
+        static let dailyAnimalDeck      = "ac_daily_animal_deck"
+        static let dailyAnimalDeckStart = "ac_daily_animal_deck_start"
     }
 
     // MARK: - Collection
@@ -151,6 +154,18 @@ final class PersistenceService {
             defaults.set(newValue, forKey: Key.newAnimalsTodayCount)
             defaults.set(Date(), forKey: Key.newAnimalsTodayDate)
         }
+    }
+
+    // MARK: - Animal del día deck
+
+    var dailyAnimalDeck: [String] {
+        get { defaults.stringArray(forKey: Key.dailyAnimalDeck) ?? [] }
+        set { defaults.set(newValue, forKey: Key.dailyAnimalDeck) }
+    }
+
+    var dailyAnimalDeckStartDate: Date? {
+        get { defaults.object(forKey: Key.dailyAnimalDeckStart) as? Date }
+        set { defaults.set(newValue, forKey: Key.dailyAnimalDeckStart) }
     }
 
     // MARK: - Streak logic
