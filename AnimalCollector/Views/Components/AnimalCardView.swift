@@ -9,16 +9,59 @@ struct AnimalRemoteImage: View {
     let glowColor: Color
     let glowRadius: CGFloat
 
+    @State private var loadFailed = false
+
     var body: some View {
-        KFImage(URL(string: "\(r2BaseURL)/\(animalId).webp"))
-            .placeholder {
-                Text(emoji)
-                    .font(.system(size: 52))
-                    .shadow(color: glowColor.opacity(0.6), radius: glowRadius)
+        if loadFailed {
+            EmojiFallback(emoji: emoji, glowColor: glowColor, glowRadius: glowRadius)
+        } else {
+            KFImage(URL(string: "\(r2BaseURL)/\(animalId).webp"))
+                .placeholder { ShimmerPlaceholder(color: glowColor) }
+                .onFailure { _ in loadFailed = true }
+                .resizable()
+                .scaledToFill()
+                .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
+        }
+    }
+}
+
+/// Shown while the image is downloading.
+private struct ShimmerPlaceholder: View {
+    let color: Color
+    @State private var phase: CGFloat = -1
+
+    var body: some View {
+        GeometryReader { geo in
+            let w = geo.size.width
+            LinearGradient(
+                stops: [
+                    .init(color: color.opacity(0.07), location: 0),
+                    .init(color: color.opacity(0.18), location: 0.4),
+                    .init(color: color.opacity(0.07), location: 1),
+                ],
+                startPoint: UnitPoint(x: phase, y: 0),
+                endPoint: UnitPoint(x: phase + 1, y: 1)
+            )
+            .onAppear {
+                withAnimation(.linear(duration: 1.4).repeatForever(autoreverses: false)) {
+                    phase = 1
+                }
             }
-            .resizable()
-            .scaledToFill()
-            .shadow(color: glowColor.opacity(0.5), radius: glowRadius)
+        }
+        .background(color.opacity(0.07))
+    }
+}
+
+/// Shown when the image fails to load (missing or unavailable).
+private struct EmojiFallback: View {
+    let emoji: String
+    let glowColor: Color
+    let glowRadius: CGFloat
+
+    var body: some View {
+        Text(emoji)
+            .font(.system(size: 52))
+            .shadow(color: glowColor.opacity(0.6), radius: glowRadius)
     }
 }
 
