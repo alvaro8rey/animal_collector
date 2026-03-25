@@ -10,7 +10,7 @@ struct ExchangeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color(white: 0.04).ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 0) {

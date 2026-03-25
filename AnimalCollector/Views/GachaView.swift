@@ -271,8 +271,8 @@ struct GachaView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.orange)
                 } else {
-                    Text("\(threshold - count) sobre\(threshold - count != 1 ? "s" : "")")
-                        .font(.caption2)
+                    Text("\(count) / \(threshold)")
+                        .font(.caption2.monospacedDigit())
                         .foregroundStyle(isClose ? Color.orange.opacity(0.8) : .white.opacity(0.35))
                 }
             }

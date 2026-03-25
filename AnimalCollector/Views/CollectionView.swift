@@ -4,7 +4,7 @@ enum CollectionSort: String, CaseIterable {
     case rarity    = "Rareza"
     case obtained  = "Obtenido"
     case id        = "ID"
-    case copies    = "Nº de copias"
+    case copies    = "Copias"
 
     var icon: String {
         switch self {
