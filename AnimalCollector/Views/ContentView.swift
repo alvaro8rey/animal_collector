@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var vm: GameViewModel
     @State private var selectedTab = 0
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -27,5 +28,8 @@ struct ContentView: View {
         .tint(.yellow)
         .preferredColorScheme(.dark)
         .onAppear { vm.refreshFromRemote() }
+        .onChange(of: scenePhase) { phase in
+            if phase == .active { vm.refreshDailyStateIfNeeded() }
+        }
     }
 }

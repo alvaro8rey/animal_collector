@@ -53,6 +53,7 @@ struct CollectionView: View {
             case .id:
                 return $0.collectionNumber < $1.collectionNumber
             case .copies:
+                if $0.isObtained != $1.isObtained { return $0.isObtained }
                 if $0.duplicateCount != $1.duplicateCount { return $0.duplicateCount > $1.duplicateCount }
                 return $0.collectionNumber < $1.collectionNumber
             }

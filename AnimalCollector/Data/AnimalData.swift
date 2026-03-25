@@ -30,8 +30,9 @@ struct AnimalData {
             if let data,
                (response as? HTTPURLResponse)?.statusCode == 200,
                let animals = try? JSONDecoder().decode([Animal].self, from: data) {
+                let existingCache = try? Data(contentsOf: cacheURL)
                 try? data.write(to: cacheURL, options: .atomic)
-                if animals.map(\.id) != current.map(\.id) {
+                if existingCache != data {
                     updated = animals
                 }
             } else {

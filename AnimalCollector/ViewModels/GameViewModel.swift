@@ -334,6 +334,18 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    /// Re-reads all day-resettable counters from persistence.
+    /// Call this whenever the app becomes active so state is fresh after midnight.
+    func refreshDailyStateIfNeeded() {
+        claimedMissionIds = persistence.claimedMissionIds
+        packsOpenedToday  = persistence.packsOpenedToday
+        gotRareToday      = persistence.gotRareToday
+        gotEpicToday      = persistence.gotEpicToday
+        gotDuplicateToday = persistence.gotDuplicateToday
+        newAnimalsToday   = persistence.newAnimalsToday
+        todayMissions     = DailyMission.todaysMissions()
+    }
+
     private func loadPersistedState() {
         if persistence.isFirstLaunch {
             availablePacks = 5
