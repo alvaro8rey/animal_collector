@@ -168,6 +168,14 @@ struct PremiumView: View {
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.3))
                 }
+
+                HStack(spacing: 4) {
+                    Link("Privacidad", destination: URL(string: "https://alvaro8rey.github.io/animal-collector-legal/privacy")!)
+                    Text("·")
+                    Link("Términos de uso", destination: URL(string: "https://alvaro8rey.github.io/animal-collector-legal/privacy")!)
+                }
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.25))
                 .padding(.bottom, 32)
             }
         }
