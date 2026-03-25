@@ -317,6 +317,15 @@ struct PremiumView: View {
                     .foregroundStyle(.white.opacity(0.3))
             }
             .disabled(isPurchasing)
+
+            // Legal links — required by App Store guidelines
+            HStack(spacing: 4) {
+                Link("Privacidad", destination: URL(string: "https://REPLACE_WITH_YOUR_PRIVACY_POLICY_URL")!)
+                Text("·")
+                Link("Términos de uso", destination: URL(string: "https://REPLACE_WITH_YOUR_TERMS_URL")!)
+            }
+            .font(.caption2)
+            .foregroundStyle(.white.opacity(0.25))
         }
     }
 

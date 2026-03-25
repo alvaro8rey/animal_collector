@@ -29,9 +29,11 @@
 	</dict>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Usamos este permiso para mostrarte anuncios relevantes y medir su rendimiento. Sin él verás anuncios genéricos.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

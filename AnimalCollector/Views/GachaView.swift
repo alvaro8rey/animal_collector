@@ -16,6 +16,7 @@ struct GachaView: View {
     @State private var frozenObtainedCount: Int? = nil
     @State private var frozenRecentCards: [Animal]? = nil
     @State private var selectedAnimal: Animal? = nil
+    @State private var showOdds = false
 
     var body: some View {
         NavigationStack {
@@ -392,7 +393,14 @@ struct GachaView: View {
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.35))
             }
+
+            Button { showOdds = true } label: {
+                Label("Ver probabilidades", systemImage: "info.circle")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.25))
+            }
         }
+        .sheet(isPresented: $showOdds) { OddsSheet() }
     }
 
     // MARK: - Refill Section
@@ -950,6 +958,142 @@ private struct StatsCategoryCell: View {
             RoundedRectangle(cornerRadius: 10)
                 .fill(cat.color.opacity(0.07))
                 .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(cat.color.opacity(0.15), lineWidth: 1))
+        )
+    }
+}
+
+// MARK: - Odds Sheet
+
+private struct OddsSheet: View {
+
+    // Rows derived directly from PackType weights so they're always in sync.
+    private struct OddsRow: Identifiable {
+        let id = UUID()
+        let rarity: Rarity
+        let standard: String   // cartas 1-4
+        let lastCard: String   // carta 5
+    }
+
+    private let rows: [OddsRow] = {
+        let std  = PackType.basic.standardWeights
+        let last = PackType.basic.lastCardWeights
+        let stdTotal  = Double(std.values.reduce(0, +))
+        let lastTotal = Double(last.values.reduce(0, +))
+        return Rarity.allCases.compactMap { r -> OddsRow? in
+            guard r != .secret else { return nil }
+            let s = std[r].map  { String(format: "%.1f%%", Double($0) / stdTotal  * 100) } ?? "—"
+            let l = last[r].map { String(format: "%.1f%%", Double($0) / lastTotal * 100) } ?? "—"
+            return OddsRow(rarity: r, standard: s, lastCard: l)
+        }.reversed()
+    }()
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color(white: 0.04).ignoresSafeArea()
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+
+                        // Table
+                        VStack(spacing: 0) {
+                            // Header
+                            HStack {
+                                Text("Rareza").frame(maxWidth: .infinity, alignment: .leading)
+                                Text("Cartas 1–4").frame(width: 80, alignment: .trailing)
+                                Text("Carta 5").frame(width: 72, alignment: .trailing)
+                            }
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.white.opacity(0.4))
+                            .textCase(.uppercase)
+                            .tracking(0.6)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+
+                            Divider().background(Color.white.opacity(0.07))
+
+                            ForEach(rows) { row in
+                                HStack {
+                                    HStack(spacing: 6) {
+                                        Circle()
+                                            .fill(row.rarity.color)
+                                            .frame(width: 8, height: 8)
+                                        Text(row.rarity.displayName)
+                                            .font(.subheadline.weight(.medium))
+                                            .foregroundStyle(.white)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text(row.standard)
+                                        .font(.subheadline.monospacedDigit())
+                                        .foregroundStyle(row.standard == "—" ? .white.opacity(0.2) : row.rarity.color)
+                                        .frame(width: 80, alignment: .trailing)
+                                    Text(row.lastCard)
+                                        .font(.subheadline.monospacedDigit())
+                                        .foregroundStyle(row.lastCard == "—" ? .white.opacity(0.2) : row.rarity.color)
+                                        .frame(width: 72, alignment: .trailing)
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                Divider().background(Color.white.opacity(0.05))
+                            }
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color.white.opacity(0.04))
+                                .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(.white.opacity(0.07), lineWidth: 1))
+                        )
+
+                        // Guarantees
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Garantías")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.4))
+                                .textCase(.uppercase)
+                                .tracking(0.8)
+
+                            guaranteeRow(
+                                icon: "5.circle.fill",
+                                color: .blue,
+                                text: "La carta 5 de cada sobre es siempre Rara o superior."
+                            )
+                            guaranteeRow(
+                                icon: "arrow.up.circle.fill",
+                                color: .purple,
+                                text: "Pity: si abres 10 sobres consecutivos sin obtener una carta Épica o superior, el siguiente sobre incluye una carta Épica garantizada."
+                            )
+                            guaranteeRow(
+                                icon: "sparkles",
+                                color: .yellow,
+                                text: "Secreta: probabilidad de 0.3 % por sobre de que una carta sea reemplazada por una carta Secreta."
+                            )
+                        }
+                    }
+                    .padding(20)
+                }
+            }
+            .navigationTitle("Probabilidades")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color(white: 0.04), for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+        }
+    }
+
+    private func guaranteeRow(icon: String, color: Color, text: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 18))
+                .foregroundStyle(color)
+                .frame(width: 24)
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.75))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.white.opacity(0.04))
+                .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(.white.opacity(0.06), lineWidth: 1))
         )
     }
 }

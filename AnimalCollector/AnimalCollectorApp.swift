@@ -1,5 +1,6 @@
 import SwiftUI
 import GoogleMobileAds
+import AppTrackingTransparency
 
 @main
 struct AnimalCollectorApp: App {
@@ -19,6 +20,15 @@ struct AnimalCollectorApp: App {
             ContentView()
                 .environmentObject(gameViewModel)
                 .preferredColorScheme(.dark)
+                .onAppear { requestTrackingIfNeeded() }
+        }
+    }
+
+    private func requestTrackingIfNeeded() {
+        // Delay so the UI is fully visible before the system dialog appears.
+        // ATTrackingManager is a no-op if the user already answered.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            ATTrackingManager.requestTrackingAuthorization { _ in }
         }
     }
 }
