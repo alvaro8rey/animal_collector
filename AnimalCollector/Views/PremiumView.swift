@@ -320,9 +320,9 @@ struct PremiumView: View {
 
             // Legal links — required by App Store guidelines
             HStack(spacing: 4) {
-                Link("Privacidad", destination: URL(string: "https://REPLACE_WITH_YOUR_PRIVACY_POLICY_URL")!)
+                Link("Privacidad", destination: URL(string: "https://alvaro8rey.github.io/animal-collector-legal/privacy")!)
                 Text("·")
-                Link("Términos de uso", destination: URL(string: "https://REPLACE_WITH_YOUR_TERMS_URL")!)
+                Link("Términos de uso", destination: URL(string: "https://alvaro8rey.github.io/animal-collector-legal/privacy")!)
             }
             .font(.caption2)
             .foregroundStyle(.white.opacity(0.25))
